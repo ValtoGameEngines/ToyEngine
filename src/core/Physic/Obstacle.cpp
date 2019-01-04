@@ -5,7 +5,7 @@
 
 #include <core/Physic/Obstacle.h>
 
-#include <core/Entity/Entity.h>
+#include <core/Spatial/Spatial.h>
 
 #include <core/Physic/CollisionShape.h>
 #include <core/Physic/Collider.h>
@@ -13,21 +13,9 @@
 
 using namespace mud; namespace toy
 {
-	ObstacleBody::ObstacleBody(Entity& entity, Medium& medium, const CollisionShape& shape, float throughput)
-		: Collider(entity, shape, medium, CM_OBSTACLE)
+	Obstacle::Obstacle(HSpatial spatial, HMovable movable, Medium& medium, const CollisionShape& shape, float throughput)
+		: Collider(spatial, movable, shape, medium, CM_OBSTACLE)
+		, m_shape(shape)
 		, m_throughput(throughput)
 	{}
-
-	Obstacle::Obstacle(Entity& entity, const CollisionShape& shape)
-		: m_entity(entity)
-		, m_shape(shape)
-	{}
-
-	Obstacle::~Obstacle()
-	{}
-
-	void Obstacle::addBody(Medium& medium, const CollisionShape& shape, float throughput)
-	{
-		m_bodies.push_back(make_object<ObstacleBody>(m_entity, medium, shape, throughput));
-	}
 }

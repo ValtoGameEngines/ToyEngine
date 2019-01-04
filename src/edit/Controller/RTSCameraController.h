@@ -12,9 +12,11 @@ using namespace mud; namespace toy
 	class TOY_EDIT_EXPORT RTSCameraController : public CameraController
 	{
 	public:
-		RTSCameraController(Viewer& viewer, Camera& camera);
+		RTSCameraController(Viewer& viewer, HCamera camera, HMovable movable);
 
 		virtual void process(Widget& widget) { UNUSED(widget); }
 		virtual void process(Viewer& viewer);
+
+		void process(Viewer& viewer, Spatial& spatial, Camera& camera);
 	};
 }

@@ -4,7 +4,7 @@
 
 #include <infra/Config.h>
 
-#include <obj/Forward.h>
+#include <type/Forward.h>
 #include <math/Forward.h>
 
 #ifndef TOY_UTIL_EXPORT
@@ -82,18 +82,6 @@ namespace toy {
     
     class ProcedureType;
     class Procedure;
-    class DataSource;
-    class DataLoader;
-    class GlobalLoader;
-    class Loader;
-    class ObjectLoader;
-    class PartLoader;
-    class MemberLoader;
-    class TypeLoader;
-    class LinkedLoader;
-    class OwnedLoader;
-    class SequenceLoader;
-    class StructureLoader;
     class Scheduler;
 }
 

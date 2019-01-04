@@ -7,7 +7,7 @@
 #include <block/Types.h>
 #include <block/Sector.h>
 
-#include <core/Entity/Entity.h>
+#include <core/Spatial/Spatial.h>
 #include <core/World/World.h>
 
 #include <block/Element.h>
@@ -17,13 +17,20 @@
 
 using namespace mud; namespace toy
 {
-	Sector::Sector(Id id, Entity& parent, const vec3& position, const uvec3& coordinate, const vec3& size)
-		: Complex(id, type<Sector>(), m_emitter, m_world_page, m_bufferPage, m_navblock, *this)
-		, m_entity(id, *this, parent, position, ZeroQuat)
-		, m_emitter(m_entity)
-		, m_world_page(m_entity, m_emitter, true, size)
-		, m_bufferPage(m_entity, m_world_page, true)
-		, m_navblock(m_entity.m_world.as<Navmesh>(), m_entity, m_world_page)
+	Entity Sector::create(ECS& ecs, HSpatial parent, const vec3& position, const uvec3& coordinate, const vec3& size)
+	{
+		Entity entity = { ecs.CreateEntity<Spatial, WorldPage, Navblock, Sector>(), ecs.m_index };
+		ecs.SetComponent(entity, Spatial(parent, position, ZeroQuat));
+		ecs.SetComponent(entity, WorldPage(HSpatial(entity), true, size));
+		ecs.SetComponent(entity, Navblock(HSpatial(entity), HWorldPage(entity), as<Navmesh>(parent->m_world->m_complex)));
+		ecs.SetComponent(entity, Sector(HSpatial(entity), HWorldPage(entity), HNavblock(entity), coordinate, size));
+		return entity;
+	}
+
+	Sector::Sector(HSpatial spatial, HWorldPage world_page, HNavblock navblock, const uvec3& coordinate, const vec3& size)
+		: m_spatial(spatial)
+		, m_world_page(world_page)
+		, m_navblock(navblock)
 		, m_coordinate(coordinate)
 		, m_size(size)
 		, m_block(nullptr)
@@ -32,7 +39,9 @@ using namespace mud; namespace toy
 
 	struct BlockGrid
 	{
-		BlockGrid(const uvec3& grid_subdiv, const uvec3& block_subdiv, const vec3& cell_size) {}
+		BlockGrid(const uvec3& grid_subdiv, const uvec3& block_subdiv, const vec3& cell_size)
+			: m_subdiv(grid_subdiv), m_block_subdiv(block_subdiv), m_cell_size(cell_size)
+		{}
 
 		attr_ uvec3 m_subdiv;
 		attr_ uvec3 m_block_subdiv;
@@ -65,8 +74,8 @@ using namespace mud; namespace toy
 		{
 			vec3 position = grid_center(coord, grid.m_sector_size) - grid.m_center_offset;
 
-			Sector& sector = world.origin().construct<Sector>(position, coord, grid.m_sector_size);
-			Block& block = sector.m_entity.construct<Block>(Zero3, nullptr, 0, grid.m_sector_size);
+			Sector& sector = construct<Sector>(world.origin(), position, coord, grid.m_sector_size);
+			Block& block = construct<Block>(sector.m_spatial, sector.m_world_page, Zero3, nullptr, 0, grid.m_sector_size);
 
 			grid.m_sectors.push_back(&sector);
 			blocks.push_back(&block);
@@ -76,51 +85,61 @@ using namespace mud; namespace toy
 		index_blocks(grid_subdiv, grid.m_blocks, blocks, grid.m_sectors);
 	}
 
-	TileBlock::TileBlock(Id id, Entity& parent, const vec3& position, const uvec3& size, const vec3& period, WaveTileset& tileset)
-		: Complex(id, type<TileBlock>(), *this, m_emitter, m_world_page, m_navblock)
-		, m_entity(id, *this, parent, position, ZeroQuat)
-		, m_emitter(m_entity)
-		, m_world_page(m_entity, m_emitter, true, vec3(size) * 0.5f)
-		, m_navblock(m_entity.m_world.as<Navmesh>(), m_entity, m_world_page)
-		, m_wfc_block(position, size, period, tileset)
+	Entity Tileblock::create(ECS& ecs, HSpatial parent, const vec3& position, const uvec3& size, const vec3& tile_scale, WaveTileset& tileset)
 	{
-		m_entity.m_world.add_task(this, short(Task::Background));
+		Entity entity = { ecs.CreateEntity<Spatial, WorldPage, Navblock, Tileblock>(), ecs.m_index };
+		ecs.SetComponent(entity, Spatial(parent, position, ZeroQuat));
+		ecs.SetComponent(entity, WorldPage(HSpatial(entity), true, size));
+		ecs.SetComponent(entity, Navblock(HSpatial(entity), HWorldPage(entity), as<Navmesh>(parent->m_world->m_complex)));
+		ecs.SetComponent(entity, Tileblock(HSpatial(entity), HWorldPage(entity), HNavblock(entity), size, tile_scale, tileset));
+		return entity;
 	}
 
-	TileBlock::~TileBlock()
+	Tileblock::Tileblock(HSpatial spatial, HWorldPage world_page, HNavblock navblock, const uvec3& size, const vec3& period, WaveTileset& tileset)
+		: m_spatial(spatial)
+		, m_world_page(world_page)
+		, m_navblock(navblock)
+		, m_wfc_block(spatial->m_position, size, period, tileset)
 	{
-		m_entity.m_world.remove_task(this, short(Task::Background));
+		//m_spatial.m_world.add_task(this, short(Task::Background));
 	}
 
-	void TileBlock::next_frame(size_t frame, size_t delta)
+	Tileblock::~Tileblock()
+	{
+		//m_spatial.m_world.remove_task(this, short(Task::Background));
+	}
+
+	void Tileblock::next_frame(WorldPage& world_page, size_t frame, size_t delta)
 	{
 		m_wfc_block.next_frame(frame, delta);
 
-		m_world_page.m_updated = m_wfc_block.m_wave_solved;
+		world_page.m_updated = m_wfc_block.m_wave_solved;
 
 		if(m_wfc_block.m_wave.m_solved && !m_setup)
 			m_setup = true;
 	}
 
-	bool TileBlock::contains(const vec3& position)
+	bool Tileblock::contains(const vec3& position)
 	{
 		bool outside = any(less(position, m_wfc_block.m_aabb.bmin())) && any(less(position, m_wfc_block.m_aabb.bmax()));
 		return !outside;
 	}
 
-	TileBlock& generate_block(GfxSystem& gfx_system, WaveTileset& tileset, Entity& origin, const ivec2& coord, const uvec3& block_subdiv, const vec3& tile_scale, bool from_file)
+	HTileblock generate_block(GfxSystem& gfx_system, WaveTileset& tileset, HSpatial origin, const ivec2& coord, const uvec3& block_subdiv, const vec3& tile_scale, bool from_file)
 	{
 		vec3 position = vec3(to_xz(coord)) * vec3(block_subdiv) * tile_scale;
-		TileBlock& block = global_pool<TileBlock>().construct(0U, origin, position, block_subdiv, tile_scale, tileset);
+		HTileblock block = construct<Tileblock>(origin, position, block_subdiv, tile_scale, tileset);
 
-		if(block.m_wfc_block.m_tile_models.empty())
-			block.m_wfc_block.load_models(gfx_system, from_file);
+		if(block->m_wfc_block.m_tile_models.empty())
+			block->m_wfc_block.load_models(gfx_system, from_file);
 
 		return block;
 	}
 
-	void build_block_geometry(Scene& scene, WorldPage& page, TileBlock& block)
+	void build_block_geometry(Scene& scene, WorldPage& page, Tileblock& block)
 	{
+		UNUSED(scene);
+
 		WfcBlock& tileblock = block.m_wfc_block;
 
 		std::vector<Cube> cubes;
@@ -144,15 +163,17 @@ using namespace mud; namespace toy
 		}
 
 		page.m_chunks.emplace_back();
-		Geometry& geom = page.m_chunks.back();
+		Geometry& geometry = page.m_chunks.back();
 
 		ShapeSize size;
 		for(const ProcShape& shape : shapes)
 			size.vec += symbol_triangle_size(shape).vec;
 
-		geom.allocate(size.vertex_count, size.index_count);
+		geometry.allocate(size.vertex_count, size.index_count);
 
-		MeshData data(geom.vertices(), geom.indices());
+		array<Vertex> vertices = geometry.vertices();
+		array<uint32_t> indices = geometry.indices();
+		MeshAdapter data(Vertex::vertex_format, vertices.data(), vertices.size(), indices.data(), indices.size(), true);
 
 		for(const ProcShape& shape : shapes)
 		{

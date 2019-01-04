@@ -1,11 +1,12 @@
 
 #pragma once
 
+#include <jobs/Job.h>
 #include <tree/Node.h>
 #include <refl/System.h>
 #include <refl/Class.h>
 #include <shell/Forward.h>
-#include <core/Player/Player.h>
+#include <core/User.h>
 
 #include <edit/Editor/Editor.h>
 #include <lang/Lua.h>
@@ -100,7 +101,7 @@ using namespace mud; namespace toy
 		VirtualMethod m_call;
 	};
 
-	TOY_SHELL_EXPORT Viewer& game_viewport(Widget& parent, GameScene& scene, Camera& camera);
+	TOY_SHELL_EXPORT Viewer& game_viewport(Widget& parent, GameScene& scene, HCamera camera, HMovable movable);
 	TOY_SHELL_EXPORT func_ void paint_physics(Gnode& parent, World& world);
 	TOY_SHELL_EXPORT func_ void physic_painter(GameScene& scene);
 
@@ -166,6 +167,7 @@ using namespace mud; namespace toy
 
 		User m_user;
 
+		object_ptr<JobSystem> m_job_system;
 		object_ptr<Core> m_core;
 		object_ptr<LuaInterpreter> m_lua;
 		object_ptr<WrenInterpreter> m_wren;

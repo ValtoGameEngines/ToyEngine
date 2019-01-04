@@ -125,7 +125,7 @@ struct SplitQuery : public NodeState
 {
 	SplitQuery() {}
 	std::string m_name;
-	std::map<ShipSchema*, size_t> m_ships;
+	std::map<ShipSchema*, uint32_t> m_ships;
 	FleetStance m_stance = FleetStance::Movement;
 };
 
@@ -173,7 +173,7 @@ void jump_query(Widget& parent, Viewer& viewer, Fleet& fleet, uint32_t mode)
 	if(query.m_hover != uvec2(UINT_MAX))
 	{
 		uint16_t magic = 16; // @kludge: we probably have less than 16 painters, so safe
-		draw_jump_hover(viewer.m_scene->m_graph.subx(magic), fleet.m_entity.m_position, query.m_hover, fleet.m_commander->m_colour);
+		draw_jump_hover(viewer.m_scene->m_graph.subx(magic), fleet.m_spatial->m_position, query.m_hover, fleet.m_commander->m_colour);
 	}
 }
 
@@ -197,7 +197,7 @@ void split_query(Widget& parent, Fleet& fleet, uint32_t mode)
 		ui::label(row, kv.first->m_code.c_str());
 		ui::label(row, kv.first->m_name.c_str());
 		ui::label(row, to_string(kv.second).c_str());
-		ui::number_input<size_t>(row, { query.m_ships[kv.first], StatDef<size_t>{ 0, fleet.m_ships[kv.first] } });
+		ui::number_input<uint32_t>(row, { query.m_ships[kv.first], StatDef<uint32_t>{ 0, fleet.m_ships[kv.first] } });
 	}
 
 	if(ui::button(self, "Split").activated())
@@ -368,9 +368,9 @@ void star_sheet(Widget& parent, Star& star)
 		if(star.m_commander)
 			commander_emblem(info, *star.m_commander, ("Star " + star.m_name).c_str());
 
-		Widget& self = ui::row(info);
-		Table& left = ui::columns(self, carray<float, 2>{ 0.6f, 0.4f });
-		Table& right = ui::columns(self, carray<float, 2>{ 0.6f, 0.4f });
+		Widget& row = ui::row(info);
+		Table& left = ui::columns(row, carray<float, 2>{ 0.6f, 0.4f });
+		Table& right = ui::columns(row, carray<float, 2>{ 0.6f, 0.4f });
 
 		label_entry(right, "Population", (to_string(star.m_population) + "/" + to_string(star.m_max_population)).c_str());
 		number_entry(right, "Environment", star.m_environment);
@@ -497,7 +497,7 @@ void turn_report_divisions(Widget& parent, Turn& turn)
 
 	if(split)
 	{
-		split->update(*split->m_source, split->m_source->m_entity.m_last_tick);
+		split->update(*split->m_source, split->m_source->m_spatial->m_last_tick);
 		turn.m_split++;
 	}
 
@@ -505,12 +505,12 @@ void turn_report_divisions(Widget& parent, Turn& turn)
 		turn.next_stage();
 }
 
-void jump_camera_to(toy::Camera& camera, const vec3& target, const quat& rotation, float distance, float angle, float duration = 1.f)
+void jump_camera_to(Spatial& spatial, toy::Camera& camera, const vec3& target, const quat& rotation, float distance, float angle, float duration = 1.f)
 {
 	animate(Ref(&camera), member(&toy::Camera::m_lens_distance), var(distance), duration);
 	animate(Ref(&camera), member(&toy::Camera::m_lens_angle), var(angle), duration);
-	animate(Ref(&as<Transform>(camera.m_entity)), member(&Transform::m_position), var(target), duration);
-	animate(Ref(&as<Transform>(camera.m_entity)), member(&Transform::m_rotation), var(rotation), duration);
+	animate(Ref(&as<Transform>(spatial)), member(&Transform::m_position), var(target), duration);
+	animate(Ref(&as<Transform>(spatial)), member(&Transform::m_rotation), var(rotation), duration);
 }
 
 void turn_report_movements(Widget& parent, GameScene& scene, Turn& turn)
@@ -520,17 +520,17 @@ void turn_report_movements(Widget& parent, GameScene& scene, Turn& turn)
 
 	auto do_jump = [&](Fleet& fleet, Jump& jump)
 	{
-		jump.update(fleet, fleet.m_entity.m_last_tick);
-		if(jump.m_state_updated == fleet.m_entity.m_last_tick)
+		jump.update(fleet, fleet.m_spatial->m_last_tick);
+		if(jump.m_state_updated == fleet.m_spatial->m_last_tick)
 		{
 			quat rotation = look_at(jump.m_start_pos, jump.m_dest_pos);
 
 			float size = c_fleet_visu_sizes[size_t(fleet.estimated_size())];
 
 			if(jump.m_state == Jump::Start)
-				jump_camera_to(*player.m_camera, jump.m_start_pos, rotation, 2.f * size, c_pi / 8.f, 3.f);
+				jump_camera_to(player.m_camera->m_spatial, player.m_camera, jump.m_start_pos, rotation, 2.f * size, c_pi / 8.f, 3.f);
 			else if(jump.m_state == Jump::Warp)
-				jump_camera_to(*player.m_camera, jump.m_dest_pos, 2.f * size);
+				jump_camera_to(player.m_camera->m_spatial, player.m_camera, jump.m_dest_pos, 2.f * size);
 		}
 		if(jump.m_state == Jump::None)
 			turn.m_jump++;
@@ -732,7 +732,7 @@ Widget& division(Widget& parent, float span)
 	return self;
 }
 
-void shrink_switch(Widget& parent, array<cstring> labels, size_t& value)
+void shrink_switch(Widget& parent, array<cstring> labels, uint32_t& value)
 {
 	static Style style("ShrinkSwitch", styles().wedge, [](Layout& l) { l.m_space = { READING, SHRINK, SHRINK }; l.m_align = { CENTER, CENTER }; });
 
@@ -745,11 +745,11 @@ static void game_viewer_ui(Viewer& viewer, GameScene& scene, Player& player)
 	Widget& self = ui::screen(viewer);
 
 	Widget& header = ui::header(self);
-	GameStage mode = player.m_mode;
-	shrink_switch(header, carray<cstring, 3>{ "Empire", "Tactics", "Turn Report" }, (size_t&) player.m_mode);
+	GameStage game_mode = player.m_mode;
+	shrink_switch(header, carray<cstring, 3>{ "Empire", "Tactics", "Turn Report" }, (uint32_t&) player.m_mode);
 	
-	if(mode == GameStage::TurnReport || (player.m_mode == GameStage::TurnReport && mode != player.m_mode))
-		player.m_mode = mode;
+	if(game_mode == GameStage::TurnReport || (player.m_mode == GameStage::TurnReport && game_mode != player.m_mode))
+		player.m_mode = game_mode;
 
 	struct Divs
 	{
@@ -766,9 +766,9 @@ static void game_viewer_ui(Viewer& viewer, GameScene& scene, Player& player)
 
 	if(player.m_mode == GameStage::Empire)
 	{
-		enum Modes : size_t { Overview, Technology };
+		enum Modes : uint32_t { Overview, Technology };
 		static Modes mode = Overview;
-		shrink_switch(divs.left, carray<cstring, 2>{ "Overview", "Technology" }, (size_t&) mode);
+		shrink_switch(divs.left, carray<cstring, 2>{ "Overview", "Technology" }, (uint32_t&) mode);
 
 		if(mode == Overview)
 		{
@@ -784,7 +784,7 @@ static void game_viewer_ui(Viewer& viewer, GameScene& scene, Player& player)
 
 		player.m_selected_item = {};
 
-		static Ref hovered = player.m_hovered_item;
+		static Entity hovered = player.m_hovered_item;
 		static Clock clock;
 		if(hovered != player.m_hovered_item)
 		{
@@ -798,9 +798,9 @@ static void game_viewer_ui(Viewer& viewer, GameScene& scene, Player& player)
 	}
 	else if(player.m_mode == GameStage::Tactics)
 	{
-		Ref selected = scene.m_selection.size() > 0 ? scene.m_selection[0] : Ref();
+		Entity selected = { scene.m_selection.size() > 0 ? as_ent(scene.m_selection[0]) : UINT32_MAX, 0 };
 
-		if(Star* star = try_val<Star>(selected))
+		if(Star* star = try_asa<Star>(selected))
 		{
 			if(star->m_commander == player.m_commander)
 				star_sheet(divs.left, *star);
@@ -811,7 +811,7 @@ static void game_viewer_ui(Viewer& viewer, GameScene& scene, Player& player)
 			star_orders(orders, viewer, *star);
 		}
 
-		if(Fleet* fleet = try_val<Fleet>(selected))
+		if(Fleet* fleet = try_asa<Fleet>(selected))
 		{
 			if(fleet->m_commander == player.m_commander)
 				fleet_sheet(divs.left, *fleet);
@@ -826,13 +826,16 @@ static void game_viewer_ui(Viewer& viewer, GameScene& scene, Player& player)
 
 		if(player.m_selected_item != selected)
 		{
-			Entity& entity = type(selected).is<Fleet>() ? val<Fleet>(selected).m_entity : val<Star>(selected).m_entity;
-			jump_camera_to(*player.m_camera, entity.m_position, random_scalar(1.f, 2.f), random_scalar(float(-c_pi / 8.f), float(c_pi / 8.f)));
+			if(selected)
+			{
+				Spatial& spatial = asa<Spatial>(selected);
+				jump_camera_to(player.m_camera->m_spatial, player.m_camera, spatial.m_position, random_scalar(1.f, 2.f), random_scalar(float(-c_pi / 8.f), float(c_pi / 8.f)));
+			}
 			player.m_selected_item = selected;
 		}
 
 		static Clock clock;
-		player.m_camera->m_entity.rotate(Y3, CAMERA_ROTATION_SPEED * float(clock.step()));
+		player.m_camera->m_spatial->rotate(Y3, CAMERA_ROTATION_SPEED * float(clock.step()));
 	}
 	else if(player.m_mode == GameStage::TurnReport)
 	{
@@ -846,11 +849,19 @@ void ex_space_ui(Widget& parent, GameScene& scene)
 
 	Widget& self = ui::widget(parent, styles().board, &scene);
 
-	Viewer& viewer = game_viewport(self, scene, *player.m_camera);
+	Viewer& viewer = game_viewport(self, scene, player.m_camera, HMovable(player.m_camera));
 	viewer.m_camera.m_near = 0.001f;
 	paint_viewer(viewer);
 
 	game_viewer_ui(viewer, scene, player);
 
-	player.m_hovered_item = viewer.m_hovered;
+	if(viewer.m_hovered)
+	{
+		uint32_t* hovered = try_val<uint32_t>(viewer.m_hovered->m_node->m_object);
+		player.m_hovered_item = hovered ? Entity(*hovered, 0) : Entity();
+	}
+	else
+	{
+		player.m_hovered_item = Entity();
+	}
 }

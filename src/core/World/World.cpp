@@ -3,83 +3,66 @@
 //  See the attached LICENSE.txt file or https://www.gnu.org/licenses/gpl-3.0.en.html.
 //  This notice and the license may not be removed or altered from any source distribution.
 
+#include <core/Types.h>
 #include <core/World/World.h>
 
 #include <core/World/Origin.h>
+#include <core/Physic/Collider.h>
 
-#include <obj/Indexer.h>
+#include <core/Api.h>
+
+#include <type/Indexer.h>
 #include <math/Timer.h>
-#include <proto/Proto.h>
+#include <ecs/Proto.h>
 #include <math/Vec.h>
-#include <core/Entity/Entity.h>
+#include <core/Spatial/Spatial.h>
 #include <core/World/WorldClock.h>
 #include <core/World/Section.h>
 
 using namespace mud; namespace toy
 {
-	World::World(Id id, Complex& complex, const string& name)
+	World::World(Id id, Complex& complex, const string& name, JobSystem& job_system)
         : m_id(complex.m_id)
 		, m_complex(complex)
 		, m_name(name)
-		, m_sections(size_t(Task::Background) + 1)
 		, m_clock(make_object<WorldClock>(*this))
+		, m_pools(c_max_types)
+		, m_job_system(job_system)
     {
-		for(Task task = Task(0); task < Task::Count; task = Task(uint(task) + 1))
-			m_sections[size_t(task)] = make_object<MonoSection>(short(task));
+		UNUSED(id);
+		s_ecs[0] = &m_ecs;
 
-		m_sections[size_t(Task::Background)] = make_object<MonoSection>(short(Task::Background), true);
+		//m_ecs.AddBuffers<Spatial>();
+		m_ecs.AddBuffers<Spatial, Origin>("Origin");
+		m_ecs.AddBuffers<Spatial, Waypoint>("Waypoint");
+		m_ecs.AddBuffers<Spatial, Movable, Camera>("Camera");
 
-		//indexer(type<Entity>()).alloc();
-		//indexer(type<Entity>()).alloc();
-		m_origin = make_object<Origin>(1, *this);
-		m_unworld = make_object<Origin>(2, *this);
+		m_origin = { Origin::create(m_ecs, *this), 0 };
+		m_unworld = { Origin::create(m_ecs, *this), 0 };
+
+		auto update_colliders = [&](size_t tick, size_t delta)
+		{
+			for(Collider& collider : this->pool<Collider>().m_objects)
+				collider.next_frame(tick, delta);
+		};
+
+		m_pump.add_step({ Task::Physics, update_colliders });
+
+		add_parallel_loop<Spatial>(Task::Spatial);
+		add_parallel_loop<Movable, Spatial>(Task::Spatial);
+		add_parallel_loop<Camera, Spatial>(Task::Spatial);
+		add_parallel_loop<WorldPage, Spatial>(Task::Spatial);
+		add_parallel_loop<Navblock, Spatial, WorldPage>(Task::Spatial);
+
+		// not parallel because we don't know what the script might do
+		add_loop<EntityScript>(Task::Spatial);
 	}
 
     World::~World()
-    {
-		this->destroy();
-	}
-
-	void World::destroy()
-	{
-		// stop threaded sections potentially iterating the entity tree
-		for(auto& section : m_sections)
-			if(section)
-				section->m_destroy = true;
-		m_origin = nullptr;
-		m_unworld = nullptr;
-	}
+    {}
 
     void World::next_frame()
     {
-#ifndef TOY_THREADED
-		m_clock->stepClock();
-		for(Task task = Task(0); task < Task::Count; task = Task(uint(task) + 1))
-			m_sections[size_t(task)]->update();
-#endif
-
-#ifdef MUD_PLATFORM_EMSCRIPTEN
-		m_sections[size_t(Task::Background)]->update();
-#endif
+		m_pump.pump();
     }
-
-    void World::add_task(Updatable* task, short int section)
-    {
-		m_sections[section]->add_task(task);
-    }
-
-	void World::remove_task(Updatable* task, short int section)
-	{
-		m_sections[section]->remove_task(task);
-	}
-
-	void World::updateTasks(short int section)
-	{
-		m_sections[section]->update();
-	}
-
-	TaskSection* World::section(short int section)
-	{
-		return m_sections[section].get();
-	}
 }

@@ -356,7 +356,7 @@ func_ void bar(MyObject& object, int value);
 ```
 Notice how this is a standard c++ definition, with some added [reflection hints](#hints): `refl_` to reflect a class, `_constr_` to reflect a constructor, `_meth_` for a reflected method, and `_attr_` for a reflected attribute.
 
-Using these annotations, the reflection [generator](#generator) produces a couple of reflection files, which declares and registers [constructs](#constructs) using mud corresponding types: [functions](../src/obj/Reflect/Method.h), [types](../src/obj/Reflect/Meta.h), [classes](../src/obj/Reflect/Class.h), [class members](../src/obj/Reflect/Member.h), [class methods](../src/obj/Reflect/Method.h), [enums](../src/obj/Reflect/Enum.h).  
+Using these annotations, the reflection [generator](#generator) produces a couple of reflection files, which declares and registers [constructs](#constructs) using mud corresponding types: [functions](../src/type/Reflect/Method.h), [types](../src/type/Reflect/Meta.h), [classes](../src/type/Reflect/Class.h), [class members](../src/type/Reflect/Member.h), [class methods](../src/type/Reflect/Method.h), [enums](../src/type/Reflect/Enum.h).  
 
 ## precompiling
 
@@ -417,7 +417,7 @@ Each Asset Store holds the specific operations to do in order to load a given ty
 
 ```cpp
 Texture* texture = gfx_system.textures().file("my_texture.png");
-Model* model = gfx_system.textures().file("my_model.gltf");
+Model* model = gfx_system.models().file("my_model.gltf");
 ```
 
 Resources lifetimes are managed by the user explicitly: to free a resource, simply call

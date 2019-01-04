@@ -3,23 +3,30 @@
 //  See the attached LICENSE.txt file or https://www.gnu.org/licenses/gpl-3.0.en.html.
 //  This notice and the license may not be removed or altered from any source distribution.
 
+#include <core/Types.h>
 #include <core/Path/DetourPath.h>
 
-#include <core/Entity/Entity.h>
+#include <core/Spatial/Spatial.h>
 #include <core/Path/Pathfinder.h>
 
 #include <DetourNavMeshQuery.h>
 
 using namespace mud; namespace toy
 {
-	OWaypoint::OWaypoint(Id id, Entity& parent, const vec3& position)
-		: Complex(id, type<OWaypoint>())
-		, m_entity(id, *this, parent, position, ZeroQuat)
+	Entity Waypoint::create(ECS& ecs, HSpatial parent, const vec3& position)
+	{
+		Entity entity = { ecs.CreateEntity<Spatial, Waypoint>(), ecs.m_index };
+		ecs.SetComponent(entity, Spatial(parent, position, ZeroQuat));
+		ecs.SetComponent(entity, Waypoint(HSpatial(entity)));
+		return entity;
+	}
+
+	Waypoint::Waypoint(HSpatial spatial)
+		: m_spatial(spatial)
 	{}
 
-	DetourPath::DetourPath(Entity& entity, Pathfinder& pathfinder, const vec3& origin, const vec3& destination)
-		: m_entity(entity)
-		, m_pathfinder(pathfinder)
+	DetourPath::DetourPath(Pathfinder& pathfinder, const vec3& origin, const vec3& destination)
+		: m_pathfinder(pathfinder)
 		, m_origin(origin)
 		, m_destination(destination)
 	{}
@@ -53,7 +60,7 @@ using namespace mud; namespace toy
 		std::vector<dtPolyRef> poly_path(m_pathfinder.m_max_polys);
 		int polyCount = 0;
 
-		if(!query.findPath(start_poly, end_poly, &start_pos[0], &end_pos[0], &filter, poly_path.data(), &polyCount, m_pathfinder.m_max_polys))
+		if(!query.findPath(start_poly, end_poly, &start_pos[0], &end_pos[0], &filter, poly_path.data(), &polyCount, int(m_pathfinder.m_max_polys)))
 			return false;
 
 		std::vector<vec3> point_path(m_pathfinder.m_max_waypoints);
@@ -61,7 +68,7 @@ using namespace mud; namespace toy
 
 		int count;
 
-		if(!query.findStraightPath(&start_pos[0], &end_pos[0], poly_path.data(), polyCount, value_ptr(point_path[0]), 0, poly_refs.data(), &count, m_pathfinder.m_max_waypoints))
+		if(!query.findStraightPath(&start_pos[0], &end_pos[0], poly_path.data(), polyCount, value_ptr(point_path[0]), 0, poly_refs.data(), &count, int(m_pathfinder.m_max_waypoints)))
 			return false;
 
 		for(int i = count - 1; i >= 0; i--)

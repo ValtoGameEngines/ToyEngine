@@ -14,10 +14,14 @@
 
 #include <lang/Wren.h>
 
+#include <Tracy.hpp>
+
 #include <numeric>
 #include <deque>
 
 class WrenVM;
+
+//#define MUD_GFX_DEFERRED
 
 using namespace mud; namespace toy
 {
@@ -93,9 +97,9 @@ using namespace mud; namespace toy
 	GameScene::~GameScene()
 	{}
 
-	Viewer& game_viewport(Widget& parent, GameScene& scene, Camera& camera)
+	Viewer& game_viewport(Widget& parent, GameScene& scene, HCamera camera, HMovable movable)
 	{
-		return scene_viewport(parent, scene, camera, scene.m_selection);
+		return scene_viewport(parent, scene, camera, movable, scene.m_selection);
 	}
 
 	void paint_physics(Gnode& parent, World& world)
@@ -115,7 +119,8 @@ using namespace mud; namespace toy
 	GameShell::GameShell(array<cstring> resource_paths, int argc, char *argv[])
 		: m_exec_path(exec_path(argc, argv))
 		, m_resource_path(resource_paths[0])
-		, m_core(make_object<toy::Core>())
+		, m_job_system(make_object<JobSystem>())
+		, m_core(make_object<toy::Core>(*m_job_system))
 		, m_gfx_system(make_object<GfxSystem>(resource_paths))
 #ifdef TOY_SOUND
 		, m_sound_system(make_object<SoundManager>(resource_paths[0]))
@@ -123,8 +128,8 @@ using namespace mud; namespace toy
 		, m_editor(*m_gfx_system)
 		, m_game(m_user, *m_gfx_system)
 	{
-		System::instance().load_modules({ &mud_infra::m(), &mud_obj::m(), &mud_pool::m(), &mud_refl::m(), &mud_proto::m(), &mud_tree::m() });
-		System::instance().load_modules({ &mud_srlz::m(), &mud_math::m(), &mud_geom::m(), &mud_procgen::m(), &mud_lang::m() });
+		System::instance().load_modules({ &mud_infra::m(), &mud_type::m(), &mud_pool::m(), &mud_refl::m(), &mud_proto::m(), &mud_tree::m() });
+		System::instance().load_modules({ &mud_srlz::m(), &mud_math::m(), &mud_geom::m(), &mud_noise::m(), &mud_wfc::m(), &mud_fract::m(), &mud_lang::m() });
 		System::instance().load_modules({ &mud_ctx::m(), &mud_ui::m(), &mud_gfx::m(), &mud_gfx_pbr::m(), &mud_gfx_obj::m(), &mud_gfx_gltf::m(), &mud_gfx_ui::m(), &mud_tool::m() });
 
 		static Meta m = { type<VirtualMethod>(), &namspc({}), "VirtualMethod", sizeof(VirtualMethod), TypeClass::Object };
@@ -140,11 +145,28 @@ using namespace mud; namespace toy
 
 		m_game.m_shell = this;
 
+		m_gfx_system->m_job_system = m_job_system.get();
+		m_job_system->adopt();
+
 		this->init();
 	}
 
 	GameShell::~GameShell()
-    {}
+    {
+		m_job_system->emancipate();
+	}
+
+	template <class T_Asset>
+	void add_asset_loader(AssetStore<T_Asset>& store, cstring format)
+	{
+		auto loader = [&](GfxSystem& gfx_system, T_Asset& asset, cstring path)
+		{
+			UNUSED(gfx_system);
+			unpack_json_file(Ref(&asset), string(path) + store.m_cformats[0]);
+		};
+
+		store.add_format(format, loader);
+	}
 
 	void GameShell::init()
 	{
@@ -168,7 +190,11 @@ using namespace mud; namespace toy
 
 		m_ui_window = make_unique<UiWindow>(*m_context, *m_vg);
 
+#ifdef MUD_GFX_DEFERRED
+		pipeline_pbr(*m_gfx_system, *m_gfx_system->m_pipeline, true);
+#else
 		pipeline_pbr(*m_gfx_system, *m_gfx_system->m_pipeline);
+#endif
 		m_gfx_system->init_pipeline();
 
 		static ImporterOBJ obj_importer(*m_gfx_system);
@@ -177,11 +203,15 @@ using namespace mud; namespace toy
 		string stylesheet = "minimal.yml";
 		//string stylesheet = "vector.yml";
 		//string stylesheet = "blendish_dark.yml";
-		set_style_sheet(*m_ui_window->m_styler, (string(m_ui_window->m_resource_path) + "interface/styles/" + stylesheet).c_str());
+		//set_style_sheet(*m_ui_window->m_styler, (string(m_ui_window->m_resource_path) + "interface/styles/" + stylesheet).c_str());
 
-		declare_gfx_edit();
+		style_minimal(*m_ui_window);
+
+		//declare_gfx_edit();
 
 		m_ui = m_ui_window->m_root_sheet.get();
+
+		add_asset_loader(m_gfx_system->particles(), ".ptc");
 	}
 
 	void GameShell::reset_interpreters(bool reflect)
@@ -240,14 +270,6 @@ using namespace mud; namespace toy
 #endif
 	}
 
-	void GameShell::run_game(GameModule& module, size_t iterations)
-	{
-		this->load(module);
-		//this->start_game();
-		m_pump = [&]() { this->pump_game(); };
-		this->run(iterations);
-	}
-
 	void GameShell::run_script(Module& module, const string& file, bool run)
 	{
 		string path = "scripts/" + file;
@@ -300,10 +322,18 @@ using namespace mud; namespace toy
 		this->run(0);
 	}
 
+	void GameShell::run_game(GameModule& module, size_t iterations)
+	{
+		this->load(module);
+		//this->start_game();
+		m_pump = [&]() { this->pump_game(); };
+		this->run(iterations);
+	}
+
 	void GameShell::run_editor(GameModule& module, size_t iterations)
 	{
 		this->load(module);
-		this->start_game();
+		//this->start_game();
 		m_pump = [&]() { this->pump_editor(); };
 		this->run(iterations);
 	}
@@ -338,12 +368,14 @@ using namespace mud; namespace toy
 		bool pursue = true;
 		for(float& time : m_times)
 			time = 0.f;
-		time(m_times, Step::Input,		"ui input",		[&] { pursue &= m_ui_window->input_frame(); });
-		time(m_times, Step::Core,		"core",			[&] { m_core->next_frame(); });
+		time(m_times, Step::Input,		"ui input",		[&] { ZoneScopedNC("ui input",  tracy::Color::Salmon);    pursue &= m_ui_window->input_frame(); });
+		time(m_times, Step::Core,		"core",			[&] { ZoneScopedNC("core",      tracy::Color::Red);       m_core->next_frame(); });
 		m_pump();
-		time(m_times, Step::UiRender,	"ui render",	[&] { m_ui_window->render_frame(); });
-		time(m_times, Step::GfxRender,	"gfx",			[&] { pursue &= m_gfx_system->next_frame(); });
+		time(m_times, Step::GfxRender,	"gfx",			[&] { ZoneScopedNC("gfx",		tracy::Color::Green);	  m_gfx_system->begin_frame(); });
+		time(m_times, Step::UiRender,	"ui render",	[&] { ZoneScopedNC("ui render", tracy::Color::LightBlue); m_ui_window->render_frame(); });
+		time(m_times, Step::GfxRender,	"gfx",			[&] { ZoneScopedNC("gfx",       tracy::Color::Green);     pursue &= m_gfx_system->next_frame(); });
 
+		FrameMark;
 		timer.end();
 
 		return pursue;
@@ -352,7 +384,7 @@ using namespace mud; namespace toy
 	void GameShell::start_game()
 	{
 		m_game_module->start(*this, m_game);
-		this->pump_game();
+		//this->pump_game();
 	}
 
 	void GameShell::frame_world()
@@ -375,9 +407,9 @@ using namespace mud; namespace toy
 
 	void GameShell::pump_game()
 	{
-		time(m_times, Step::World, "world", [&] { this->frame_world(); });
-		time(m_times, Step::Game, "game", [&] { this->frame_game(); });
-		time(m_times, Step::Scene, "scenes", [&] { this->frame_scenes(); });
+		time(m_times, Step::World, "world",  [&] { ZoneScopedNC("world",  tracy::Color::AliceBlue); this->frame_world(); });
+		time(m_times, Step::Game,  "game",   [&] { ZoneScopedNC("game",   tracy::Color::Violet);    this->frame_game(); });
+		time(m_times, Step::Scene, "scenes", [&] { ZoneScopedNC("scenes", tracy::Color::Orange);    this->frame_scenes(); });
 	}
 
 	void GameShell::pump_editor()
@@ -392,12 +424,12 @@ using namespace mud; namespace toy
 		else
 			toy::editor(ui, m_editor, m_game.m_screen);
 
-		if(m_editor.m_run_game || m_editor.m_play_game)
-			time(m_times, Step::World, "world", [&] { this->frame_world(); });
-		if(m_editor.m_play_game)
-			time(m_times, Step::Game, "game", [&] { this->frame_game(); });
+		if(m_editor.m_run_game)
+			time(m_times, Step::World, "world", [&] { ZoneScopedNC("world", tracy::Color::AliceBlue); this->frame_world(); });
+		if(m_editor.m_run_game && m_editor.m_play_game)
+			time(m_times, Step::Game,  "game",  [&] { ZoneScopedNC("game", tracy::Color::Violet); this->frame_game(); });
 
-		time(m_times, Step::Scene, "scenes", [&] { this->frame_scenes(); });
+		time(m_times, Step::Scene, "scenes", [&] { ZoneScopedNC("scenes", tracy::Color::Orange); this->frame_scenes(); });
 
 		m_ui->begin(); // well maybe we should call it end() then
 	}
@@ -414,7 +446,9 @@ using namespace mud; namespace toy
 	}
 
 	void GameShell::remove_scene(GameScene& scene)
-	{}
+	{
+		UNUSED(scene);
+	}
 
 	void GameShell::clear_scenes()
 	{
@@ -429,6 +463,7 @@ using namespace mud; namespace toy
 
 	World& GameShell::load_world(Id id)
 	{
+		UNUSED(id);
 		Ref world;
 		unpack_json_file(world, "");
 		m_game.m_world = &val<World>(world);

@@ -10,7 +10,8 @@
 #include <geom/Shapes.h>
 #include <math/Image256.h>
 
-#include <core/Entity/Entity.h>
+#include <core/World/World.h>
+#include <core/Spatial/Spatial.h>
 
 #include <core/Physic/Scope.h>
 #include <core/Physic/CollisionShape.h>
@@ -46,22 +47,22 @@ using namespace mud; namespace toy
 	{
 		block.reset();
 
-		size_t subdiv = block.subdiv();
-		for(size_t y = 0; y < subdiv; ++y)
-			for(size_t x = 0; x < subdiv; ++x)
+		uint16_t subdiv = block.subdiv();
+		for(uint16_t y = 0; y < subdiv; ++y)
+			for(uint16_t x = 0; x < subdiv; ++x)
 			{
-				size_t height = image.at(x, y);
-				for(size_t z = 0; z <= height; ++z)
+				uint32_t height = image.at(x, y);
+				for(uint32_t z = 0; z <= height; ++z)
 					block.chunk(x, z, y, element);
 			}
 	}
 
 	void paint_block_elements(Block& block, Image256& image, array<Element*> elements)
 	{
-		size_t subdiv = block.subdiv();
-		for(size_t y = 0; y < subdiv; ++y)
-			for(size_t x = 0; x < subdiv; ++x)
-				for(size_t z = 0; z < subdiv; ++z)
+		uint16_t subdiv = block.subdiv();
+		for(uint16_t y = 0; y < subdiv; ++y)
+			for(uint16_t x = 0; x < subdiv; ++x)
+				for(uint16_t z = 0; z < subdiv; ++z)
 				{
 					size_t colour = image.at(x, y);
 					Element* element = block.m_chunks.at(x, z, y);
@@ -71,33 +72,41 @@ using namespace mud; namespace toy
 				}
 	}
 
-	Block::Block(Id id, Entity& parent, const vec3& position, Block* parentblock, size_t index, const vec3& size)
-		: Complex(id, type<Block>(), m_emitter, *this)
-		, m_entity(id, *this, parent, position, ZeroQuat)
-		, m_emitter(m_entity)
+	Entity Block::create(ECS& ecs, HSpatial parent, HWorldPage world_page, const vec3& position, Block* parentblock, size_t index, const vec3& size)
+	{
+		Entity entity = { ecs.CreateEntity<Spatial, Block>(), ecs.m_index };
+		asa<Spatial>(entity) = Spatial(parent, position, ZeroQuat);
+		asa<Block>(entity) = Block(HSpatial(entity), world_page, parentblock, index, size);
+		//, m_emitter(*this, m_spatial, m_movable)
+		return entity;
+	}
+
+	Block::Block(HSpatial spatial, HWorldPage world_page, Block* parentblock, size_t index, const vec3& size)
+		: m_spatial(spatial)
+		, m_world_page(world_page)
 		, m_parentblock(parentblock)
 		, m_index(index)
 		, m_size(size)
 		, m_chunks(BLOCK_SUBDIV)
 		, m_subblocks(2)
-		, m_scope(m_emitter.add_scope(WorldMedium::me, Cube(m_size), CM_SOURCE))
+		//, m_scope(m_emitter.add_scope(WorldMedium::me, Cube(m_size), CM_SOURCE))
 	{}
 
-	size_t Block::depth()
+	uint16_t Block::depth()
 	{
 		return m_parentblock ? m_parentblock->depth() + 1 : 0;
 	}
 
-	vec3 Block::min()
+	vec3 Block::min(Spatial& self)
 	{
 		vec3 half_size = m_size / 2.f;
-		return m_entity.absolute_position() - half_size;
+		return self.absolute_position() - half_size;
 	}
 
-	vec3 Block::max()
+	vec3 Block::max(Spatial& self)
 	{
 		vec3 half_size = m_size / 2.f;
-		return m_entity.absolute_position() + half_size;
+		return self.absolute_position() + half_size;
 	}
 
 	vec3 Block::coordinates()
@@ -105,7 +114,7 @@ using namespace mud; namespace toy
 		return m_parentblock ? m_parentblock->block_coord(*this) : vec3(0, 0, 0);
 	}
 
-	size_t Block::subdiv()
+	uint16_t Block::subdiv()
 	{
 		return BLOCK_SUBDIV;
 	}
@@ -129,7 +138,8 @@ using namespace mud; namespace toy
 	void Block::commit()
 	{
 		m_updated++;
-		this->sector().m_world_page.m_updated++; // = m_entity.m_last_tick;
+		WorldPage& page = m_world_page;
+		page.m_updated++;
 	}
 
 	vec3 Block::local_block_coord(Block& child)
@@ -181,29 +191,31 @@ using namespace mud; namespace toy
 
 	void Block::subdivide()
 	{
+		Spatial& spatial = m_spatial;
+
 		for(size_t index = 0; index < 8; ++index)
 		{
 			vec3 half_size = m_size / 2.f;
 			vec3 half_subdiv_size = half_size / 2.f;
 			vec3 position = this->local_block_coord(index) * half_size - half_size + half_subdiv_size;
 
-			Block& block = m_entity.construct<Block>(position, this, index, m_size / 2.f);
+			HBlock block = construct<Block>(m_spatial, m_world_page, position, this, index, m_size / 2.f);
 
-			m_subblocks.push_back(&block);
+			m_subblocks.push_back(block);
 		}
 
 		m_subdived = true;
 		// "update" trick
-		m_entity.set_position(m_entity.m_position);
+		spatial.set_position(spatial.m_position);
 	}
 
-	void Block::subdivide_to(size_t depth)
+	void Block::subdivide_to(uint16_t depth)
 	{
 		this->subdivide();
 
 		if(depth - 1 > 0)
 		{
-			for(Block* block : m_subblocks)
+			for(HBlock& block : m_subblocks)
 				block->subdivide_to(depth - 1);
 		}
 	}
@@ -228,14 +240,5 @@ using namespace mud; namespace toy
 	Hunk Block::neighbour(Hunk& hunk, Side side)
 	{
 		return this->neighbour(hunk.index, side);
-	}
-
-	Sector& Block::sector()
-	{
-		Entity* parent = m_entity.m_parent;
-		for(size_t depth = 1; !parent->isa<Sector>(); parent = parent->m_parent)
-			++depth;
-
-		return parent->as<Sector>();
 	}
 }

@@ -15,26 +15,45 @@ WaveTileset& generator_tileset(GfxSystem& gfx_system)
 	return tileset;
 }
 
-void generate_crates(TileBlock& block)
+void generate_crates(Tileblock& block)
 {
+	HSpatial origin = block.m_spatial->m_world->origin();
+
 	float crate_radius = 10.f;
 	std::vector<vec3> positions = distribute_poisson(to_xz(block.m_wfc_block.m_aabb.m_extents), crate_radius);
-
 	for(const vec3& position : positions)
 	{
-		block.m_entity.m_world.origin().construct<Crate>(block.m_entity.m_position + position + Y3 * 10.f, vec3(0.75f));
+		construct<Crate>(origin, block.m_spatial->m_position + position + Y3 * 10.f, vec3(0.75f));
 	}
 }
 
-void generate_npcs(TileBlock& block)
+void generate_npcs(Tileblock& block)
 {
+	HSpatial origin = block.m_spatial->m_world->origin();
+
 	float npc_radius = 10.f;
 	std::vector<vec3> positions = distribute_poisson(to_xz(block.m_wfc_block.m_aabb.m_extents), npc_radius);
-
 	for(const vec3& position : positions)
 	{
-		block.m_entity.m_world.origin().construct<Human>(block.m_entity.m_position + position + Y3 * 10.f, Faction::Enemy);
+		construct<Human>(origin, block.m_spatial->m_position + position + Y3 * 10.f, Faction::Enemy);
 	}
+}
+
+void generate_lamps(Tileblock& block)
+{
+	HSpatial origin = block.m_spatial->m_world->origin();
+
+	for(size_t x = 0; x < block.m_wfc_block.m_tiles.m_x; ++x)
+		for(size_t y = 0; y < block.m_wfc_block.m_tiles.m_y; ++y)
+			for(size_t z = 0; z < block.m_wfc_block.m_tiles.m_z; ++z)
+			{
+				Tile& tile = block.m_wfc_block.m_tileset->m_tiles_flip[block.m_wfc_block.m_tiles.at(x, y, z)];
+				if(tile.m_name == "cube_covered_side")
+					if(random_integer(0, 9) > 8)
+					{
+						construct<Lamp>(origin, block.m_wfc_block.to_position(uvec3(x, y, z)) + Y3 * 1.5f * block.m_wfc_block.m_scale);
+					}
+			}
 }
 
 void platform_generator(GameShell& shell, VisualScript& script)
@@ -59,8 +78,8 @@ void platform_generator(GameShell& shell, VisualScript& script)
 	//Valve& wave = empty_wave;
 
 	Valve& scale = script.value(vec3(4.f));
-	Valve& empty_world = script.create<TileBlock>({ &script.value(0U), &script.input("origin"), &script.value(Zero3), &gridSize, &scale, tileset });
-	//Valve& world = script.method(&TileBlock::update, { &empty_world, &wave });
+	Valve& empty_world = script.create<Tileblock>({ &script.value(0U), &script.input("origin"), &script.value(Zero3), &gridSize, &scale, tileset });
+	//Valve& world = script.method(&Tileblock::update, { &empty_world, &wave });
 
 #if 0
 	// Create crates

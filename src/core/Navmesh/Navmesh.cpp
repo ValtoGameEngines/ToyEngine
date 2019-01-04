@@ -3,6 +3,7 @@
 //  See the attached LICENSE.txt file or https://www.gnu.org/licenses/gpl-3.0.en.html.
 //  This notice and the license may not be removed or altered from any source distribution.
 
+#include <core/Types.h>
 #include <core/Navmesh/Navmesh.h>
 
 #include <infra/StringConvert.h>
@@ -13,7 +14,7 @@
 #include <core/World/World.h>
 #include <core/World/Section.h>
 #include <core/WorldPage/WorldPage.h>
-#include <core/Entity/Entity.h>
+#include <core/Spatial/Spatial.h>
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -47,7 +48,7 @@ using namespace mud; namespace toy
 		return { num_verts, num_verts * 2 };
 	}
 
-	void draw_shape_lines(const ProcShape& shape, const NavmeshShape& navmesh_shape, MeshData& data)
+	void draw_shape_lines(const ProcShape& shape, const NavmeshShape& navmesh_shape, MeshAdapter& writer)
 	{
 		UNUSED(shape);
 		Navmesh& navmesh = navmesh_shape.m_navmesh;
@@ -75,8 +76,8 @@ using namespace mud; namespace toy
 					size_t vertex_offset = tile->polys[p].verts[v] * 3;
 					vec3 vertex = { tile->verts[vertex_offset], tile->verts[vertex_offset + 1], tile->verts[vertex_offset + 2] };
 
-					data.position(vertex)
-						.colour(colour);
+					writer.position(vertex)
+						  .colour(colour);
 
 				}
 
@@ -84,7 +85,7 @@ using namespace mud; namespace toy
 				{
 					uint16_t i0 = index + i;
 					uint16_t i1 = i + 1 < tile->polys[p].vertCount ? index + i + 1 : index;
-					data.line(i0, i1);
+					writer.line(i0, i1);
 				}
 
 				index += tile->polys[p].vertCount;
@@ -99,7 +100,7 @@ using namespace mud; namespace toy
 		return { num_verts, num_verts * 3 };
 	}
 
-	void draw_shape_triangles(const ProcShape& shape, const NavmeshShape& navmesh_shape, MeshData& data)
+	void draw_shape_triangles(const ProcShape& shape, const NavmeshShape& navmesh_shape, MeshAdapter& writer)
 	{
 		UNUSED(shape);
 		Navmesh& navmesh = navmesh_shape.m_navmesh;
@@ -132,14 +133,14 @@ using namespace mud; namespace toy
 
 					center += vertex;
 
-					data.position(vertex)
-						.colour(colour);
+					writer.position(vertex)
+						  .colour(colour);
 				}
 
 				center /= tile->polys[p].vertCount;
 				
-				data.position(center)
-					.colour(colour);
+				writer.position(center)
+					  .colour(colour);
 
 				uint16_t center_index = index + tile->polys[p].vertCount;
 
@@ -147,7 +148,7 @@ using namespace mud; namespace toy
 				{
 					uint16_t i0 = index + i;
 					uint16_t i1 = i + 1 < tile->polys[p].vertCount ? index + i + 1 : index;
-					data.tri(i0, i1, center_index);
+					writer.tri(i0, i1, center_index);
 				}
 
 				index += tile->polys[p].vertCount + 1;
@@ -163,26 +164,23 @@ using namespace mud; namespace toy
 		}
 	};
 
-	Navblock::Navblock(Navmesh& navmesh, Entity& entity, WorldPage& world_page)
-		: m_entity(entity)
+	Navblock::Navblock(HSpatial spatial, HWorldPage world_page, Navmesh& navmesh)
+		: m_spatial(spatial)
 		, m_world_page(world_page)
-		, m_navmesh(navmesh)
-	{
-		m_entity.m_world.add_task(this, short(Task::Physics));
-	}
+		, m_navmesh(&navmesh)
+	{}
 
 	Navblock::~Navblock()
-	{
-		m_entity.m_world.remove_task(this, short(Task::Physics));
-	}
+	{}
 
-	void Navblock::next_frame(size_t tick, size_t delta)
+	void Navblock::next_frame(const Spatial& spatial, const WorldPage& world_page, size_t tick, size_t delta)
 	{
 		UNUSED(tick); UNUSED(delta);
-		if(m_auto_update && m_updated < m_world_page.m_last_rebuilt)
+		
+		if(m_auto_update && m_updated < world_page.m_last_rebuilt)
 		{
-			m_navmesh.update_block(*this);
-			m_updated = m_entity.m_last_tick;
+			m_navmesh->update_block(*this);
+			m_updated = spatial.m_last_tick;
 		}
 	}
 
@@ -193,20 +191,19 @@ using namespace mud; namespace toy
 		static NavmeshShapeDeclaration decl;
 
 		m_navgeom = make_unique<NavGeom>(m_geometry, m_world.m_name.c_str());
-
-		m_world.add_task(this, short(Task::Physics));
 	}
 
 	Navmesh::~Navmesh()
-	{
-		m_world.remove_task(this, short(Task::Physics));
-	}
+	{}
 
 	void Navmesh::update_block(Navblock& navblock)
 	{
 		// @todo we are just appending here, should clear and update
 
-		for(Geometry& geom : navblock.m_world_page.m_chunks)
+		const Spatial& spatial = navblock.m_spatial;
+		const WorldPage& world_page = navblock.m_world_page;
+
+		for(const Geometry& geom : world_page.m_chunks)
 		{
 			if(geom.m_vertices.empty())
 				return;
@@ -215,10 +212,10 @@ using namespace mud; namespace toy
 
 			ShapeIndex offset = ShapeIndex(m_geometry.m_vertices.size());
 
-			for(Vertex& vertex : geom.m_vertices)
-				m_geometry.m_vertices.emplace_back(Vertex{ navblock.m_entity.m_position + vertex.m_position });
+			for(const Vertex& vertex : geom.m_vertices)
+				m_geometry.m_vertices.emplace_back(Vertex{ spatial.m_position + vertex.m_position });
 
-			for(Tri& tri : geom.m_triangles)
+			for(const Tri& tri : geom.m_triangles)
 				m_geometry.m_triangles.push_back(Tri{ ShapeIndex(offset + tri.a), ShapeIndex(offset + tri.b), ShapeIndex(offset + tri.c) });
 
 			m_dirty = true;

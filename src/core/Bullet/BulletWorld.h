@@ -5,9 +5,10 @@
 
 #pragma once
 
-#include <obj/Unique.h>
+#include <type/Unique.h>
 #include <core/Forward.h>
 #include <core/Physic/PhysicWorld.h>
+#include <core/Physic/Collider.h>
 
 #ifndef MUD_CPP_20
 #include <unordered_map>
@@ -35,66 +36,64 @@ using namespace mud; namespace toy
 	static void collisionEnded(btPersistentManifold* manifold);
 #endif
 
-	class refl_ TOY_CORE_EXPORT SubBulletWorld : public PhysicMedium
+	class refl_ TOY_CORE_EXPORT BulletMedium : public PhysicMedium
 	{
 	public:
-        SubBulletWorld(World& world, Medium& medium);
-        ~SubBulletWorld();
+        BulletMedium(World& world, BulletWorld& bullet_world, Medium& medium);
+        ~BulletMedium();
 
-		void update_contacts();
+		virtual void update_contacts() override final;
 
-        void next_frame(size_t tick, size_t delta);
+        virtual void next_frame(size_t tick, size_t delta) override final;
 
-		virtual object_ptr<ColliderImpl> make_collider(Collider& collider);
-		virtual object_ptr<ColliderImpl> make_solid(Solid& solid);
+		virtual object_ptr<ColliderImpl> make_collider(HCollider collider) override final;
+		virtual object_ptr<SolidImpl> make_solid(HSolid solid) override final;
 
-		void add_solid(Solid& solid);
-		void remove_solid(Solid& solid);
+		virtual void add_solid(HCollider collider, HSolid solid) override final;
+		virtual void remove_solid(HCollider collider, HSolid solid) override final;
 
-		void add_collider(Collider& collider);
-		void remove_collider(Collider& collider);
+		virtual void add_collider(HCollider collider) override final;
+		virtual void remove_collider(HCollider collider) override final;
 
-		void remove_contacts(Collider& collider);
+		virtual void project(HCollider collider, const vec3& position, const quat& rotation, std::vector<Collision>& collisions, short int mask) override final;
+		virtual void raycast(HCollider collider, const vec3& start, const vec3& end, std::vector<Collision>& collisions, short int mask) override final;
+		virtual Collision raycast(HCollider collider, const vec3& start, const vec3& end, short int mask) override final;
+
+		void remove_contacts(uint32_t collider);
 
     public:
+		BulletWorld& m_bullet_world;
+
 		size_t m_last_tick;
-		unique_ptr<btCollisionConfiguration> m_collisionConfiguration;
-        unique_ptr<btCollisionDispatcher> m_collisionDispatcher;
-        unique_ptr<btBroadphaseInterface> m_broadphaseInterface;
+        unique_ptr<btCollisionDispatcher> m_collision_dispatcher;
+        unique_ptr<btBroadphaseInterface> m_broadphase_interface;
 
-		unique_ptr<btCollisionWorld> m_bullet_world;
-        unique_ptr<btConstraintSolver> m_constraintSolver;
+		unique_ptr<btCollisionWorld> m_collision_world;
+        unique_ptr<btConstraintSolver> m_constraint_solver;
 
-		btDynamicsWorld* m_dynamicsWorld = nullptr;
-
-		std::vector<Solid*> m_solids;
+		btDynamicsWorld* m_dynamics_world = nullptr;
 
 #ifndef TRIGGER_COLLISIONS
-		struct pairhash
-		{
-			template <class T, class U>
-			size_t operator()(const T& first, const U& second) const { return std::hash<T>()(first) ^ std::hash<U>()(second); }
-		};
-
-		pairhash m_hash;
+		uint64_t hash(uint32_t a, uint32_t b) { return uint64_t(a) | (uint64_t(b) << 32); }
+		uint64_t pair_hash(uint32_t a, uint32_t b) { return a < b ? hash(a, b) : hash(b, a); }
 
 		struct Contact
 		{
 			Contact() : m_tick(0) {}
 
-			Collider* m_col0;
-			Collider* m_col1;
+			uint32_t m_col0;
+			uint32_t m_col1;
 			size_t m_tick;
 			size_t m_index;
 		};
 
-		std::unordered_map<size_t, Contact> m_hashContacts;
+		std::unordered_map<uint64_t, Contact> m_hash_contacts;
 		std::vector<Contact*> m_contacts;
 
 		void remove_contact(Contact& contact, size_t index);
 
-		void remove_contact(Collider& col0, Collider& col1);
-		Contact& findContact(Collider& col0, Collider& col1);
+		void remove_contact(uint32_t col0, uint32_t col1);
+		Contact& find_contact(uint32_t col0, uint32_t col1);
 #endif
 	};
 

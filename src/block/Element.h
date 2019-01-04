@@ -5,12 +5,12 @@
 
 #pragma once
 
-#include <proto/Proto.h>
+#include <ecs/Proto.h>
 #include <infra/Global.h>
 #include <math/Colour.h>
 #include <math/Grid.h>
 #include <math/Math.h>
-#include <core/Entity/Entity.h>
+#include <core/Spatial/Spatial.h>
 #include <core/Physic/Scope.h>
 #include <block/Forward.h>
 
@@ -41,19 +41,18 @@ using namespace mud; namespace toy
 		attr_ Colour m_colour;
 	};
 
-	class refl_ TOY_BLOCK_EXPORT Heap : public Complex
+	class refl_ TOY_BLOCK_EXPORT Heap
 	{
 	public:
-		constr_ Heap(Id id, Entity& parent, const vec3& position, Element& element, float radius);
+		constr_ Heap() {}
+		constr_ Heap(HSpatial spatial, Element& element, float radius);
 
-		comp_ attr_ Entity m_entity;
-		attr_ link_  Element& m_element;
+		static Entity create(ECS& ecs, HSpatial parent, const vec3& position, Element& element, float radius);
+
+		comp_ HSpatial m_spatial;
+
+		attr_ link_ Element* m_element;
 		attr_ float m_radius;
-
-		//attr_ Array<Chunk>& chunks() { return m_chunks; }
-
-	protected:
-		//Array<Chunk> m_chunks;
 	};
 
 	class TOY_BLOCK_EXPORT ChunkFilter

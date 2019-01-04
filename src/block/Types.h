@@ -2,15 +2,15 @@
 
 #include <block/Forward.h>
 
-#if !defined MUD_MODULES || defined MUD_OBJ_LIB
-#include <obj/Type.h>
-#include <obj/Vector.h>
+#if !defined MUD_MODULES || defined MUD_TYPE_LIB
+#include <type/Type.h>
+#include <type/Vector.h>
 #endif
 
 #ifndef MUD_MODULES
-#include <obj/Types.h>
+#include <type/Types.h>
 #include <math/Types.h>
-#include <procgen-gfx/Types.h>
+#include <wfc-gfx/Types.h>
 #include <core/Types.h>
 #include <visu/Types.h>
 #include <edit/Types.h>
@@ -34,7 +34,7 @@ namespace mud
     export_ template <> TOY_BLOCK_EXPORT Type& type<toy::Chunk>();
     export_ template <> TOY_BLOCK_EXPORT Type& type<toy::Heap>();
     export_ template <> TOY_BLOCK_EXPORT Type& type<toy::Sector>();
-    export_ template <> TOY_BLOCK_EXPORT Type& type<toy::TileBlock>();
+    export_ template <> TOY_BLOCK_EXPORT Type& type<toy::Tileblock>();
     export_ template <> TOY_BLOCK_EXPORT Type& type<toy::Earth>();
     
 	export_ template struct TOY_BLOCK_EXPORT Typed<std::vector<toy::Element*>>;
@@ -43,6 +43,6 @@ namespace mud
 	export_ template struct TOY_BLOCK_EXPORT Typed<std::vector<toy::Chunk*>>;
 	export_ template struct TOY_BLOCK_EXPORT Typed<std::vector<toy::Heap*>>;
 	export_ template struct TOY_BLOCK_EXPORT Typed<std::vector<toy::Sector*>>;
-	export_ template struct TOY_BLOCK_EXPORT Typed<std::vector<toy::TileBlock*>>;
+	export_ template struct TOY_BLOCK_EXPORT Typed<std::vector<toy::Tileblock*>>;
 	export_ template struct TOY_BLOCK_EXPORT Typed<std::vector<toy::Earth*>>;
 }

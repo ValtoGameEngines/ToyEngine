@@ -22,36 +22,27 @@ float spot_attenuation(vec3 ray, vec3 light, float range, float attenuation_fact
 	return attenuation * (1.f - pow(max(spot_rim, 0.001f), spot_attenuation));
 }
 
-void populate_block(TileBlock& block)
+void populate_block(Tileblock& block)
 {
 	generate_crates(block);
 	generate_npcs(block);
-
-	for(size_t x = 0; x < block.m_wfc_block.m_tiles.m_x; ++x)
-		for(size_t y = 0; y < block.m_wfc_block.m_tiles.m_y; ++y)
-			for(size_t z = 0; z < block.m_wfc_block.m_tiles.m_z; ++z)
-			{
-				Tile& tile = block.m_wfc_block.m_tileset.m_tiles_flip[block.m_wfc_block.m_tiles.at(x, y, z)];
-				if(tile.m_name == "cube_covered_side")
-				{
-					if(random_integer(0, 9) > 8)
-						block.m_entity.m_world.origin().construct<Lamp>(block.m_wfc_block.to_position(uvec3(x, y, z)) + Y3 * 1.5f * block.m_wfc_block.m_scale);
-				}
-			}
+	generate_lamps(block);
 }
 
-TileWorld::TileWorld(const std::string& name)
+TileWorld::TileWorld(const std::string& name, JobSystem& job_system)
 	: Complex(0, type<TileWorld>(), m_bullet_world, m_navmesh, *this)
-	, m_world(0, *this, name)
+	, m_world(0, *this, name, job_system)
 	, m_bullet_world(m_world)
 	, m_navmesh(m_world)
 	, m_block_size(vec3(m_block_subdiv) * m_tile_scale)
-{}
+{
+	m_world.m_pump.add_step({ Task::PhysicsWorld,
+		[&](size_t tick, size_t delta) { m_bullet_world.next_frame(tick, delta); }
+	});
+}
 
 TileWorld::~TileWorld()
-{
-	m_world.destroy();
-}
+{}
 
 void TileWorld::next_frame()
 {
@@ -67,45 +58,47 @@ void TileWorld::generate_block(GfxSystem& gfx_system, const ivec2& coord)
 {
 	static WaveTileset& tileset = generator_tileset(gfx_system);
 
-	TileBlock& block = ::generate_block(gfx_system, tileset, m_world.origin(), coord, m_block_subdiv, m_tile_scale);
+	HTileblock block = ::generate_block(gfx_system, tileset, m_world.origin(), coord, m_block_subdiv, m_tile_scale);
+	WfcBlock& wfc = block->m_wfc_block;
+	WorldPage& world_page = block->m_world_page;
 
-	block.m_world_page.m_geometry_filter = { "platform/cube_covered", "platform/cube_covered_side", "platform/cube_covered_angle", "platform/corner_covered", "platform/empty_covered" };
+	world_page.m_geometry_filter = { "platform/cube_covered", "platform/cube_covered_side", "platform/cube_covered_angle", "platform/corner_covered", "platform/empty_covered" };
 
-	m_blocks[coord] = &block;
+	m_blocks[coord] = block;
 
 	// @todo why u clang no accept this ?
 	// for(size_t x : { 0U, block.m_wfc_block.m_tiles.m_x - 1 })
-	std::vector<size_t> xs = { 0U, block.m_wfc_block.m_tiles.m_x - 1 };
+	std::vector<size_t> xs = { 0U, wfc.m_tiles.m_x - 1 };
 	for(size_t x : xs)
-	for(size_t y = 0; y < block.m_wfc_block.m_tiles.m_y; ++y)
-	for(size_t z = 0; z < block.m_wfc_block.m_tiles.m_z; ++z)
+	for(size_t y = 0; y < wfc.m_tiles.m_y; ++y)
+	for(size_t z = 0; z < wfc.m_tiles.m_z; ++z)
 	{
 		uint16_t empty = 0;
-		block.m_wfc_block.m_wave.set_tile({ uint(x), uint(y), uint(z) }, empty);
+		wfc.m_wave.set_tile({ uint(x), uint(y), uint(z) }, empty);
 	}
 
-	if(m_center_block == nullptr)
+	if(!m_center_block)
 	{
-		m_center_block = &block;
-		block.m_wfc_block.m_auto_solve = true;
+		m_center_block = block;
+		wfc.m_auto_solve = true;
 		return;
 	}
 
-	bool positive = m_blocks[coord + ivec2(0, 1)] == nullptr;
-	TileBlock& neighbour = positive ? *m_blocks[coord + ivec2(0, -1)] : *m_blocks[coord + ivec2(0, 1)];
+	bool positive = (bool)m_blocks[coord + ivec2(0, -1)];
+	Tileblock& neighbour = positive ? *m_blocks[coord + ivec2(0, -1)] : *m_blocks[coord + ivec2(0, 1)];
 
-	for(size_t x = 0; x < block.m_wfc_block.m_tiles.m_x; ++x)
-	for(size_t y = 0; y < block.m_wfc_block.m_tiles.m_y; ++y)
+	for(size_t x = 0; x < wfc.m_tiles.m_x; ++x)
+	for(size_t y = 0; y < wfc.m_tiles.m_y; ++y)
 	{
-		size_t z = positive ? 0U : block.m_wfc_block.m_tiles.m_z - 1;
-		size_t adjacent_z = positive ? block.m_wfc_block.m_tiles.m_z - 1 : 0U;
+		size_t z = positive ? 0U : wfc.m_tiles.m_z - 1;
+		size_t adjacent_z = positive ? wfc.m_tiles.m_z - 1 : 0U;
 		uint16_t tile = neighbour.m_wfc_block.m_tiles.at(x, y, adjacent_z);
-		block.m_wfc_block.m_wave.set_tile({ uint(x), uint(y), uint(z) }, tile);
+		wfc.m_wave.set_tile({ uint(x), uint(y), uint(z) }, tile);
 	}
 
-	block.m_wfc_block.m_wave.propagate();
+	wfc.m_wave.propagate();
 
-	block.m_wfc_block.m_auto_solve = true;
+	wfc.m_auto_solve = true;
 }
 
 void TileWorld::open_blocks(GfxSystem& gfx_system, const vec3& position, const ivec2& radius)
@@ -121,17 +114,20 @@ void TileWorld::open_blocks(GfxSystem& gfx_system, const vec3& position, const i
 	}
 }
 
+Entity Bullet::create(ECS& ecs, HSpatial parent, const vec3& source, const quat& rotation, float velocity)
+{
+	Entity entity = { ecs.CreateEntity<Spatial, Bullet>(), ecs.m_index };
+	ecs.SetComponent(entity, Spatial(parent, source, rotation));
+	ecs.SetComponent(entity, Bullet(HSpatial(entity), source, rotation, velocity));
+	return entity;
+}
 
-Bullet::Bullet(Entity& parent, const vec3& source, const quat& rotation, float velocity)
-	: Complex(0, type<Bullet>(), *this)
-	, m_entity(0, *this, parent, source, rotation)
+Bullet::Bullet(HSpatial spatial, const vec3& source, const quat& rotation, float velocity)
+	: m_spatial(spatial)
 	, m_source(source)
 	, m_velocity(rotate(rotation, -Z3) * velocity)
-	//, m_solid(m_entity, *this, Sphere(0.1f), SolidMedium::me, CollisionGroup(energy), false, 1.f)
-	, m_collider(m_entity, Sphere(0.1f), SolidMedium::me, CM_SOLID)
-{}
-
-Bullet::~Bullet()
+	//, m_solid(Solid::create(m_spatial, *this, Sphere(0.1f), SolidMedium::me, CollisionGroup(energy), false, 1.f))
+	, m_collider(Collider::create(m_spatial, HMovable(), Sphere(0.1f), SolidMedium::me, CM_SOLID))
 {}
 
 void Bullet::update()
@@ -139,35 +135,41 @@ void Bullet::update()
 	if(m_impacted)
 		return;
 
-	Collision collision = m_collider.m_impl->raycast(m_entity.m_position + m_velocity, CM_SOLID | CM_GROUND);
-	Entity* hit = collision.m_second ? &collision.m_second->m_entity : nullptr;
+	Spatial& spatial = m_spatial;
+	Collider& collider = *m_collider;
 
-	if(hit != nullptr && hit->isa<Human>())
+	Collision collision = collider->raycast(spatial.m_position + m_velocity, CM_SOLID | CM_GROUND);
+	HSpatial hit = collision.m_second ? collision.m_second->m_spatial : HSpatial();
+
+	if(hit)
 	{
-		Human& shot = hit->as<Human>();
-		if(shot.m_shield && shot.m_energy > 0.f)
+		if(Human* shot = try_asa<Human>(hit))
 		{
-			auto reflect = [](const vec3& I, const vec3& N) { return I - 2.f * dot(N, I) * N; };
-			vec3 N = normalize(collision.m_hit_point - shot.m_entity.m_position + Y3);
-			m_velocity = reflect(m_velocity, N);
-			m_entity.m_rotation = look_at(Zero3, m_velocity);
+			Spatial& shot_spatial = shot->m_spatial;
+			if(shot->m_shield && shot->m_energy > 0.f)
+			{
+				auto reflect = [](const vec3& I, const vec3& N) { return I - 2.f * dot(N, I) * N; };
+				vec3 N = normalize(collision.m_hit_point - shot_spatial.m_position + Y3);
+				m_velocity = reflect(m_velocity, N);
+				spatial.m_rotation = look_at(Zero3, m_velocity);
 
-			shot.m_energy -= 0.5f;
-			shot.m_discharge += 0.5f;
-		}
-		else
-		{
-			m_impacted = true;
-			m_impact = collision.m_hit_point;
+				shot->m_energy -= 0.5f;
+				shot->m_discharge += 0.5f;
+			}
+			else
+			{
+				m_impacted = true;
+				m_impact = collision.m_hit_point;
 
-			shot.damage(1.f);
+				shot->damage(1.f);
+			}
 		}
 	}
 
-	if(distance(m_entity.m_position, m_source) > 100.f)
+	if(distance(spatial.m_position, m_source) > 100.f)
 		m_destroy = true;
 
-	m_entity.set_position(m_entity.m_position + m_velocity);
+	spatial.set_position(spatial.m_position + m_velocity);
 	//m_collider.update_transform();
 }
 
@@ -176,48 +178,52 @@ float Human::headlight_angle = 40.f;
 //float Human::headlight_angle = 30.f;
 //float Human::headlight_angle = 20.f;
 
-Human::Human(Id id, Entity& parent, const vec3& position, Faction faction)
-	: Complex(id, type<Human>(), m_movable, m_emitter, m_receptor, m_script, *this)
-	, m_entity(id, *this, parent, position, ZeroQuat)
-	, m_movable(m_entity)
-	, m_emitter(m_entity)
-	, m_receptor(m_entity)
-	, m_script(m_entity)
+Entity Human::create(ECS& ecs, HSpatial parent, const vec3& position, Faction faction)
+{
+	Entity entity = { ecs.CreateEntity<Spatial, Movable, Emitter, Receptor, EntityScript, Human>(), ecs.m_index };
+	ecs.SetComponent(entity, Spatial(parent, position, ZeroQuat));
+	ecs.SetComponent(entity, Movable(HSpatial(entity)));
+	ecs.SetComponent(entity, Emitter(HSpatial(entity)));
+	ecs.SetComponent(entity, Receptor(HSpatial(entity)));
+	ecs.SetComponent(entity, EntityScript(entity));
+	ecs.SetComponent(entity, Human(entity, entity, entity, entity, entity, faction));
+	return entity;
+}
+
+Human::Human(HSpatial spatial, HMovable movable, HEmitter emitter, HReceptor receptor, HEntityScript script, Faction faction)
+	: m_spatial(spatial)
+	, m_movable(movable)
+	, m_emitter(emitter)
+	, m_receptor(receptor)
+	, m_script(script)
 	, m_faction(faction)
 	, m_walk(false)
-	, m_solid(m_entity, CollisionShape(Capsule(0.35f, 1.1f), Y3 * 0.9f), false, 1.f)
+	, m_solid(Solid::create(m_spatial, m_movable, CollisionShape(Capsule(0.35f, 1.1f), Y3 * 0.9f), false, 1.f))
 {
-	m_entity.m_world.add_task(this, short(Task::State)); // TASK_GAMEOBJECT
-
-	m_emitter.add_sphere(VisualMedium::me, 0.1f);
-	m_receptor.add_sphere(VisualMedium::me, 30.f);
+	emitter->add_sphere(VisualMedium::me, 0.1f);
+	receptor->add_sphere(VisualMedium::me, 30.f);
 }
 
-Human::~Human()
-{
-	m_entity.m_world.remove_task(this, short(Task::State));
-}
-
-void Human::next_frame(size_t tick, size_t delta)
+void Human::next_frame(Spatial& spatial, Movable& movable, Receptor& receptor, size_t tick, size_t delta)
 {
 	UNUSED(tick);
-	m_solid->set_angular_factor(Zero3);
+	(*m_solid)->set_angular_factor(Zero3);
 
 	m_visor = this->aim();
 
 	for(auto& bullet : reverse_adapt(m_bullets))
 	{
 		bullet->update();
-		if(bullet->m_destroy)
-			vector_remove_pt(m_bullets, *bullet);
+		//if(bullet->m_destroy)
+		//	vector_remove_pt(m_bullets, *bullet);
 	}
 
 	m_energy = min(1.f, m_energy + delta * 0.01f);
 	m_discharge = max(0.f, m_discharge - delta * 0.05f);
 	
 	// @kludge in case that weird bug where we go through the scene geometry happens... put us back up
-	if(m_entity.m_position.y < -10.f)
-		m_entity.m_position.y = 10.f;
+	if(spatial.m_position.y < -10.f)
+		spatial.m_position.y = 10.f;
 
 	bool ia = m_faction == Faction::Enemy;
 	//ia = false;
@@ -232,27 +238,27 @@ void Human::next_frame(size_t tick, size_t delta)
 		if(m_target)
 		{
 			Aim aim = this->aim();
-			bool disable = distance(m_target->m_entity.m_position, m_entity.m_position) > 50.f;
-			disable |= aim.hit && aim.hit != &m_target->m_entity;
+			bool disable = distance(((Spatial&)m_target->m_spatial).m_position, spatial.m_position) > 50.f;
+			disable |= aim.hit && aim.hit != &(*m_target->m_spatial);
 			disable |= m_target->m_life <= 0.f;
 			if(disable)
-				m_target = nullptr;
+				m_target = {};
 		}
 
-		if(m_target == nullptr)
+		if(!m_target)
 		{
-			ReceptorScope* vision = m_receptor.scope(VisualMedium::me);
-			for(Entity* entity : vision->m_scope.store())
-				if(Human* human = entity->try_as<Human>())
+			ReceptorScope* vision = receptor.scope(VisualMedium::me);
+			for(HSpatial seen : vision->m_scope)
+				if(Human* human = try_asa<Human>(seen))
 				{
 					if(human->m_faction != m_faction)
 					{
-						vec3 direction = entity->m_position - m_entity.m_position;
-						float light = spot_attenuation(-direction, m_entity.front(), 30.f, 0.5f, 0.9f, cos(to_radians(headlight_angle)));
+						vec3 direction = seen->m_position - spatial.m_position;
+						float light = spot_attenuation(-direction, spatial.front(), 30.f, 0.5f, 0.9f, cos(to_radians(headlight_angle)));
 						float visibility = light * (human->m_headlight ? 4.f : 0.5f);
 						if(human->m_life > 0.f && (visibility > 0.2f || length(direction) < 4.f))
 						{
-							m_target = human;
+							m_target = seen;
 							m_cooldown = 2.f;
 						}
 					}
@@ -265,7 +271,7 @@ void Human::next_frame(size_t tick, size_t delta)
 			this->stop();
 
 			auto x0z = [](const vec3& v) -> vec3 { return{ v.x, 0.f, v.z }; };
-			m_entity.set_rotation(look_at(x0z(m_entity.m_position), x0z(m_target->m_entity.m_position)));
+			spatial.set_rotation(look_at(x0z(spatial.m_position), x0z(m_target->m_spatial->m_position)));
 
 			if(m_cooldown == 0.f)
 			{
@@ -275,26 +281,26 @@ void Human::next_frame(size_t tick, size_t delta)
 		}
 		else
 		{
-			auto is_walkable = [&](const vec3& pos) { return m_entity.m_world.as<PhysicWorld>().ground_point(to_ray(pos, -Y3)) != Zero3; };
+			auto is_walkable = [&](const vec3& pos) { return as<PhysicWorld>(spatial.m_world->m_complex).ground_point(to_ray(pos, -Y3)) != Zero3; };
 
 			if(m_dest == Zero3)
 			{
 				float amplitude = 10.f;
-				m_dest = m_entity.m_position + vec3(random_scalar(-amplitude, amplitude), 0.f, random_scalar(-amplitude, amplitude));
+				m_dest = spatial.m_position + vec3(random_scalar(-amplitude, amplitude), 0.f, random_scalar(-amplitude, amplitude));
 				if(!is_walkable(m_dest))
 					m_dest = Zero3;
 			}
 
 			if(m_dest != Zero3)
 			{
-				if(steer_2d(m_movable, m_dest, 3.f, float(delta) * float(c_tick_interval), 1.f))
+				if(steer_2d(spatial, movable, m_dest, 3.f, float(delta) * float(c_tick_interval), 1.f))
 				{
 					this->stop();
 				}
 				else
 				{
 					m_state = { m_walk ? "Walk" : "RunAim", true };
-					m_movable.set_linear_velocity(m_movable.m_linear_velocity - Y3 * 1.f);
+					movable.set_linear_velocity(movable.m_linear_velocity - Y3 * 1.f);
 				}
 			}
 		}
@@ -303,24 +309,28 @@ void Human::next_frame(size_t tick, size_t delta)
 
 quat Human::sight(bool aiming)
 {
-	return aiming ? rotate(m_entity.m_rotation, X3, m_angles.y) : m_entity.m_rotation;
+	Spatial& spatial = m_spatial;
+	return aiming ? rotate(spatial.m_rotation, X3, m_angles.y) : spatial.m_rotation;
 }
 
 void Human::stop()
 {
+	Movable& movable = m_movable;
 	m_state = { "IdleAim", true };
-	m_movable.m_linear_velocity = Zero3;
+	movable.m_linear_velocity = Zero3;
 	m_dest = Zero3;
 }
 
 Aim Human::aim()
 {
+	Spatial& spatial = m_spatial;
 	quat rotation = this->sight(m_aiming);
-	vec3 muzzle = m_entity.m_position + rotate(m_entity.m_rotation, Human::muzzle_offset);
+	vec3 muzzle = spatial.m_position + rotate(spatial.m_rotation, Human::muzzle_offset);
 	vec3 end = muzzle + rotate(rotation, -Z3) * 1000.f;
 
-	Collision hit = m_entity.m_world.as<PhysicWorld>().raycast({ muzzle, end }, CM_GROUND | CM_SOLID);
-	return { rotation, muzzle, hit.m_second ? hit.m_hit_point : end, hit.m_second ? &hit.m_second->m_entity : nullptr };
+	Collision hit = as<PhysicWorld>(spatial.m_world->m_complex).raycast({ muzzle, end }, CM_GROUND | CM_SOLID);
+	Spatial* target = nullptr;//hit.m_second ? &((Spatial&)hit.m_second->m_spatial) : nullptr;
+	return { rotation, muzzle, hit.m_second ? hit.m_hit_point : end, target };
 }
 
 void Human::shoot()
@@ -328,32 +338,49 @@ void Human::shoot()
 	Aim aim = this->aim();
 	auto fuzz = [](const quat& rotation, const vec3& axis) { return rotate(rotation, axis, random_scalar(-0.05f, 0.05f)); };
 	quat rotation = fuzz(fuzz(aim.rotation, X3), Y3);
-	m_bullets.emplace_back(make_object<Bullet>(m_entity, aim.start, rotation, 2.f));
-	//m_solid->impulse(rotate(m_entity.m_rotation, Z3 * 4.f), Zero3);
+	m_bullets.emplace_back(construct_owned<Bullet>(m_spatial, aim.start, rotation, 2.f));
+	//m_solid->impulse(rotate(m_spatial.m_rotation, Z3 * 4.f), Zero3);
 }
 
 void Human::damage(float amount)
 {
+	Movable& movable = m_movable;
 	m_life -= amount;
 	if(m_life <= 0.f)
 	{
 		m_headlight = false;
-		m_movable.m_linear_velocity = Zero3;
+		movable.m_linear_velocity = Zero3;
 	}
 }
 
-Lamp::Lamp(Id id, Entity& parent, const vec3& position)
-	: Complex(id, type<Lamp>(), m_movable, *this)
-	, m_entity(id, *this, parent, position, ZeroQuat)
-	, m_movable(m_entity)
+Entity Lamp::create(ECS& ecs, HSpatial parent, const vec3& position)
+{
+	Entity entity = { ecs.CreateEntity<Spatial, Movable, Lamp>(), ecs.m_index };
+	ecs.SetComponent(entity, Spatial(parent, position, ZeroQuat));
+	ecs.SetComponent(entity, Movable(HSpatial(entity)));
+	ecs.SetComponent(entity, Lamp(HSpatial(entity), HMovable(entity)));
+	return entity;
+}
+
+Lamp::Lamp(HSpatial spatial, HMovable movable)
+	: m_spatial(spatial)
+	, m_movable(movable)
 {}
 
-Crate::Crate(Id id, Entity& parent, const vec3& position, const vec3& extents)
-	: Complex(id, type<Crate>(), m_movable, *this)
-	, m_entity(id, *this, parent, position, ZeroQuat)
-	, m_movable(m_entity)
+Entity Crate::create(ECS& ecs, HSpatial parent, const vec3& position, const vec3& extents)
+{
+	Entity entity = { ecs.CreateEntity<Spatial, Movable, Crate>(), ecs.m_index };
+	ecs.SetComponent(entity, Spatial(parent, position, ZeroQuat));
+	ecs.SetComponent(entity, Movable(HSpatial(entity)));
+	ecs.SetComponent(entity, Crate(HSpatial(entity), HMovable(entity), extents));
+	return entity;
+}
+
+Crate::Crate(HSpatial spatial, HMovable movable, const vec3& extents)
+	: m_spatial(spatial)
+	, m_movable(movable)
 	, m_extents(extents)
-	, m_solid(m_entity, Cube(extents), SolidMedium::me, CM_SOLID, false, 10.f)
+	, m_solid(Solid::create(m_spatial, m_movable, Cube(extents), SolidMedium::me, CM_SOLID, false, 10.f))
 {}
 
 Player::Player(TileWorld& world)
@@ -362,8 +389,9 @@ Player::Player(TileWorld& world)
 
 void Player::spawn(const vec3& start_position)
 {
+	HSpatial origin = m_world->m_world.origin();
 	vec3 position = start_position + Y3 * 2.f * m_world->m_center_block->m_wfc_block.m_scale.y;
-	m_human = &m_world->m_world.origin().construct<Human>(position, Faction::Ally);
+	m_human = construct<Human>(origin, position, Faction::Ally);
 	//m_human->m_headlight = false;
 	m_human->m_stealth = true;
 	m_human->m_walk = false;
@@ -372,10 +400,12 @@ void Player::spawn(const vec3& start_position)
 
 void paint_bullet(Gnode& parent, Bullet& bullet)
 {
+	Spatial& spatial = bullet.m_spatial;
+
 	static ParticleGenerator* flash = parent.m_scene->m_gfx_system.particles().file("flash");
 	static ParticleGenerator* impact = parent.m_scene->m_gfx_system.particles().file("impact");
 
-	Gnode& source = gfx::node(parent, {}, bullet.m_source, bullet.m_entity.m_rotation);
+	Gnode& source = gfx::node(parent, {}, bullet.m_source, spatial.m_rotation);
 	gfx::particles(source, *flash);
 
 	//toy::sound(source, "rifle", false, 0.4f);
@@ -383,13 +413,13 @@ void paint_bullet(Gnode& parent, Bullet& bullet)
 
 	if(!bullet.m_impacted)
 	{
-		Gnode& projectile = gfx::node(parent, {}, bullet.m_entity.m_position, bullet.m_entity.m_rotation);
+		Gnode& projectile = gfx::node(parent, {}, spatial.m_position, spatial.m_rotation);
 		gfx::shape(projectile, Cube(vec3(0.02f, 0.02f, 0.4f)), Symbol(Colour(2.f, 0.3f, 0.3f) * 4.f));
 	}
 
 	if(bullet.m_impacted)
 	{
-		Gnode& hit = gfx::node(parent, {}, bullet.m_impact, bullet.m_entity.m_rotation);
+		Gnode& hit = gfx::node(parent, {}, bullet.m_impact, spatial.m_rotation);
 		toy::sound(source, "impact2", false, 0.4f);
 		if(gfx::particles(hit, *impact).m_ended)
 			bullet.m_destroy = true;
@@ -398,7 +428,8 @@ void paint_bullet(Gnode& parent, Bullet& bullet)
 
 void paint_lamp(Gnode& parent, Lamp& lamp)
 {
-	gfx::shape(parent, Sphere(0.1f), Symbol(Colour::Red), ITEM_SELECTABLE);
+	UNUSED(lamp);
+	gfx::shape(parent, Sphere(0.1f), Symbol(Colour::Red), ItemFlag::Default | ItemFlag::Selectable);
 	gfx::light(parent, LightType::Point, false, Colour(1.f, 0.3f, 0.2f), 10.f);
 }
 
@@ -433,15 +464,17 @@ Model& human_model_stealth(GfxSystem& gfx_system)
 
 void paint_human(Gnode& parent, Human& human)
 {
+	Spatial& spatial = human.m_spatial;
+
 	static Model& model_normal = *parent.m_scene->m_gfx_system.models().file("human00");
 	static Model& model_stealth = human_model_stealth(parent.m_scene->m_gfx_system);
 	static Model& model_glow = human_model_glow(parent.m_scene->m_gfx_system);
 
 	Model& model = human.m_stealth ? model_stealth : model_glow;
 	
-	Gnode& self = gfx::node(parent, Ref(&human), human.m_entity.m_position, human.m_entity.m_rotation);
+	Gnode& self = gfx::node(parent, Ref(&human), spatial.m_position, spatial.m_rotation);
 	
-	Item& item = gfx::item(self, model, ITEM_SELECTABLE);
+	Item& item = gfx::item(self, model, ItemFlag::Default | ItemFlag::Selectable);
 	Animated& animated = gfx::animated(self, item);
 
 	if(animated.m_playing.empty() || animated.playing() != human.m_state.name)
@@ -449,21 +482,21 @@ void paint_human(Gnode& parent, Human& human)
 
 	Bone* bone = animated.m_rig.m_skeleton.find_bone("RightHand");
 
-	mat4 pose = bxrotation(human.m_entity.m_rotation) * fix_bone_pose(*bone);
-	Gnode& arm = gfx::node(self, {}, human.m_entity.m_position + vec3(pose * vec4(Zero3, 1.f)), human.m_entity.m_rotation);
+	mat4 pose = bxrotation(spatial.m_rotation) * fix_bone_pose(*bone);
+	Gnode& arm = gfx::node(self, {}, spatial.m_position + vec3(pose * vec4(Zero3, 1.f)), spatial.m_rotation);
 	gfx::model(arm, "rifle");
 
 	enum States { Seek = 3, Dead = 4, Shield = 5, Headlight = 6, Visor = 7 };
 
 	if(human.m_target)
 	{
-		Gnode& seek = gfx::node(parent.subx(Seek), Ref(&human), human.m_entity.m_position, human.m_entity.m_rotation);
+		Gnode& seek = gfx::node(parent.subx(Seek), Ref(&human), spatial.m_position, spatial.m_rotation);
 		toy::sound(seek, "destroy", false, 0.5f);
 	}
 
 	if(human.m_life <= 0.f)
 	{
-		Gnode& dead = gfx::node(parent.subx(Dead), Ref(&human), human.m_entity.m_position, human.m_entity.m_rotation);
+		Gnode& dead = gfx::node(parent.subx(Dead), Ref(&human), spatial.m_position, spatial.m_rotation);
 		//toy::sound(dead, "robotdeath", false, 0.1f);
 		toy::sound(dead, "sparks", false, 0.1f);
 	}
@@ -484,12 +517,12 @@ void paint_human(Gnode& parent, Human& human)
 		static Material& shield = shield_material(shield_colour, 0.04f);
 
 		static Clock clock;
-		float shield_intensity = remap_trig(sin(clock.read() * 2.f), 0.3f, 1.4f) * (human.m_energy + human.m_discharge * 10.f);
-		float light_intensity = remap_trig(sin(clock.read() * 2.f), 0.8f, 1.4f) * (human.m_energy + human.m_discharge * 5.f);
+		float shield_intensity = remap_trig(sin(float(clock.read()) * 2.f), 0.3f, 1.4f) * (human.m_energy + human.m_discharge * 10.f);
+		float light_intensity = remap_trig(sin(float(clock.read()) * 2.f), 0.8f, 1.4f) * (human.m_energy + human.m_discharge * 5.f);
 		
 		shield.m_fresnel_block.m_value.m_value = shield_colour * shield_intensity;
 
-		Gnode& center = gfx::node(parent.subx(Shield), Ref(&human), human.m_entity.m_position + rotate(human.m_entity.m_rotation, Y3), human.m_entity.m_rotation);
+		Gnode& center = gfx::node(parent.subx(Shield), Ref(&human), spatial.m_position + rotate(spatial.m_rotation, Y3), spatial.m_rotation);
 		gfx::shape(center, Sphere(1.f), Symbol(shield_colour), 0U, &shield);
 		gfx::light(center, LightType::Point, false, Colour(0.3f, 0.4f, 1.f) * light_intensity, 10.f);
 	
@@ -504,7 +537,7 @@ void paint_human(Gnode& parent, Human& human)
 
 	if(human.m_headlight)
 	{
-		Gnode& headlight = gfx::node(parent.subx(Headlight), Ref(&human), human.m_entity.m_position + rotate(human.m_entity.m_rotation, Human::muzzle_offset), human.sight());
+		Gnode& headlight = gfx::node(parent.subx(Headlight), Ref(&human), spatial.m_position + rotate(spatial.m_rotation, Human::muzzle_offset), human.sight());
 		Light& light = gfx::light(headlight, LightType::Spot, false, Colour::White, 30.f);
 		light.m_spot_angle = Human::headlight_angle;
 		light.m_spot_attenuation = 0.9f;
@@ -512,32 +545,26 @@ void paint_human(Gnode& parent, Human& human)
 
 	if(human.m_faction == Faction::Ally)
 	{
-		Gnode& visor = gfx::node(parent.subx(Visor), Ref(&human), human.m_entity.m_position + rotate(human.m_entity.m_rotation, Human::muzzle_offset), human.sight(human.m_aiming));
+		Gnode& visor = gfx::node(parent.subx(Visor), Ref(&human), spatial.m_position + rotate(spatial.m_rotation, Human::muzzle_offset), human.sight(human.m_aiming));
 		//gfx::shape(visor, Line(-Z3 * 4.f, -Z3 * 8.f), Symbol(Colour(0.2f, 0.8f, 2.4f) * 4.f, Colour::None, true));
 		gfx::shape(visor, Circle(-Z3 * 8.f, 0.2f, Axis::Z), Symbol(Colour::None, Colour(0.2f, 0.8f, 2.4f) * 4.f, true));
 	}
 }
 
-void paint_world_block(Gnode& parent, TileBlock& block, const uvec3* exclude = nullptr)
+void paint_world_block(Gnode& parent, Tileblock& block, const uvec3* exclude = nullptr)
 {
+	Spatial& spatial = block.m_spatial;
 	if(!block.m_wfc_block.m_wave.m_solved) return;
-	paint_tiles(parent, Ref(&block.m_entity), block.m_wfc_block, uvec3(UINT_MAX), exclude);
-	if(!block.m_world_page.m_build_geometry)
-		block.m_world_page.m_build_geometry = [&](WorldPage& page) { build_block_geometry(*parent.m_scene, page, block); };
-}
-
-Material& plain_material(GfxSystem& gfx_system, cstring name, const Colour& colour)
-{
-	Material& material = gfx_system.fetch_material(name, "pbr/pbr");
-	material.m_pbr_block.m_enabled = true;
-	material.m_pbr_block.m_albedo.m_value = colour;
-	return material;
+	paint_tiles(parent, Ref(&spatial), block.m_wfc_block, uvec3(UINT_MAX), exclude);
+	WorldPage& world_page = block.m_world_page;
+	if(!world_page.m_build_geometry)
+		world_page.m_build_geometry = [&](WorldPage& page) { build_block_geometry(*parent.m_scene, page, block); };
 }
 
 void paint_crate(Gnode& parent, Crate& crate)
 {
-	static Material& material = plain_material(parent.m_scene->m_gfx_system, "crate", Colour::White);
-	gfx::shape(parent, Cube(crate.m_extents), Symbol(), ITEM_SELECTABLE, &material);
+	static Material& material = gfx::pbr_material(parent.m_scene->m_gfx_system, "crate", Colour::White);
+	gfx::shape(parent, Cube(crate.m_extents), Symbol(), ItemFlag::Default | ItemFlag::Selectable, &material);
 }
 
 void paint_scene(Gnode& parent)
@@ -552,6 +579,13 @@ void paint_scene(Gnode& parent)
 
 void paint_viewer(Viewer& viewer)
 {
+	if(rect_size(viewer.m_viewport.m_rect) != vec2(0.f) && !viewer.m_camera.m_clusters)
+	{
+		viewer.m_camera.m_clustered = true;
+		viewer.m_camera.m_clusters = make_unique<Froxelizer>(viewer.m_scene->m_gfx_system);
+		viewer.m_camera.m_clusters->prepare(viewer.m_viewport, viewer.m_camera.m_projection, viewer.m_camera.m_near, viewer.m_camera.m_far);
+	}
+
 	viewer.m_filters.m_glow.m_enabled = true;
 #ifndef MUD_PLATFORM_EMSCRIPTEN
 	viewer.m_filters.m_glow.m_bicubic_filter = true;
@@ -563,7 +597,7 @@ vec3 find_fitting_player_location(WfcBlock& tileblock)
 	vec3 center = vec3(tileblock.m_size) * 0.5f;
 	vec3 start_coord = {};
 	for(size_t i = 0; i < tileblock.m_tiles.size(); ++i)
-		if(tileblock.m_tileset.m_tiles_flip[tileblock.m_tiles[i]].m_name == "empty_covered")
+		if(tileblock.m_tileset->m_tiles_flip[tileblock.m_tiles[i]].m_name == "empty_covered")
 		{
 			vec3 coord = { tileblock.m_tiles.x(i), tileblock.m_tiles.y(i), tileblock.m_tiles.z(i) };
 			if(distance2(coord, center) < distance2(start_coord, center))
@@ -580,7 +614,7 @@ Style& menu_style()
 
 Style& button_style()
 {
-	static Style style = { "GameButton", styles().button, [](Layout& l) {},
+	static Style style = { "GameButton", styles().button, [](Layout& l) { UNUSED(l); },
 														  [](InkStyle& s) { s.m_empty = false; s.m_text_colour = Colour::AlphaWhite; s.m_text_size = 24.f; },
 														  [](Style& s) { s.decline_skin(HOVERED).m_text_colour = Colour::White; } };
 	return style;
@@ -614,6 +648,7 @@ Style& screen_style()
 
 Style& left_panel_style(UiWindow& ui_window)
 {
+	UNUSED(ui_window);
 	//static ImageSkin skin = { *ui_window.find_image("graphic/blue_on"), 46, 28, 38, 30 };
 	
 	static Style style = { "LeftPanel", styles().wedge, [](Layout& l) { l.m_space = { PARAGRAPH, WRAP, FIXED }; l.m_size = { 450.f, 0.f }; l.m_align = { Left, CENTER }; l.m_padding = vec4(30.f); l.m_spacing = vec2(30.f); } };
@@ -623,12 +658,15 @@ Style& left_panel_style(UiWindow& ui_window)
 
 void human_controller(HumanController& controller, Human& human, OrbitController& orbit, bool relative = true)
 {
-	vec3 velocity = human.m_solid->linear_velocity();
-	vec3 force = relative ? rotate(human.m_entity.m_rotation, controller.m_force)
+	Spatial& spatial = human.m_spatial;
+	Solid& solid = human.m_solid;
+
+	vec3 velocity = solid->linear_velocity();
+	vec3 force = relative ? rotate(spatial.m_rotation, controller.m_force)
 						  : rotate(quat(vec3(orbit.m_pitch, orbit.m_yaw, 0.f)), controller.m_force);
 
-	human.m_solid->set_linear_velocity({ force.x, velocity.y - 1.f, force.z });
-	human.m_solid->set_angular_velocity(controller.m_torque);
+	solid->set_linear_velocity({ force.x, velocity.y - 1.f, force.z });
+	solid->set_angular_velocity(controller.m_torque);
 }
 
 static void human_velocity_controller(Viewer& viewer, HumanController& controller, Human& human, OrbitController& orbit, bool relative = true)
@@ -637,7 +675,7 @@ static void human_velocity_controller(Viewer& viewer, HumanController& controlle
 	ui::velocity_controller(viewer, controller.m_force, controller.m_torque, speed);
 
 	if(viewer.key_event(Key::Space, EventType::Stroked))
-		human.m_solid->impulse(Y3 * 20.f, Zero3);
+		(*human.m_solid)->impulse(Y3 * 20.f, Zero3);
 
 	if(controller.m_force != Zero3 || controller.m_torque != Zero3)
 	{
@@ -653,6 +691,8 @@ static void human_velocity_controller(Viewer& viewer, HumanController& controlle
 
 void ex_platform_game_hud(Viewer& viewer, GameScene& scene, Human& human)
 {
+	Spatial& spatial = human.m_spatial;
+
 	static Style& style_screen = screen_style();
 	static Style& style_left_panel = left_panel_style(viewer.ui_window());
 
@@ -660,9 +700,10 @@ void ex_platform_game_hud(Viewer& viewer, GameScene& scene, Human& human)
 	Widget& screen = ui::widget(viewer, style_screen);
 
 	ui::OrbitMode mode = val<Player>(scene.m_player).m_mode;
-	OrbitController& orbit = ui::hybrid_controller(viewer, mode, human.m_entity, human.m_aiming, human.m_angles, scene.m_game.m_mode == GameMode::Play);
+	//OrbitController& orbit = ui::orbit_controller(viewer);
+	OrbitController& orbit = ui::hybrid_controller(viewer, mode, human.m_spatial, human.m_aiming, human.m_angles, scene.m_game.m_mode == GameMode::Play);
 
-	Widget& board = ui::board(screen);
+	Widget& board = ui::board(screen); UNUSED(board);
 	Widget& row = ui::row(screen);
 	Widget& left_panel = ui::widget(row, style_left_panel);
 
@@ -680,11 +721,11 @@ void ex_platform_game_hud(Viewer& viewer, GameScene& scene, Human& human)
 		human_velocity_controller(viewer, controller, human, orbit, mode != ui::OrbitMode::Isometric);
 
 		if(mode == ui::OrbitMode::Isometric && controller.m_force != Zero3)
-			human.m_entity.set_rotation(look_at(Zero3, rotate(quat(vec3(0.f, orbit.m_yaw, 0.f)), controller.m_force)));
+			spatial.set_rotation(look_at(Zero3, rotate(quat(vec3(0.f, orbit.m_yaw, 0.f)), controller.m_force)));
 
 		if(viewer.mouse_event(DeviceType::MouseLeft, EventType::Stroked))
 		{
-			//viewer.take_focus();
+			viewer.take_focus();
 			human.shoot();
 		}
 
@@ -696,6 +737,7 @@ void ex_platform_game_hud(Viewer& viewer, GameScene& scene, Human& human)
 
 		auto bar = [](Widget& parent, Style& style, cstring icon, float ratio)
 		{
+			UNUSED(ratio);
 			Widget& row = ui::widget(parent, row_bar_style());// row(parent);
 			ui::icon(row, icon);
 			ui::widget(row, style);
@@ -728,10 +770,13 @@ void ex_platform_game_ui(Widget& parent, Game& game, GameScene& scene)
 	Widget& self = ui::widget(parent, styles().board, &scene);//ui::board(parent);
 
 	Viewer& viewer = ui::viewer(self, scene.m_scene);
-
 	paint_viewer(viewer);
-	
+
+	//Viewer& debug_viewer = ui::viewer(self, scene.m_scene);
+	//ui::orbit_controller(debug_viewer);
+
 	Player& player = val<Player>(game.m_player);
+	player.m_viewer = &viewer;
 	if(player.m_human)
 		ex_platform_game_hud(viewer, scene, *player.m_human);
 }
@@ -753,7 +798,7 @@ Viewer& ex_platform_menu_viewport(Widget& parent, GameShell& app)
 
 	viewer.m_camera.m_eye = Z3 * 2.f;
 
-	Gnode& node = gfx::node(scene, {}, -Y3 * 0.5f + X3 * 0.6f, angle_axis(fmod(clock.read(), 2.f * c_pi), Y3), Unit3 * 0.5f);
+	Gnode& node = gfx::node(scene, {}, -Y3 * 0.5f + X3 * 0.6f, angle_axis(fmod(float(clock.read()), 2.f * c_pi), Y3), Unit3 * 0.5f);
 	Item& item = gfx::item(node, human);
 	Animated& animated = gfx::animated(node, item);
 	 
@@ -800,13 +845,13 @@ void ex_platform_pump_game(GameShell& app, Game& game, Widget& parent)
 {
 	Player& player = val<Player>(game.m_player);
 	TileWorld& world = as<TileWorld>(game.m_world->m_complex);
-	TileBlock& block = *world.m_center_block;
+	Tileblock& block = *world.m_center_block;
 
 	world.next_frame();
 
 	Widget& self = ui::widget(parent, styles().board, &game);
 
-	if(player.m_human == nullptr)
+	if(!player.m_human)
 	{
 		Viewer& viewer = ex_platform_menu_viewport(self, *game.m_shell);
 		Widget& overlay = ui::screen(viewer);
@@ -825,25 +870,10 @@ void ex_platform_pump_game(GameShell& app, Game& game, Widget& parent)
 		static GameScene& scene = app.add_scene();
 		ex_platform_game_ui(self, game, scene);
 
-		vec3 position = player.m_human->m_entity.m_position;
+		Spatial& spatial = player.m_human->m_spatial;
+		vec3 position = spatial.m_position;
 		world.open_blocks(*app.m_gfx_system, position, { 0, 1 });
 	}
-}
-
-template <class T, class T_Store, class T_PaintFunc>
-inline void range_entity_painter(VisuScene& scene, Entity& reference, float range, cstring name, T_Store& entities, T_PaintFunc paint_func)
-{
-	auto paint = [&scene, &reference, range, &entities, paint_func](size_t index, VisuScene&, Gnode& parent)
-	{
-		float range2 = range*range;
-		for(Entity* entity : entities.store())
-		{
-			float dist2 = distance2(entity->m_position, reference.m_position);
-			if(dist2 < range2 && entity->isa<T>())
-				paint_func(scene.entity_node(parent, *entity, index), entity->as<T>());
-		}
-	};
-	scene.m_painters.emplace_back(make_unique<VisuPainter>(name, scene.m_painters.size(), paint));
 }
 
 class PlatformModule : public GameModule
@@ -871,14 +901,20 @@ public:
 
 	virtual void start(GameShell& app, Game& game) final
 	{
-		global_pool<TileBlock>();
-		global_pool<TileWorld>();
-		global_pool<Human>();
-		global_pool<Crate>();
-		global_pool<OCamera>();
+		TileWorld& tileworld = global_pool<TileWorld>().construct("Arcadia", *app.m_job_system);
+		World& world = tileworld.m_world;
+		game.m_world = &world;
 
-		TileWorld& tileworld = global_pool<TileWorld>().construct("Arcadia");
-		game.m_world = &tileworld.m_world;
+		world.m_ecs.AddBuffers<Spatial, WorldPage, Navblock, Sector>("Sector");
+		world.m_ecs.AddBuffers<Spatial, WorldPage, Navblock, Tileblock>("Tileblock");
+
+		world.m_ecs.AddBuffers<Spatial, Bullet>("Bullet");
+		world.m_ecs.AddBuffers<Spatial, Movable, Emitter, Receptor, EntityScript, Human>("Human");
+		world.m_ecs.AddBuffers<Spatial, Movable, Crate>("Crate");
+		world.m_ecs.AddBuffers<Spatial, Movable, Lamp>("Lamp");
+
+		world.add_loop<Tileblock, WorldPage>(Task::Spatial);
+		world.add_loop<Human, Spatial, Movable, Receptor>(Task::GameObject);
 
 		static Player player = { tileworld };
 		game.m_player = Ref(&player);
@@ -888,24 +924,25 @@ public:
 
 	virtual void scene(GameShell& app, GameScene& scene) final
 	{
-		static OmniVision vision = { *scene.m_game.m_world };
-		//scene.m_camera.m_entity.set_position(Zero3);
-
+		UNUSED(app);
 		//scene_painters(scene, vision.m_store);
-		scene.painter("World", [&](size_t index, VisuScene& scene, Gnode& parent) {
-			UNUSED(scene); paint_scene(parent.subi((void*)index));
+		Player& player = val<Player>(scene.m_player);
+		HSpatial reference = player.m_human->m_spatial;
+
+		scene.painter("World", [&](size_t index, VisuScene& visu_scene, Gnode& parent) {
+			UNUSED(visu_scene);
+			Gnode& self = parent.subi((void*)index);
+			paint_scene(self);
+			//debug_draw_light_clusters(self, player.m_viewer->m_camera);
 		});
 
-		Player& player = val<Player>(scene.m_player);
-		Entity& reference = player.m_human->m_entity;
-
-		auto paint_hole_block = [&](Gnode& parent, TileBlock& block)
+		auto paint_hole_block = [&](Gnode& parent, Tileblock& block)
 		{
 #if 0 //ndef MUD_PLATFORM_EMSCRIPTEN
-			if(block.contains(player.m_human->m_entity.m_position))
+			if(block.contains(player.m_human->m_spatial.m_position))
 			{
 				// cut a hole of 6x6 tiles above the character
-				uvec3 coord = block.m_wfc_block.to_coord(player.m_human->m_entity.m_position);
+				uvec3 coord = block.m_wfc_block.to_coord(player.m_human->m_spatial.m_position);
 				uvec3 y = uvec3(0, 1, 0);
 				uvec3 lohi[2] = { { coord + y - min(uvec3(6, 0, 6), coord) },
 								  { coord + y + uvec3(6, 0, 6)} };
@@ -918,11 +955,12 @@ public:
 			}
 		};
 
-		range_entity_painter<Lamp>(scene, reference, 100.f, "Lamps", vision.m_store, paint_lamp);
-		range_entity_painter<Human>(scene, reference, 100.f, "Humans", vision.m_store, paint_human);
-		range_entity_painter<Crate>(scene, reference, 100.f, "Crates", vision.m_store, paint_crate);
-		range_entity_painter<TileBlock>(scene, reference, 200.f, "Tileblocks", vision.m_store, paint_hole_block);
-		range_entity_painter<Bullet>(scene, reference, 100.f, "Bullets", vision.m_store, paint_bullet);
+		World& world = *scene.m_game.m_world;
+		scene.range_entity_painter<Lamp>(reference, 100.f, "Lamps", world, paint_lamp);
+		scene.range_entity_painter<Human>(reference, 100.f, "Humans", world, paint_human);
+		scene.range_entity_painter<Crate>(reference, 100.f, "Crates", world, paint_crate);
+		scene.range_entity_painter<Tileblock>(reference, 200.f, "Tileblocks", world, paint_hole_block);
+		scene.range_entity_painter<Bullet>(reference, 100.f, "Bullets", world, paint_bullet);
 
 		//physic_painter(scene);
 	}
@@ -931,6 +969,7 @@ public:
 	{
 		auto pump = [&](Widget& parent, Dockbar* dockbar = nullptr)
 		{
+			UNUSED(dockbar);
 			if(!game.m_player)
 				ex_platform_menu(parent, game);
 			else
@@ -952,7 +991,7 @@ int main(int argc, char *argv[])
 	GameShell app(carray<cstring, 1>{ TOY_RESOURCE_PATH }, argc, argv);
 	
 	PlatformModule module = { _platform::m() };
-	//app.run_game(module);
-	app.run_editor(module);
+	app.run_game(module);
+	//app.run_editor(module);
 }
 #endif

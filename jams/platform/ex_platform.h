@@ -15,22 +15,35 @@ extern "C"
 	//_PLATFORM_EXPORT void ex_platform_game(GameShell& app, Game& game);
 }
 
+namespace mud
+{
+	template <> struct TypedBuffer<Bullet> { static size_t index() { return 20; } };
+	template <> struct TypedBuffer<Human>  { static size_t index() { return 21; } };
+	template <> struct TypedBuffer<Lamp>   { static size_t index() { return 22; } };
+	template <> struct TypedBuffer<Crate>  { static size_t index() { return 23; } };
+}
+
+using HBullet = ComponentHandle<Bullet>;
+using HHuman = ComponentHandle<Human>;
+using HLamp = ComponentHandle<Lamp>;
+using HCrate = ComponentHandle<Crate>;
+
 class refl_ _PLATFORM_EXPORT TileWorld : public Complex
 {
 public:
-	constr_ TileWorld(const std::string& name);
+	constr_ TileWorld(const std::string& name, JobSystem& job_system);
 	~TileWorld();
 
-	comp_ attr_ World m_world;
-	comp_ attr_ BulletWorld m_bullet_world;
-	comp_ attr_ Navmesh m_navmesh;
+	attr_ World m_world;
+	attr_ BulletWorld m_bullet_world;
+	attr_ Navmesh m_navmesh;
 
 	uvec3 m_block_subdiv = uvec3(20, 4, 20);
 	vec3 m_tile_scale = vec3(4.f);
 	vec3 m_block_size;
 
-	std::map<ivec2, TileBlock*> m_blocks;
-	TileBlock* m_center_block = nullptr;
+	std::map<ivec2, HTileblock> m_blocks;
+	HTileblock m_center_block = {};
 
 	void next_frame();
 
@@ -38,13 +51,15 @@ public:
 	void open_blocks(GfxSystem& gfx_system, const vec3& position, const ivec2& radius);
 };
 
-class refl_ _PLATFORM_EXPORT Bullet : public Complex
+class refl_ _PLATFORM_EXPORT Bullet
 {
 public:
-	Bullet(Entity& parent, const vec3& source, const quat& rotation, float velocity);
-	~Bullet();
+	Bullet() {}
+	Bullet(HSpatial spatial, const vec3& source, const quat& rotation, float velocity);
 
-	comp_ attr_ Entity m_entity;
+	static Entity create(ECS& ecs, HSpatial parent, const vec3& source, const quat& rotation, float velocity);
+
+	comp_ HSpatial m_spatial;
 
 	attr_ vec3 m_source;
 	attr_ vec3 m_velocity;
@@ -53,8 +68,8 @@ public:
 	bool m_destroy = false;
 	vec3 m_impact = Zero3;
 
-	//Solid m_solid;
-	Collider m_collider;
+	//OSolid m_solid;
+	OCollider m_collider;
 
 	void update();
 };
@@ -70,7 +85,7 @@ struct refl_ Aim
 	attr_ quat rotation;
 	attr_ vec3 start;
 	attr_ vec3 end;
-	attr_ Entity* hit;
+	attr_ Spatial* hit;
 };
 
 struct HumanController
@@ -87,19 +102,21 @@ struct refl_ Stance
 	attr_ bool loop;
 };
 
-class refl_ _PLATFORM_EXPORT Human : public Complex, public Updatable
+class refl_ _PLATFORM_EXPORT Human
 {
 public:
-	constr_ Human(Id id, Entity& parent, const vec3& position, Faction faction);
-	~Human();
+	constr_ Human() {}
+	constr_ Human(HSpatial spatial, HMovable movable, HEmitter emitter, HReceptor receptor, HEntityScript script, Faction faction);
 
-	comp_ attr_ Entity m_entity;
-	comp_ attr_ Movable m_movable;
-	comp_ attr_ Emitter m_emitter;
-	comp_ attr_ Receptor m_receptor;
-	comp_ attr_ EntityScript m_script; // @todo ---->> ECS
+	static Entity create(ECS& ecs, HSpatial parent, const vec3& position, Faction faction);
 
-	Solid m_solid;
+	comp_ HSpatial m_spatial;
+	comp_ HMovable m_movable;
+	comp_ HEmitter m_emitter;
+	comp_ HReceptor m_receptor;
+	comp_ HEntityScript m_script; // @todo ---->> ECS
+
+	OSolid m_solid;
 
 	attr_ Faction m_faction;
 
@@ -117,15 +134,15 @@ public:
 
 	bool m_stealth = false;
 
-	attr_ Human* m_target = nullptr;
+	attr_ HHuman m_target = {};
 	attr_ vec3 m_dest = Zero3;
 	attr_ float m_cooldown = 0.f;
 
 	attr_ Stance m_state = { "IdleAim", true };
 
-	std::vector<unique_ptr<Bullet>> m_bullets;
+	std::vector<EntityHandle<Bullet>> m_bullets;
 
-	void next_frame(size_t tick, size_t delta);
+	void next_frame(Spatial& spatial, Movable& movable, Receptor& receptor, size_t tick, size_t delta);
 
 	meth_ quat sight(bool aiming = true);
 	meth_ Aim aim();
@@ -137,25 +154,31 @@ public:
 	static float headlight_angle;
 };
 
-class refl_ _PLATFORM_EXPORT Lamp : public Complex
+class refl_ _PLATFORM_EXPORT Lamp
 {
 public:
-	constr_ Lamp(Id id, Entity& parent, const vec3& position);
+	constr_ Lamp() {}
+	constr_ Lamp(HSpatial spatial, HMovable movable);
 
-	comp_ attr_ Entity m_entity;
-	comp_ attr_ Movable m_movable;
+	static Entity create(ECS& ecs, HSpatial parent, const vec3& position);
+
+	comp_ HSpatial m_spatial;
+	comp_ HMovable m_movable;
 };
 
-class refl_ _PLATFORM_EXPORT Crate : public Complex
+class refl_ _PLATFORM_EXPORT Crate
 {
 public:
-	constr_ Crate(Id id, Entity& parent, const vec3& position, const vec3& extents);
+	constr_ Crate() {}
+	constr_ Crate(HSpatial spatial, HMovable movable, const vec3& extents);
 
-	comp_ attr_ Entity m_entity;
-	comp_ attr_ Movable m_movable;
+	static Entity create(ECS& ecs, HSpatial parent, const vec3& position, const vec3& extents);
+
+	comp_ HSpatial m_spatial;
+	comp_ HMovable m_movable;
 
 	attr_ vec3 m_extents;
-	Solid m_solid;
+	OSolid m_solid;
 };
 
 class refl_ _PLATFORM_EXPORT Player
@@ -166,6 +189,7 @@ public:
 	void spawn(const vec3& start_position);
 	
 	TileWorld* m_world;
-	Human* m_human = nullptr;
+	HHuman m_human = {};
+	Viewer* m_viewer = nullptr;
 	ui::OrbitMode m_mode = ui::OrbitMode::ThirdPerson;
 };

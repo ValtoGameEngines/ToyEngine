@@ -5,8 +5,8 @@
 #ifndef MUD_MODULES
 #include <meta/visu/Module.h>
 
-#include <obj/Any.h>
-#include <obj/Vector.h>
+#include <type/Any.h>
+#include <type/Vector.h>
 #include <refl/MetaDecl.h>
 #include <refl/Module.h>
 #endif
@@ -52,39 +52,6 @@ namespace mud
         
         
         meta_class<toy::PhysicDebugDraw>();
-    }
-    
-    
-        
-    // toy::SoundSource
-    {
-        static Meta meta = { type<toy::SoundSource>(), &namspc({ "toy" }), "SoundSource", sizeof(toy::SoundSource), TypeClass::Object };
-        static Class cls = { type<toy::SoundSource>(),
-            // bases
-            {  },
-            {  },
-            // constructors
-            {
-            },
-            // copy constructor
-            {
-            },
-            // members
-            {
-                { type<toy::SoundSource>(), Address(), type<toy::Entity>(), "entity", Ref(type<toy::Entity>()), Member::Flags(Member::NonMutable|Member::Link), [](Ref object) { return Ref(&val<toy::SoundSource>(object).m_entity); } }
-            },
-            // methods
-            {
-            },
-            // static members
-            {
-            }
-        };
-        
-        
-        
-        
-        meta_class<toy::SoundSource>();
     }
     
     

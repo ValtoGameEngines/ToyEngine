@@ -13,6 +13,8 @@
 #include <core/Bullet/BulletWorld.h>
 #include <core/Navmesh/Navmesh.h>
 
+#include <ecs/Loop.h>
+
 #ifndef MUD_CPP_20
 #include <map>
 #endif
@@ -24,25 +26,23 @@ using namespace mud; namespace toy
 	class refl_ TOY_CORE_EXPORT Core : public NonCopy
 	{
 	public:
-		Core();
+		Core(JobSystem& job_system);
 		~Core();
 
 		void next_frame();
-
-		TaskSection& section(short int index) { return *m_sections[index]; }
-
-	private:
-		std::vector<object_ptr<TaskSection>> m_sections;
+		
+		JobSystem& m_job_system;
+		JobPump m_pump;
 	};
 
 	class refl_ TOY_CORE_EXPORT DefaultWorld : public Complex
 	{
 	public:
-		constr_ DefaultWorld(const string& name);
+		constr_ DefaultWorld(const string& name, JobSystem& job_system);
 		~DefaultWorld();
 
-		comp_ attr_ World m_world;
-		comp_ attr_ BulletWorld m_bullet_world;
-		comp_ attr_ Navmesh m_navmesh;
+		attr_ World m_world;
+		attr_ BulletWorld m_bullet_world;
+		attr_ Navmesh m_navmesh;
 	};
 }

@@ -7,10 +7,12 @@
 
 #include <tree/Node.h>
 #include <math/Timer.h>
-#include <infra/Updatable.h>
 #include <visu/Forward.h>
 
-#include <core/Entity/Entity.h>
+#include <ecs/Registry.h>
+
+#include <core/World/World.h>
+#include <core/Spatial/Spatial.h>
 #include <core/Camera/Camera.h>
 #include <core/Selector/Selection.h>
 
@@ -75,21 +77,40 @@ using namespace mud; namespace toy
 
 		meth_ void next_frame();
 
-		Gnode& entity_node(Gnode& parent, Entity& entity, size_t painter);
+		Gnode& entity_node(Gnode& parent, uint32_t entity, Spatial& spatial, size_t painter);
 
 		inline void painter(cstring name, std::function<void(size_t, VisuScene&, Gnode&)> paint)
 		{
 			m_painters.emplace_back(make_unique<VisuPainter>(name, m_painters.size(), paint));
 		}
 
-		template <class T, class T_Store>
-		inline void entity_painter(cstring name, T_Store& entities, void (*paint_func)(Gnode&, T&))
+		template <class T>
+		inline void entity_painter(cstring name, World& world, void (*paint_func)(Gnode&, T&))
 		{
-			auto paint = [this, &entities, paint_func](size_t index, VisuScene&, Gnode& parent)
+			auto paint = [this, &world, paint_func](size_t index, VisuScene&, Gnode& parent)
 			{
-				for(Entity* entity : entities.store())
-					if(entity->isa<T>())
-						paint_func(this->entity_node(parent, *entity, index), entity->as<T>());
+				world.m_ecs.Loop<Spatial, T>([this, paint_func, index, &parent](uint32_t entity, Spatial& spatial, T& component)
+				{
+					paint_func(this->entity_node(parent, entity, spatial, index), component);
+				});
+			};
+			m_painters.emplace_back(make_unique<VisuPainter>(name, m_painters.size(), paint));
+		}
+
+		template <class T, class T_PaintFunc>
+		inline void range_entity_painter(HSpatial reference, float range, cstring name, World& world, T_PaintFunc paint_func)
+		{
+			float range2 = range * range;
+			auto paint = [reference, range2, this, &world, paint_func](size_t index, VisuScene&, Gnode& parent)
+			{
+				vec3 position = reference->m_position;
+				world.m_ecs.Loop<Spatial, T>([&position, range2, this, paint_func, index, &parent](uint32_t entity, Spatial& spatial, T& component)
+				{
+					UNUSED(entity);
+					float dist2 = distance2(spatial.m_position, position);
+					if(dist2 < range2)
+						paint_func(this->entity_node(parent, entity, spatial, index), component);
+				});
 			};
 			m_painters.emplace_back(make_unique<VisuPainter>(name, m_painters.size(), paint));
 		}
@@ -99,8 +120,8 @@ using namespace mud; namespace toy
 		{
 			auto paint = [this, &objects, paint_func](size_t index, VisuScene&, Gnode& parent)
 			{
-				for(T* object : objects)
-					paint_func(this->entity_node(parent, object->m_entity, index), *object);
+				for(auto object : objects)
+					paint_func(this->entity_node(parent, object->m_spatial.m_handle, object->m_spatial, index), *object);
 			};
 			m_painters.emplace_back(make_unique<VisuPainter>(name, m_painters.size(), paint));
 		}
@@ -114,15 +135,15 @@ using namespace mud; namespace toy
 	export_ TOY_VISU_EXPORT void paint_selection(Gnode& parent, Selection& selection, Ref hovered);
 
 	export_ TOY_VISU_EXPORT void paint_camera(Gnode& parent, Camera& camera);
-	export_ TOY_VISU_EXPORT void paint_light(Gnode& parent, LightSource& light);
-	export_ TOY_VISU_EXPORT void paint_symbolic(Gnode& parent, Symbolic& symbolic);
+	//export_ TOY_VISU_EXPORT void paint_light(Gnode& parent, LightSource& light);
+	//export_ TOY_VISU_EXPORT void paint_symbolic(Gnode& parent, Symbolic& symbolic);
 	export_ TOY_VISU_EXPORT void paint_obstacle(Gnode& parent, Obstacle& obstacle);
-	export_ TOY_VISU_EXPORT void paint_disq(Gnode& parent, Disq& disq);
-	export_ TOY_VISU_EXPORT void paint_event_sphere(Gnode& parent, EventReceptor& receptor);
-	export_ TOY_VISU_EXPORT void paint_entity(Gnode& parent, Entity& entity);
-	export_ TOY_VISU_EXPORT void paint_active(Gnode& parent, Active& active);
+	//export_ TOY_VISU_EXPORT void paint_disq(Gnode& parent, Disq& disq);
+	//export_ TOY_VISU_EXPORT void paint_event_sphere(Gnode& parent, EventReceptor& receptor);
+	export_ TOY_VISU_EXPORT void paint_entity(Gnode& parent, Spatial& spatial);
+	//export_ TOY_VISU_EXPORT void paint_active(Gnode& parent, Active& active);
 
-	export_ TOY_VISU_EXPORT void scene_painters(VisuScene& scene, Array<Entity>& store);
+	export_ TOY_VISU_EXPORT void scene_painters(VisuScene& scene, World& world);
 
 	export_ TOY_VISU_EXPORT bool sound(Gnode& parent, const string& sound, bool loop = false, float volume = 1.f);
 }

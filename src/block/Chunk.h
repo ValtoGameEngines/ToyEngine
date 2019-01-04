@@ -5,26 +5,29 @@
 
 #pragma once
 
-#include <proto/Complex.h>
+#include <ecs/Entity.h>
 #include <math/Math.h>
 #include <block/Forward.h>
-#include <core/Entity/Entity.h>
+#include <block/Components.h>
+#include <core/Spatial/Spatial.h>
+#include <ecs/ECS.h>
 
 using namespace mud; namespace toy
 {
-	class refl_ TOY_BLOCK_EXPORT Chunk : public Complex
+	class refl_ TOY_BLOCK_EXPORT Chunk
 	{
 	public:
-		constr_ Chunk(Id id, Entity& parent, const vec3& position, size_t index, Element& element, float size);
+		constr_ Chunk() {}
+		constr_ Chunk(HSpatial spatial, Block& block, size_t index, Element& element, float size);
 
-		comp_ attr_ Entity m_entity;
+		static Entity create(ECS& ecs, HSpatial parent, Block& block, const vec3& position, size_t index, Element& element, float size);
+
+		comp_ HSpatial m_spatial;
 
 		attr_ size_t m_index;
-		attr_ Block& m_block;
-		attr_ Element& m_element;
+		attr_ Block* m_block;
+		attr_ Element* m_element;
 		attr_ float m_size;
-
-		Sector& sector();
 
 		Chunk* neighbour(Side side);
 		bool boundary(Side side);

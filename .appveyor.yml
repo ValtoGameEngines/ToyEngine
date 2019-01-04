@@ -11,8 +11,8 @@ configuration:
   - Release
 
 install:
-  - git submodule update --init
-  - bin\windows\genie --sound %TOOLSET%
+  - git submodule update --init --recursive
+  - bin\windows\genie %TOOLSET%
 
 build:
-  project: build/projects/$(TOOLSET)/mud.sln
+  project: build/projects/$(TOOLSET)/toy.sln

@@ -5,17 +5,20 @@
 
 #pragma once
 
-#include <proto/Proto.h>
+#include <ecs/Proto.h>
 #include <core/Forward.h>
-#include <core/Entity/Entity.h>
+#include <core/Spatial/Spatial.h>
 
 using namespace mud; namespace toy
 {
-	class refl_ TOY_CORE_EXPORT Origin : public Complex
+	class refl_ TOY_CORE_EXPORT Origin
 	{
 	public:
-		constr_ Origin(Id id, World& world);
+		constr_ Origin() {}
+		constr_ Origin(HSpatial spatial);
 
-		comp_ attr_ Entity m_entity;
+		static Entity create(ECS& ecs, World& world);
+
+		comp_ HSpatial m_spatial;
 	};
 }

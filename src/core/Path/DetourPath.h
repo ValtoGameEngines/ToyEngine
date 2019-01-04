@@ -5,12 +5,12 @@
 
 #pragma once
 
-#include <proto/Proto.h>
+#include <ecs/Proto.h>
 #include <math/Math.h>
 #include <math/Vec.h>
 #include <infra/NonCopy.h>
 #include <core/Forward.h>
-#include <core/Entity/Entity.h>
+#include <core/Spatial/Spatial.h>
 
 #ifndef MUD_CPP_20
 #include <vector>
@@ -21,20 +21,22 @@ using namespace mud; namespace toy
 {
 	typedef unsigned int dtPolyRef;
 
-	class refl_ TOY_CORE_EXPORT OWaypoint : public Complex
+	class refl_ TOY_CORE_EXPORT Waypoint
 	{
 	public:
-		constr_ OWaypoint(Id id, Entity& parent, const vec3& position);
+		constr_ Waypoint() {}
+		constr_ Waypoint(HSpatial parent);
 
-		comp_ attr_ Entity m_entity;
+		static Entity create(ECS& ecs, HSpatial parent, const vec3& position);
+
+		comp_ HSpatial m_spatial;
 	};
 
     class refl_ TOY_CORE_EXPORT DetourPath
     {
 	public:
-		DetourPath(Entity& entity, Pathfinder& pathfinder, const vec3& origin, const vec3& destination);
+		DetourPath(Pathfinder& pathfinder, const vec3& origin, const vec3& destination);
 
-		Entity& m_entity;
 		Pathfinder& m_pathfinder;
 
 		vec3 m_origin;

@@ -3,9 +3,10 @@
 //  See the attached LICENSE.txt file or https://www.gnu.org/licenses/gpl-3.0.en.html.
 //  This notice and the license may not be removed or altered from any source distribution.
 
+#include <core/Types.h>
 #include <core/Physic/Collider.h>
 
-#include <core/Entity/Entity.h>
+#include <core/Spatial/Spatial.h>
 #include <core/World/Section.h>
 #include <core/World/World.h>
 #include <core/Physic/Medium.h>
@@ -15,82 +16,97 @@
 
 using namespace mud; namespace toy
 {
-    Collider::Collider(Entity& entity, const CollisionShape& collision_shape, Medium& medium, CollisionGroup group, bool init)
-        : m_entity(entity)
-		, m_collision_shape(collision_shape)
-		, m_medium(medium)
-		, m_group(group)
-		, m_world(entity.m_world.as<PhysicWorld>().sub_world(m_medium))
-		, m_impl()
-		, m_motion_state(entity, collision_shape.m_center)
-    {
-		m_entity.m_world.add_task(this, short(Task::Physics)); // @kludge: collider motion states have to be updated (->bullet) before physics step
+	OCollider Collider::create(HSpatial spatial, HMovable movable, const CollisionShape& collision_shape, Medium& medium, CollisionGroup group)
+	{
+		SparsePool<Collider>& pool = spatial->m_world->pool<Collider>();
 
-		if(init)
-		{
-			m_impl = m_world.make_collider(*this);
-			this->init();
-		}
-		
-		// @note : instant contact detection on world inclusion works only if a call to update is done after
-		//	in a non delayed manner it is possible only by calling performDiscreteCollisionDetection on each item add
-		//	in a delayed manner it is possible by updating on the frame after
-		//this->force_update();
+		OCollider collider = pool.construct(spatial, movable, collision_shape, medium, group);
+		collider->m_world->add_collider(collider);
+		return collider;
 	}
+
+	void Collider::destroy(HCollider collider)
+	{
+		collider->m_world->remove_collider(collider);
+	}
+
+    Collider::Collider(HSpatial spatial, HMovable movable, const CollisionShape& collision_shape, Medium& medium, CollisionGroup group)
+        : m_spatial(spatial)
+		, m_movable(movable)
+		, m_collision_shape(collision_shape)
+		, m_medium(&medium)
+		, m_group(group)
+		, m_world(&as<PhysicWorld>(spatial->m_world->m_complex).sub_world(*m_medium))
+		, m_impl()
+		, m_motion_state(collision_shape.m_center)
+    {}
 
     Collider::~Collider()
-    {
-		m_entity.m_world.remove_task(this, short(Task::Physics));
+    {}
 
-		if(m_entity.m_hooked)
-			this->unhooked();
-	}
-
-	void Collider::init()
+	void Collider::init(object_ptr<ColliderImpl> impl)
 	{
-		m_motion_state.m_source = m_impl.get();
-		m_entity.observe_hook(*this);
+		m_impl = std::move(impl);
 	}
 
 	void Collider::next_frame(size_t tick, size_t delta)
 	{
+		if(m_movable)
+			this->next_frame(m_spatial, m_movable, tick, delta);
+		else
+			this->next_frame(m_spatial, tick, delta);
+	}
+
+	void Collider::next_frame(Spatial& spatial, size_t tick, size_t delta)
+	{
 		UNUSED(delta);
-		m_motion_state.update(tick);
+		m_motion_state.update(spatial, tick);
 	}
 
-	void Collider::hooked()
+	void Collider::next_frame(Spatial& spatial, Movable& movable, size_t tick, size_t delta)
 	{
-		m_world.add_collider(*this);
+		UNUSED(delta);
+		m_motion_state.update(spatial, movable, tick);
 	}
 
-	void Collider::unhooked()
+	OSolid Solid::create(HSpatial spatial, HMovable movable, const CollisionShape& collision_shape, Medium& medium, CollisionGroup group, bool isstatic, float mass)
 	{
-		m_world.remove_collider(*this);
+		SparsePool<Collider>& colliders = spatial->m_world->pool<Collider>();
+		SparsePool<Solid>& solids = spatial->m_world->pool<Solid>();
+
+		OCollider collider = colliders.construct(spatial, movable, collision_shape, medium, group);
+		OSolid solid = solids.construct(spatial, movable, std::move(collider), isstatic, mass);
+
+		HCollider hcollider = solid->m_collider;
+		hcollider->m_world->add_solid(hcollider, solid);
+
+		return solid;
 	}
 
-	Solid::Solid(Entity& entity, const CollisionShape& collision_shape, Medium& medium, CollisionGroup group, bool isstatic, float mass)
-		: Collider(entity, collision_shape, medium, group, false)
+	OSolid Solid::create(HSpatial spatial, HMovable movable, const CollisionShape& collision_shape, bool isstatic, float mass)
+	{
+		return create(spatial, movable, collision_shape, SolidMedium::me, CM_SOLID, isstatic, mass);
+	}
+
+	void Solid::destroy(HSolid solid)
+	{
+		solid->m_collider->m_world->remove_solid(solid->m_collider, solid);
+	}
+
+	Solid::Solid(HSpatial spatial, HMovable movable, OCollider collider, bool isstatic, float mass)
+		: m_spatial(spatial)
+		, m_collider(std::move(collider))
 		, m_static(isstatic)
 		, m_mass(mass)
 	{
-		m_impl = m_world.make_solid(*this);
-		this->init();
+		UNUSED(movable);
 	}
 
-	Solid::Solid(Entity& entity, const CollisionShape& collision_shape, bool isstatic, float mass)
-		: Solid(entity, collision_shape, SolidMedium::me, CM_SOLID, isstatic, mass)
-	{}
-	 
 	Solid::~Solid()
 	{}
 
-	void Solid::hooked()
+	void Solid::init(object_ptr<SolidImpl> impl)
 	{
-		m_world.add_solid(*this);
-	}
-
-	void Solid::unhooked()
-	{
-		m_world.remove_solid(*this);
+		m_impl = std::move(impl);
 	}
 }

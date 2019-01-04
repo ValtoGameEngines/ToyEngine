@@ -4,8 +4,8 @@
 
 #include <infra/Config.h>
 
-#include <obj/Forward.h>
-#include <proto/Forward.h>
+#include <type/Forward.h>
+#include <ecs/Forward.h>
 #include <math/Forward.h>
 #include <geom/Forward.h>
 #include <lang/Forward.h>
@@ -92,17 +92,12 @@ namespace toy {
     class GenStoreObserver;
     class GenStore;
     class HookObserver;
-    class Entity;
-    class Action;
-    class TaskSection;
-    class QueueSection;
-    class MonoSection;
-    class ParallelSection;
+    class Spatial;
     class Origin;
     class World;
     class PhysicMedium;
     class PhysicWorld;
-    class SubBulletWorld;
+    class BulletMedium;
     class BulletWorld;
     struct ConvexVolume;
     class NavGeom;
@@ -112,11 +107,6 @@ namespace toy {
     class NavmeshShape;
     class Core;
     class DefaultWorld;
-    class EffectCallback;
-    class Effect;
-    class State;
-    class Active;
-    class Actor;
     class CollisionShape;
     class Movable;
     class MotionSource;
@@ -125,15 +115,9 @@ namespace toy {
     class ColliderImpl;
     class ColliderObject;
     class Collider;
+	class SolidImpl;
     class Solid;
-    class Atoll;
     struct Contact;
-    class Belt;
-    class Disq;
-    class MotionStrategy;
-    class Agent;
-    class GroundMotion;
-    class Area;
     class BulletShape;
     class DispatchBulletShape;
     class BulletCollider;
@@ -142,54 +126,28 @@ namespace toy {
     class PhysicScope;
     class EmitterScope;
     class ReceptorScope;
-    class EmitterSphere;
-    class ReceptorSphere;
     class Emitter;
     class Receptor;
     class Camera;
-    class OCamera;
-    class EventHandler_;
-    class Event;
-    class EventSubscriber;
-    class EventFilter;
-    class EventTube;
-    class EventTubeEnd;
-    class EventRelay;
-    class EventEmitter;
-    class EventReceptor;
-    class LightReflector;
-    class LightSource;
-    class OLight;
     class Medium;
     class SoundMedium;
     class VisualMedium;
     class MotionStateObserver;
     struct rcChunkyTriMeshNode;
     struct rcChunkyTriMesh;
-    class OWaypoint;
+    class Waypoint;
     class DetourPath;
     class Pathfinder;
-    class ObstacleBody;
+    class Obstacle;
     class Obstacle;
     class AreaMedium;
     class Physic;
     class SolidMedium;
     class User;
-    class Behavior;
-    class Reactive;
     class ComponentPool;
     class EntityScript;
     class TargetDispatcher;
-    class Selector;
-    class Symbolic;
-    class RecursiveStore;
-    class View;
-    class StoreView;
-    class ReceptorView;
-    class Vision;
-    class OmniVision;
     class WorldClock;
-    class BufferPage;
     class WorldMedium;
     class WorldPage;
 }

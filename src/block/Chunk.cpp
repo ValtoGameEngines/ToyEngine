@@ -10,28 +10,26 @@
 #include <block/Block.h>
 #include <block/Sector.h>
 
-#include <core/Entity/Entity.h>
+#include <core/Spatial/Spatial.h>
 #include <core/WorldPage/WorldPage.h>
 
 using namespace mud; namespace toy
 {
-	Chunk::Chunk(Id id, Entity& parent, const vec3& position, size_t index, Element& element, float size)
-		: Complex(id, type<Chunk>(), *this)
-		, m_entity(id, *this, parent, position, ZeroQuat)
+	Entity Chunk::create(ECS& ecs, HSpatial parent, Block& block, const vec3& position, size_t index, Element& element, float size)
+	{
+		Entity entity = { ecs.CreateEntity<Spatial, Chunk>(), ecs.m_index };
+		ecs.SetComponent(entity, Spatial(parent, position, ZeroQuat));
+		ecs.SetComponent(entity, Chunk(entity, block, index, element, size));
+		return entity;
+	}
+
+	Chunk::Chunk(HSpatial spatial, Block& block, size_t index, Element& element, float size)
+		: m_spatial(spatial)
 		, m_index(index)
-		, m_block(*sector().m_block)
-		, m_element(element)
+		, m_block(&block)
+		, m_element(&element)
 		, m_size(size)
 	{}
-
-	Sector& Chunk::sector()
-	{
-		Entity* parent = m_entity.m_parent;
-		for(size_t depth = 1; !parent->isa<WorldPage>(); parent = parent->m_parent)
-			++depth;
-
-		return parent->as<Sector>();
-	}
 
 	Chunk* Chunk::neighbour(Side side)
 	{
@@ -43,6 +41,6 @@ using namespace mud; namespace toy
 	bool Chunk::boundary(Side side)
 	{
 		Chunk* neighbour = this->neighbour(side);
-		return (!neighbour || neighbour->m_element.m_state != this->m_element.m_state);
+		return (!neighbour || neighbour->m_element->m_state != this->m_element->m_state);
 	}
 }

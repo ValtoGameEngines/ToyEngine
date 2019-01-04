@@ -49,13 +49,14 @@ void generate_avatar(Colour& colour, Image256& avatar)
 		}
 }
 
-Star* generate_system(Entity& galaxy, const uvec3& coord, const vec3& position)
+HStar generate_system(Galaxy& galaxy, const uvec3& coord, const vec3& position)
 {
 	int roll = random_integer(0, 100);
 	if(roll < 85)
-		return nullptr;
+		return {};
 
-	Star& star = galaxy.construct<Star>(position, to_coord(coord), generate_name());
+	HStar hstar = construct<Star>(galaxy.m_spatial, galaxy, position, to_coord(coord), generate_name());
+	Star& star = hstar;
 	star.m_base_population = random_integer(1, 1000);
 	star.m_population = random_integer(1, star.m_base_population);
 	star.m_max_population = star.m_base_population;
@@ -64,16 +65,16 @@ Star* generate_system(Entity& galaxy, const uvec3& coord, const vec3& position)
 	for(Resource resource = Resource(0); resource != Resource::Count; resource = Resource(size_t(resource) + 1))
 		if(random_integer(1, 100) > 98)
 			star.m_resources[size_t(resource)] = random_integer(1, 20);
-	return &star;
+	return hstar;
 }
 
-Fleet* generate_fleet(Entity& galaxy, const uvec3& coord, const vec3& position)
+HFleet generate_fleet(Galaxy& galaxy, const uvec3& coord, const vec3& position)
 {
 	UNUSED(galaxy); UNUSED(coord); UNUSED(position);
-	return nullptr;
+	return {};
 }
 
-Commander* generate_commander(Entity& galaxy, Star& star)
+Commander* generate_commander(Galaxy& galaxy, Star& star)
 {
 	int roll = random_integer(0, 100);
 	if(roll < 85)
@@ -112,11 +113,11 @@ Commander* generate_commander(Entity& galaxy, Star& star)
 	//BLASER1 : 50
 	//BPLASMA1 : 20
 
-	galaxy.as<Galaxy>().m_commanders.push_back(&commander);
+	galaxy.m_commanders.push_back(&commander);
 
 	generate_avatar(commander.m_colour, commander.m_avatar);
 
-	Fleet& fleet = galaxy.construct<Fleet>(star.m_entity.m_position + 1.0f * Y3, commander, star.m_coord, generate_name());
+	Fleet& fleet = construct<Fleet>(galaxy.m_spatial, galaxy, star.m_spatial->m_position + 1.0f * Y3, commander, star.m_coord, generate_name());
 
 	float size = random_scalar(1.f, 3.f);
 	fleet.set_ships("SONDE", size_t(1 * size));
@@ -128,10 +129,35 @@ Commander* generate_commander(Entity& galaxy, Star& star)
 	return &commander;
 }
 
-Star* assign_system(Entity& galaxy, Star& star, std::vector<Commander*> commanders)
+void assign_system(Galaxy& galaxy, Star& star, std::vector<Commander*> commanders)
 {
 	UNUSED(galaxy); UNUSED(star); UNUSED(commanders);
-	return nullptr;
+}
+
+void space_generate(HSpatial origin)
+{
+	uint galaxy_size = 40;
+
+	HGalaxy galaxy = construct<Galaxy>(origin, Zero3, uvec2(galaxy_size));
+
+	as<Universe>(origin->m_world->m_complex).m_galaxies.push_back(galaxy);
+
+	std::vector<uvec3> coords;
+	grid(uvec3(galaxy_size, 1, galaxy_size), coords);
+
+	std::vector<vec3> positions;
+	for(uvec3& coord : coords)
+		positions.push_back(grid_center(coord, vec3(1.f)));
+
+	std::vector<HStar> systems;
+	for(size_t i = 0; i < coords.size(); ++i)
+		if(HStar star = generate_system(galaxy, coords[i], positions[i]))
+		{
+			systems.push_back(star);
+		}
+
+	for(HStar star : systems)
+		generate_commander(galaxy, *star);
 }
 
 void space_generator(GameShell& shell, VisualScript& script)

@@ -7,10 +7,9 @@
 #include <edit/Types.h>
 #include <edit/Editor/Editor.h>
 
-#include <obj/DispatchDecl.h>
+#include <type/DispatchDecl.h>
 
-#include <core/View/Vision.h>
-#include <core/Player/Player.h>
+#include <core/User.h>
 
 #include <lang/VisualScript.h>
 

@@ -18,9 +18,9 @@ namespace toy
 		: Module("toy::block")
 	{
         // ensure dependencies are instantiated
-        mud_obj::m();
+        mud_type::m();
         mud_math::m();
-        mud_procgen_gfx::m();
+        mud_wfc_gfx::m();
         toy_core::m();
         toy_visu::m();
         toy_edit::m();

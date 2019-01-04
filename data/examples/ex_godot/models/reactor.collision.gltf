@@ -1,0 +1,7093 @@
+{
+    "accessors": [
+        {
+            "bufferView": 84,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 58,
+            "max": [
+                0.0,
+                1.0
+            ],
+            "min": [
+                0.0,
+                1.0
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.014_TEXCOORD_0_0",
+            "type": "VEC2"
+        },
+        {
+            "bufferView": 100,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 168,
+            "max": [
+                0.0,
+                1.0
+            ],
+            "min": [
+                0.0,
+                1.0
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.026_TEXCOORD_0_0",
+            "type": "VEC2"
+        },
+        {
+            "bufferView": 74,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 548,
+            "max": [
+                10.192761421203613,
+                10.986199378967285,
+                -102.78978729248047
+            ],
+            "min": [
+                -10.163886070251465,
+                -1.1642417907714844,
+                -105.33063507080078
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.011_POSITION_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 115,
+            "byteOffset": 0,
+            "componentType": 5123,
+            "count": 156,
+            "max": [
+                107
+            ],
+            "min": [
+                0
+            ],
+            "name": "accessor_buffer_Plane.025_0",
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 96,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 244,
+            "max": [
+                0.0,
+                1.0
+            ],
+            "min": [
+                0.0,
+                1.0
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.025_TEXCOORD_0_0",
+            "type": "VEC2"
+        },
+        {
+            "bufferView": 39,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 91,
+            "max": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "min": [
+                -0.9440397024154663,
+                -1.0,
+                -1.0
+            ],
+            "name": "accessor_buffer_Cube.023_NORMAL_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 107,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 108,
+            "max": [
+                0.9998970031738281,
+                1.0,
+                0.9548324346542358
+            ],
+            "min": [
+                -0.9549197554588318,
+                -1.0,
+                -0.9556478261947632
+            ],
+            "name": "accessor_buffer_Plane.000_NORMAL_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 73,
+            "byteOffset": 0,
+            "componentType": 5123,
+            "count": 384,
+            "max": [
+                255
+            ],
+            "min": [
+                0
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.010_0",
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 28,
+            "byteOffset": 0,
+            "componentType": 5123,
+            "count": 2856,
+            "max": [
+                1643
+            ],
+            "min": [
+                0
+            ],
+            "name": "accessor_buffer_Cube.003_0",
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 54,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 445,
+            "max": [
+                10.341187477111816,
+                0.20139306783676147,
+                -95.48432922363281
+            ],
+            "min": [
+                -10.3118896484375,
+                -1.1506637334823608,
+                -105.35427856445312
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.005_POSITION_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 20,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1467,
+            "max": [
+                0.9999895095825195,
+                1.0,
+                0.9999817609786987
+            ],
+            "min": [
+                -0.9999895095825195,
+                -1.0,
+                -0.9999818205833435
+            ],
+            "name": "accessor_buffer_Circle.055_NORMAL_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 58,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 222,
+            "max": [
+                24.082019805908203,
+                -4.790992259979248,
+                -75.62654113769531
+            ],
+            "min": [
+                7.757559776306152,
+                -6.406675338745117,
+                -82.52139282226562
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.006_POSITION_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 51,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 320,
+            "max": [
+                0.09196501970291138,
+                1.0,
+                0.999981164932251
+            ],
+            "min": [
+                -0.09195828437805176,
+                -0.000335562537657097,
+                -0.999981164932251
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.002_NORMAL_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 61,
+            "byteOffset": 0,
+            "componentType": 5123,
+            "count": 336,
+            "max": [
+                221
+            ],
+            "min": [
+                0
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.006_0",
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 4,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1982,
+            "max": [
+                9.793350219726562,
+                3.0,
+                -2.3535590171813965
+            ],
+            "min": [
+                -9.793350219726562,
+                -3.9858665466308594,
+                -11.308381080627441
+            ],
+            "name": "accessor_buffer_Circle.013_POSITION_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 59,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 222,
+            "max": [
+                0.28446540236473083,
+                1.0,
+                0.9945542216300964
+            ],
+            "min": [
+                -0.28444385528564453,
+                -0.00033556210109964013,
+                -0.9945531487464905
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.006_NORMAL_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 27,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1644,
+            "max": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "min": [
+                -1.0,
+                -1.0,
+                -1.0
+            ],
+            "name": "accessor_buffer_Cube.003_NORMAL_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 32,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 68,
+            "max": [
+                1.1392810344696045,
+                1.1679723262786865,
+                1.0402846336364746
+            ],
+            "min": [
+                -1.1392810344696045,
+                -1.0957739353179932,
+                -1.0402846336364746
+            ],
+            "name": "accessor_buffer_Cube.007_POSITION_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 47,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 140,
+            "max": [
+                16.71202850341797,
+                0.836543083190918,
+                1.911353349685669
+            ],
+            "min": [
+                0.307952880859375,
+                -2.642970085144043,
+                -1.911353349685669
+            ],
+            "name": "accessor_buffer_Cube.570_POSITION_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 31,
+            "byteOffset": 0,
+            "componentType": 5123,
+            "count": 948,
+            "max": [
+                579
+            ],
+            "min": [
+                0
+            ],
+            "name": "accessor_buffer_Cube.004_0",
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 26,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1644,
+            "max": [
+                6.50486946105957,
+                -0.02237558364868164,
+                -42.23163986206055
+            ],
+            "min": [
+                -6.504865646362305,
+                -9.180625915527344,
+                -81.03204345703125
+            ],
+            "name": "accessor_buffer_Cube.003_POSITION_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 48,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 140,
+            "max": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "min": [
+                -1.0,
+                -1.0,
+                -1.0
+            ],
+            "name": "accessor_buffer_Cube.570_NORMAL_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 122,
+            "byteOffset": 0,
+            "componentType": 5123,
+            "count": 36,
+            "max": [
+                23
+            ],
+            "min": [
+                0
+            ],
+            "name": "accessor_buffer_Plane.033_0",
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 42,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 147,
+            "max": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "min": [
+                -1.0,
+                -1.0,
+                -1.0
+            ],
+            "name": "accessor_buffer_Cube.025_NORMAL_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 108,
+            "byteOffset": 0,
+            "componentType": 5123,
+            "count": 156,
+            "max": [
+                107
+            ],
+            "min": [
+                0
+            ],
+            "name": "accessor_buffer_Plane.000_0",
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 30,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 580,
+            "max": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "min": [
+                -1.0,
+                -1.0,
+                -1.0
+            ],
+            "name": "accessor_buffer_Cube.004_NORMAL_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 16,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 160,
+            "max": [
+                -0.09764368087053299,
+                0.8941012620925903,
+                0.8941011428833008
+            ],
+            "min": [
+                -0.8576929569244385,
+                -0.8941011428833008,
+                -0.8941011428833008
+            ],
+            "name": "accessor_buffer_Circle.044_POSITION_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 104,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 64,
+            "max": [
+                0.0,
+                1.0
+            ],
+            "min": [
+                0.0,
+                1.0
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.040_TEXCOORD_0_0",
+            "type": "VEC2"
+        },
+        {
+            "bufferView": 25,
+            "byteOffset": 0,
+            "componentType": 5123,
+            "count": 906,
+            "max": [
+                616
+            ],
+            "min": [
+                0
+            ],
+            "name": "accessor_buffer_Cube.001_0",
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 89,
+            "byteOffset": 0,
+            "componentType": 5123,
+            "count": 960,
+            "max": [
+                616
+            ],
+            "min": [
+                0
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.019_0",
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 41,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 147,
+            "max": [
+                2.8408918380737305,
+                2.30053973197937,
+                1.8233470916748047
+            ],
+            "min": [
+                -4.287439346313477,
+                1.1043524742126465,
+                -1.8233470916748047
+            ],
+            "name": "accessor_buffer_Cube.025_POSITION_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 13,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1188,
+            "max": [
+                0.9999992847442627,
+                1.0,
+                0.9999999403953552
+            ],
+            "min": [
+                -0.9999992847442627,
+                -1.0,
+                -0.9999712705612183
+            ],
+            "name": "accessor_buffer_Circle.025_NORMAL_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 94,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 244,
+            "max": [
+                9.210002899169922,
+                -6.347543239593506,
+                -82.5213851928711
+            ],
+            "min": [
+                -9.183913230895996,
+                -6.3779683113098145,
+                -95.87855529785156
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.025_POSITION_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 116,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 175,
+            "max": [
+                2.251364231109619,
+                0.01991558074951172,
+                3.8326687812805176
+            ],
+            "min": [
+                -2.251364231109619,
+                -3.5626144409179688,
+                -2.9848904609680176
+            ],
+            "name": "accessor_buffer_Plane.026_POSITION_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 92,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 436,
+            "max": [
+                0.0,
+                1.0
+            ],
+            "min": [
+                0.0,
+                1.0
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.020_TEXCOORD_0_0",
+            "type": "VEC2"
+        },
+        {
+            "bufferView": 98,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 168,
+            "max": [
+                9.417859077453613,
+                -0.8434849977493286,
+                -93.3305435180664
+            ],
+            "min": [
+                -9.391179084777832,
+                -6.3779683113098145,
+                -95.87855529785156
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.026_POSITION_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 120,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 24,
+            "max": [
+                0.9981569647789001,
+                1.0,
+                0.9999991655349731
+            ],
+            "min": [
+                -0.9999472498893738,
+                -1.0,
+                -0.9999991655349731
+            ],
+            "name": "accessor_buffer_Plane.033_NORMAL_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 29,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 580,
+            "max": [
+                -20.303070068359375,
+                -3.726937770843506,
+                18.82189178466797
+            ],
+            "min": [
+                -38.94629669189453,
+                -24.47516441345215,
+                -18.82189178466797
+            ],
+            "name": "accessor_buffer_Cube.004_POSITION_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 110,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 24,
+            "max": [
+                0.9981570243835449,
+                1.0,
+                0.9999991655349731
+            ],
+            "min": [
+                -0.9999473690986633,
+                -1.0,
+                -0.9999992251396179
+            ],
+            "name": "accessor_buffer_Plane.024_NORMAL_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 82,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 58,
+            "max": [
+                8.794677734375,
+                -6.377287864685059,
+                -82.25827026367188
+            ],
+            "min": [
+                -8.769765853881836,
+                -6.377287864685059,
+                -89.59873962402344
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.014_POSITION_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 77,
+            "byteOffset": 0,
+            "componentType": 5123,
+            "count": 804,
+            "max": [
+                547
+            ],
+            "min": [
+                0
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.011_0",
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 60,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 222,
+            "max": [
+                0.0,
+                1.0
+            ],
+            "min": [
+                0.0,
+                1.0
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.006_TEXCOORD_0_0",
+            "type": "VEC2"
+        },
+        {
+            "bufferView": 6,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1982,
+            "max": [
+                0.0,
+                1.0
+            ],
+            "min": [
+                0.0,
+                1.0
+            ],
+            "name": "accessor_buffer_Circle.013_TEXCOORD_0_0",
+            "type": "VEC2"
+        },
+        {
+            "bufferView": 83,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 58,
+            "max": [
+                0.0003350566257722676,
+                1.0,
+                0.00033509943750686944
+            ],
+            "min": [
+                -1.6463825886603445e-05,
+                0.9999999403953552,
+                -6.499594462638925e-08
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.014_NORMAL_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 87,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 617,
+            "max": [
+                1.0,
+                1.0,
+                0.9990795254707336
+            ],
+            "min": [
+                -1.0,
+                -1.0,
+                -0.9990835189819336
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.019_NORMAL_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 86,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 617,
+            "max": [
+                10.34118366241455,
+                0.20139306783676147,
+                -94.18374633789062
+            ],
+            "min": [
+                -10.31188678741455,
+                -3.4352784156799316,
+                -105.35426330566406
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.019_POSITION_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 111,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 24,
+            "max": [
+                0.0,
+                1.0
+            ],
+            "min": [
+                0.0,
+                1.0
+            ],
+            "name": "accessor_buffer_Plane.024_TEXCOORD_0_0",
+            "type": "VEC2"
+        },
+        {
+            "bufferView": 36,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 314,
+            "max": [
+                1.0,
+                0.9999999403953552,
+                1.0
+            ],
+            "min": [
+                -1.0,
+                -1.0,
+                -1.0
+            ],
+            "name": "accessor_buffer_Cube.011_NORMAL_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 37,
+            "byteOffset": 0,
+            "componentType": 5123,
+            "count": 384,
+            "max": [
+                313
+            ],
+            "min": [
+                0
+            ],
+            "name": "accessor_buffer_Cube.011_0",
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 109,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 24,
+            "max": [
+                4.105161666870117,
+                2.032817840576172,
+                0.41448211669921875
+            ],
+            "min": [
+                -4.105175018310547,
+                -2.032817840576172,
+                -0.41448211669921875
+            ],
+            "name": "accessor_buffer_Plane.024_POSITION_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 78,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 284,
+            "max": [
+                17.818334579467773,
+                10.986199378967285,
+                -75.70828247070312
+            ],
+            "min": [
+                7.757567882537842,
+                -11.479183197021484,
+                -104.49893951416016
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.012_POSITION_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 53,
+            "byteOffset": 0,
+            "componentType": 5123,
+            "count": 480,
+            "max": [
+                319
+            ],
+            "min": [
+                0
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.002_0",
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 11,
+            "byteOffset": 0,
+            "componentType": 5123,
+            "count": 1500,
+            "max": [
+                905
+            ],
+            "min": [
+                0
+            ],
+            "name": "accessor_buffer_Circle.022_0",
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 70,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 256,
+            "max": [
+                10.192761421203613,
+                10.986199378967285,
+                -102.78978729248047
+            ],
+            "min": [
+                -10.163886070251465,
+                -1.1506637334823608,
+                -104.07420349121094
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.010_POSITION_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 106,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 108,
+            "max": [
+                4.814804553985596,
+                0.07337409257888794,
+                5.055655479431152
+            ],
+            "min": [
+                -5.175188064575195,
+                -2.450896739959717,
+                -5.1758832931518555
+            ],
+            "name": "accessor_buffer_Plane.000_POSITION_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 50,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 320,
+            "max": [
+                8.139291763305664,
+                -4.790992259979248,
+                -78.65122985839844
+            ],
+            "min": [
+                -8.116235733032227,
+                -6.406675338745117,
+                -82.92178344726562
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.002_POSITION_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 114,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 108,
+            "max": [
+                0.9998970031738281,
+                1.0,
+                0.9548324346542358
+            ],
+            "min": [
+                -0.9549197554588318,
+                -1.0,
+                -0.9556478261947632
+            ],
+            "name": "accessor_buffer_Plane.025_NORMAL_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 9,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 906,
+            "max": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "min": [
+                -1.0,
+                -1.0,
+                -1.0
+            ],
+            "name": "accessor_buffer_Circle.022_NORMAL_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 80,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 284,
+            "max": [
+                0.0,
+                1.0
+            ],
+            "min": [
+                0.0,
+                1.0
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.012_TEXCOORD_0_0",
+            "type": "VEC2"
+        },
+        {
+            "bufferView": 8,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 906,
+            "max": [
+                16.381324768066406,
+                4.009302139282227,
+                -30.332088470458984
+            ],
+            "min": [
+                -16.381324768066406,
+                -6.753727912902832,
+                -42.960243225097656
+            ],
+            "name": "accessor_buffer_Circle.022_POSITION_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 118,
+            "byteOffset": 0,
+            "componentType": 5123,
+            "count": 288,
+            "max": [
+                174
+            ],
+            "min": [
+                0
+            ],
+            "name": "accessor_buffer_Plane.026_0",
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 88,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 617,
+            "max": [
+                0.0,
+                1.0
+            ],
+            "min": [
+                0.0,
+                1.0
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.019_TEXCOORD_0_0",
+            "type": "VEC2"
+        },
+        {
+            "bufferView": 65,
+            "byteOffset": 0,
+            "componentType": 5123,
+            "count": 192,
+            "max": [
+                111
+            ],
+            "min": [
+                0
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.008_0",
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 55,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 445,
+            "max": [
+                0.9990187883377075,
+                1.0,
+                0.9999811053276062
+            ],
+            "min": [
+                -0.999036431312561,
+                -1.0,
+                -0.9999811053276062
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.005_NORMAL_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 75,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 548,
+            "max": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "min": [
+                -1.0,
+                -1.0,
+                -0.06131665036082268
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.011_NORMAL_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 76,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 548,
+            "max": [
+                0.0,
+                1.0
+            ],
+            "min": [
+                0.0,
+                1.0
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.011_TEXCOORD_0_0",
+            "type": "VEC2"
+        },
+        {
+            "bufferView": 33,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 68,
+            "max": [
+                0.8605265617370605,
+                1.0,
+                0.8605266213417053
+            ],
+            "min": [
+                -0.8605265617370605,
+                -1.0,
+                -0.8605265617370605
+            ],
+            "name": "accessor_buffer_Cube.007_NORMAL_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 40,
+            "byteOffset": 0,
+            "componentType": 5123,
+            "count": 204,
+            "max": [
+                90
+            ],
+            "min": [
+                0
+            ],
+            "name": "accessor_buffer_Cube.023_0",
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 10,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 906,
+            "max": [
+                0.0,
+                1.0
+            ],
+            "min": [
+                0.0,
+                1.0
+            ],
+            "name": "accessor_buffer_Circle.022_TEXCOORD_0_0",
+            "type": "VEC2"
+        },
+        {
+            "bufferView": 5,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1982,
+            "max": [
+                0.999947726726532,
+                1.0,
+                0.9986297488212585
+            ],
+            "min": [
+                -0.999947726726532,
+                -1.0,
+                -0.998741626739502
+            ],
+            "name": "accessor_buffer_Circle.013_NORMAL_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 69,
+            "byteOffset": 0,
+            "componentType": 5123,
+            "count": 786,
+            "max": [
+                535
+            ],
+            "min": [
+                0
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.009_0",
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 21,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1467,
+            "max": [
+                1.0,
+                1.0
+            ],
+            "min": [
+                -0.01708984375,
+                0.0009765625
+            ],
+            "name": "accessor_buffer_Circle.055_TEXCOORD_0_0",
+            "type": "VEC2"
+        },
+        {
+            "bufferView": 101,
+            "byteOffset": 0,
+            "componentType": 5123,
+            "count": 252,
+            "max": [
+                167
+            ],
+            "min": [
+                0
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.026_0",
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 34,
+            "byteOffset": 0,
+            "componentType": 5123,
+            "count": 108,
+            "max": [
+                67
+            ],
+            "min": [
+                0
+            ],
+            "name": "accessor_buffer_Cube.007_0",
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 2,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1156,
+            "max": [
+                0.0,
+                1.0
+            ],
+            "min": [
+                0.0,
+                1.0
+            ],
+            "name": "accessor_buffer_Circle.012_TEXCOORD_0_0",
+            "type": "VEC2"
+        },
+        {
+            "bufferView": 85,
+            "byteOffset": 0,
+            "componentType": 5123,
+            "count": 96,
+            "max": [
+                57
+            ],
+            "min": [
+                0
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.014_0",
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 38,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 91,
+            "max": [
+                2.6203880310058594,
+                2.300539255142212,
+                1.8233470916748047
+            ],
+            "min": [
+                -3.8335180282592773,
+                1.1043519973754883,
+                -1.8233470916748047
+            ],
+            "name": "accessor_buffer_Cube.023_POSITION_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 67,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 536,
+            "max": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "min": [
+                -1.0,
+                -1.0,
+                -0.06131665036082268
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.009_NORMAL_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 97,
+            "byteOffset": 0,
+            "componentType": 5123,
+            "count": 408,
+            "max": [
+                243
+            ],
+            "min": [
+                0
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.025_0",
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 15,
+            "byteOffset": 0,
+            "componentType": 5123,
+            "count": 1815,
+            "max": [
+                1187
+            ],
+            "min": [
+                0
+            ],
+            "name": "accessor_buffer_Circle.025_0",
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 99,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 168,
+            "max": [
+                0.9992049336433411,
+                0.38834962248802185,
+                0.9999998211860657
+            ],
+            "min": [
+                -0.9992049932479858,
+                -0.9684001803398132,
+                -0.04119660705327988
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.026_NORMAL_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 45,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 486,
+            "max": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "min": [
+                -0.9659261703491211,
+                -1.0,
+                -1.0
+            ],
+            "name": "accessor_buffer_Cube.052_NORMAL_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 35,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 314,
+            "max": [
+                1.8026111125946045,
+                3.1612930297851562,
+                3.1794075965881348
+            ],
+            "min": [
+                -1.8026111125946045,
+                0.46597540378570557,
+                -4.129944324493408
+            ],
+            "name": "accessor_buffer_Cube.011_POSITION_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 72,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 256,
+            "max": [
+                0.0,
+                1.0
+            ],
+            "min": [
+                0.0,
+                1.0
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.010_TEXCOORD_0_0",
+            "type": "VEC2"
+        },
+        {
+            "bufferView": 64,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 112,
+            "max": [
+                0.0,
+                1.0
+            ],
+            "min": [
+                0.0,
+                1.0
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.008_TEXCOORD_0_0",
+            "type": "VEC2"
+        },
+        {
+            "bufferView": 90,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 436,
+            "max": [
+                9.417859077453613,
+                -0.8434849977493286,
+                -82.5213851928711
+            ],
+            "min": [
+                -9.391179084777832,
+                -6.442756175994873,
+                -102.03730010986328
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.020_POSITION_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 119,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 24,
+            "max": [
+                4.128789901733398,
+                -2.484251022338867,
+                -95.88416290283203
+            ],
+            "min": [
+                -4.081546783447266,
+                -6.549886703491211,
+                -96.71312713623047
+            ],
+            "name": "accessor_buffer_Plane.033_POSITION_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 62,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 112,
+            "max": [
+                9.210002899169922,
+                -6.347543239593506,
+                -89.16610717773438
+            ],
+            "min": [
+                -9.183913230895996,
+                -6.391178131103516,
+                -93.83000946044922
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.008_POSITION_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1156,
+            "max": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "min": [
+                -1.0,
+                -1.0,
+                -1.0
+            ],
+            "name": "accessor_buffer_Circle.012_NORMAL_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 66,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 536,
+            "max": [
+                10.192761421203613,
+                10.986199378967285,
+                -102.78978729248047
+            ],
+            "min": [
+                -10.163886070251465,
+                -1.1642417907714844,
+                -105.33063507080078
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.009_POSITION_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1156,
+            "max": [
+                -11.963703155517578,
+                -15.708806991577148,
+                11.20529842376709
+            ],
+            "min": [
+                -81.3553466796875,
+                -74.24871826171875,
+                -11.205296516418457
+            ],
+            "name": "accessor_buffer_Circle.012_POSITION_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 91,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 436,
+            "max": [
+                0.9999657869338989,
+                1.0,
+                0.9999810457229614
+            ],
+            "min": [
+                -0.9999657869338989,
+                -0.9684001803398132,
+                -0.9999657273292542
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.020_NORMAL_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 81,
+            "byteOffset": 0,
+            "componentType": 5123,
+            "count": 372,
+            "max": [
+                283
+            ],
+            "min": [
+                0
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.012_0",
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 117,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 175,
+            "max": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "min": [
+                -1.0,
+                -1.0,
+                -1.0
+            ],
+            "name": "accessor_buffer_Plane.026_NORMAL_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 79,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 284,
+            "max": [
+                0.9951711297035217,
+                1.0,
+                0.9951711893081665
+            ],
+            "min": [
+                -0.9951711297035217,
+                -1.0,
+                -0.9951713681221008
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.012_NORMAL_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 95,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 244,
+            "max": [
+                0.09177839756011963,
+                1.0,
+                0.9999810457229614
+            ],
+            "min": [
+                -0.09191220253705978,
+                -0.0003355687658768147,
+                -0.014308339916169643
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.025_NORMAL_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 46,
+            "byteOffset": 0,
+            "componentType": 5123,
+            "count": 762,
+            "max": [
+                485
+            ],
+            "min": [
+                0
+            ],
+            "name": "accessor_buffer_Cube.052_0",
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 102,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 64,
+            "max": [
+                9.417859077453613,
+                -1.1506637334823608,
+                -93.37694549560547
+            ],
+            "min": [
+                -9.391179084777832,
+                -6.347543239593506,
+                -95.9476089477539
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.040_POSITION_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 68,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 536,
+            "max": [
+                0.0,
+                1.0
+            ],
+            "min": [
+                0.0,
+                1.0
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.009_TEXCOORD_0_0",
+            "type": "VEC2"
+        },
+        {
+            "bufferView": 22,
+            "byteOffset": 0,
+            "componentType": 5123,
+            "count": 2211,
+            "max": [
+                1466
+            ],
+            "min": [
+                0
+            ],
+            "name": "accessor_buffer_Circle.055_0",
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 7,
+            "byteOffset": 0,
+            "componentType": 5123,
+            "count": 2370,
+            "max": [
+                1981
+            ],
+            "min": [
+                0
+            ],
+            "name": "accessor_buffer_Circle.013_0",
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 12,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1188,
+            "max": [
+                13.287075996398926,
+                3.0,
+                -9.793368339538574
+            ],
+            "min": [
+                -13.287075996398926,
+                -3.987361192703247,
+                -26.428775787353516
+            ],
+            "name": "accessor_buffer_Circle.025_POSITION_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 19,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1467,
+            "max": [
+                13.287075996398926,
+                3.0,
+                -9.79333782196045
+            ],
+            "min": [
+                -13.287075996398926,
+                -4.276350975036621,
+                -26.574344635009766
+            ],
+            "name": "accessor_buffer_Circle.055_POSITION_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 71,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 256,
+            "max": [
+                0.9987313747406006,
+                0.9994106888771057,
+                0.999981164932251
+            ],
+            "min": [
+                -0.9987320899963379,
+                -0.2378321886062622,
+                0.03427564352750778
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.010_NORMAL_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 49,
+            "byteOffset": 0,
+            "componentType": 5123,
+            "count": 228,
+            "max": [
+                139
+            ],
+            "min": [
+                0
+            ],
+            "name": "accessor_buffer_Cube.570_0",
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 56,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 445,
+            "max": [
+                0.0,
+                1.0
+            ],
+            "min": [
+                0.0,
+                1.0
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.005_TEXCOORD_0_0",
+            "type": "VEC2"
+        },
+        {
+            "bufferView": 105,
+            "byteOffset": 0,
+            "componentType": 5123,
+            "count": 96,
+            "max": [
+                63
+            ],
+            "min": [
+                0
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.040_0",
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 63,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 112,
+            "max": [
+                0.0917791873216629,
+                1.0,
+                0.9999810457229614
+            ],
+            "min": [
+                -0.09190531075000763,
+                -0.0003355688531883061,
+                -1.0013093998395561e-07
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.008_NORMAL_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 44,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 486,
+            "max": [
+                -0.2511558532714844,
+                1.0416070222854614,
+                2.0577335357666016
+            ],
+            "min": [
+                -17.719409942626953,
+                -2.6654462814331055,
+                -2.057729721069336
+            ],
+            "name": "accessor_buffer_Cube.052_POSITION_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 43,
+            "byteOffset": 0,
+            "componentType": 5123,
+            "count": 276,
+            "max": [
+                146
+            ],
+            "min": [
+                0
+            ],
+            "name": "accessor_buffer_Cube.025_0",
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 113,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 108,
+            "max": [
+                4.814804553985596,
+                0.07337409257888794,
+                5.055655479431152
+            ],
+            "min": [
+                -5.175188064575195,
+                -2.450896739959717,
+                -5.1758832931518555
+            ],
+            "name": "accessor_buffer_Plane.025_POSITION_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 103,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 64,
+            "max": [
+                0.0849834755063057,
+                0.37734514474868774,
+                0.9260551929473877
+            ],
+            "min": [
+                -0.08511223644018173,
+                0.3770342767238617,
+                0.9221534729003906
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.040_NORMAL_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 24,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 617,
+            "max": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "min": [
+                -1.0,
+                -1.0,
+                -1.0
+            ],
+            "name": "accessor_buffer_Cube.001_NORMAL_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 18,
+            "byteOffset": 0,
+            "componentType": 5123,
+            "count": 192,
+            "max": [
+                159
+            ],
+            "min": [
+                0
+            ],
+            "name": "accessor_buffer_Circle.044_0",
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 3,
+            "byteOffset": 0,
+            "componentType": 5123,
+            "count": 2091,
+            "max": [
+                1155
+            ],
+            "min": [
+                0
+            ],
+            "name": "accessor_buffer_Circle.012_0",
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 17,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 160,
+            "max": [
+                1.0,
+                0.9807853698730469,
+                0.9807853698730469
+            ],
+            "min": [
+                -1.0,
+                -0.9807853102684021,
+                -0.9807853102684021
+            ],
+            "name": "accessor_buffer_Circle.044_NORMAL_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 93,
+            "byteOffset": 0,
+            "componentType": 5123,
+            "count": 702,
+            "max": [
+                435
+            ],
+            "min": [
+                0
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.020_0",
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 57,
+            "byteOffset": 0,
+            "componentType": 5123,
+            "count": 732,
+            "max": [
+                444
+            ],
+            "min": [
+                0
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.005_0",
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 121,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 24,
+            "max": [
+                0.0,
+                1.0
+            ],
+            "min": [
+                0.0,
+                1.0
+            ],
+            "name": "accessor_buffer_Plane.033_TEXCOORD_0_0",
+            "type": "VEC2"
+        },
+        {
+            "bufferView": 112,
+            "byteOffset": 0,
+            "componentType": 5123,
+            "count": 36,
+            "max": [
+                23
+            ],
+            "min": [
+                0
+            ],
+            "name": "accessor_buffer_Plane.024_0",
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 23,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 617,
+            "max": [
+                2.5379397869110107,
+                8.492536544799805,
+                -76.81551361083984
+            ],
+            "min": [
+                -2.53794002532959,
+                -11.479183197021484,
+                -105.47747802734375
+            ],
+            "name": "accessor_buffer_Cube.001_POSITION_0",
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 52,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 320,
+            "max": [
+                0.0,
+                1.0
+            ],
+            "min": [
+                0.0,
+                1.0
+            ],
+            "name": "accessor_buffer_hall_circ1125_fences_1Base.002_TEXCOORD_0_0",
+            "type": "VEC2"
+        },
+        {
+            "bufferView": 14,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1188,
+            "max": [
+                1.0,
+                1.0
+            ],
+            "min": [
+                -0.01708984375,
+                0.0009765625
+            ],
+            "name": "accessor_buffer_Circle.025_TEXCOORD_0_0",
+            "type": "VEC2"
+        }
+    ],
+    "asset": {
+        "copyright": "",
+        "generator": "blendergltf v1.2.0",
+        "version": "2.0"
+    },
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteLength": 13872,
+            "byteOffset": 0,
+            "byteStride": 12,
+            "name": "bufferView_buffer_Circle.012_POSITION_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 13872,
+            "byteOffset": 13872,
+            "byteStride": 12,
+            "name": "bufferView_buffer_Circle.012_NORMAL_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 9248,
+            "byteOffset": 27744,
+            "byteStride": 8,
+            "name": "bufferView_buffer_Circle.012_TEXCOORD_0_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 4184,
+            "byteOffset": 36992,
+            "name": "bufferView_buffer_Circle.012_0",
+            "target": 34963
+        },
+        {
+            "buffer": 0,
+            "byteLength": 23784,
+            "byteOffset": 41176,
+            "byteStride": 12,
+            "name": "bufferView_buffer_Circle.013_POSITION_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 23784,
+            "byteOffset": 64960,
+            "byteStride": 12,
+            "name": "bufferView_buffer_Circle.013_NORMAL_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 15856,
+            "byteOffset": 88744,
+            "byteStride": 8,
+            "name": "bufferView_buffer_Circle.013_TEXCOORD_0_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 4744,
+            "byteOffset": 104600,
+            "name": "bufferView_buffer_Circle.013_0",
+            "target": 34963
+        },
+        {
+            "buffer": 0,
+            "byteLength": 10872,
+            "byteOffset": 109344,
+            "byteStride": 12,
+            "name": "bufferView_buffer_Circle.022_POSITION_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 10872,
+            "byteOffset": 120216,
+            "byteStride": 12,
+            "name": "bufferView_buffer_Circle.022_NORMAL_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 7248,
+            "byteOffset": 131088,
+            "byteStride": 8,
+            "name": "bufferView_buffer_Circle.022_TEXCOORD_0_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 3004,
+            "byteOffset": 138336,
+            "name": "bufferView_buffer_Circle.022_0",
+            "target": 34963
+        },
+        {
+            "buffer": 0,
+            "byteLength": 14256,
+            "byteOffset": 141340,
+            "byteStride": 12,
+            "name": "bufferView_buffer_Circle.025_POSITION_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 14256,
+            "byteOffset": 155596,
+            "byteStride": 12,
+            "name": "bufferView_buffer_Circle.025_NORMAL_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 9504,
+            "byteOffset": 169852,
+            "byteStride": 8,
+            "name": "bufferView_buffer_Circle.025_TEXCOORD_0_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 3632,
+            "byteOffset": 179356,
+            "name": "bufferView_buffer_Circle.025_0",
+            "target": 34963
+        },
+        {
+            "buffer": 0,
+            "byteLength": 1920,
+            "byteOffset": 182988,
+            "byteStride": 12,
+            "name": "bufferView_buffer_Circle.044_POSITION_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 1920,
+            "byteOffset": 184908,
+            "byteStride": 12,
+            "name": "bufferView_buffer_Circle.044_NORMAL_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 388,
+            "byteOffset": 186828,
+            "name": "bufferView_buffer_Circle.044_0",
+            "target": 34963
+        },
+        {
+            "buffer": 0,
+            "byteLength": 17604,
+            "byteOffset": 187216,
+            "byteStride": 12,
+            "name": "bufferView_buffer_Circle.055_POSITION_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 17604,
+            "byteOffset": 204820,
+            "byteStride": 12,
+            "name": "bufferView_buffer_Circle.055_NORMAL_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 11736,
+            "byteOffset": 222424,
+            "byteStride": 8,
+            "name": "bufferView_buffer_Circle.055_TEXCOORD_0_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 4424,
+            "byteOffset": 234160,
+            "name": "bufferView_buffer_Circle.055_0",
+            "target": 34963
+        },
+        {
+            "buffer": 0,
+            "byteLength": 7404,
+            "byteOffset": 238584,
+            "byteStride": 12,
+            "name": "bufferView_buffer_Cube.001_POSITION_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 7404,
+            "byteOffset": 245988,
+            "byteStride": 12,
+            "name": "bufferView_buffer_Cube.001_NORMAL_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 1816,
+            "byteOffset": 253392,
+            "name": "bufferView_buffer_Cube.001_0",
+            "target": 34963
+        },
+        {
+            "buffer": 0,
+            "byteLength": 19728,
+            "byteOffset": 255208,
+            "byteStride": 12,
+            "name": "bufferView_buffer_Cube.003_POSITION_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 19728,
+            "byteOffset": 274936,
+            "byteStride": 12,
+            "name": "bufferView_buffer_Cube.003_NORMAL_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 5716,
+            "byteOffset": 294664,
+            "name": "bufferView_buffer_Cube.003_0",
+            "target": 34963
+        },
+        {
+            "buffer": 0,
+            "byteLength": 6960,
+            "byteOffset": 300380,
+            "byteStride": 12,
+            "name": "bufferView_buffer_Cube.004_POSITION_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 6960,
+            "byteOffset": 307340,
+            "byteStride": 12,
+            "name": "bufferView_buffer_Cube.004_NORMAL_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 1900,
+            "byteOffset": 314300,
+            "name": "bufferView_buffer_Cube.004_0",
+            "target": 34963
+        },
+        {
+            "buffer": 0,
+            "byteLength": 816,
+            "byteOffset": 316200,
+            "byteStride": 12,
+            "name": "bufferView_buffer_Cube.007_POSITION_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 816,
+            "byteOffset": 317016,
+            "byteStride": 12,
+            "name": "bufferView_buffer_Cube.007_NORMAL_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 220,
+            "byteOffset": 317832,
+            "name": "bufferView_buffer_Cube.007_0",
+            "target": 34963
+        },
+        {
+            "buffer": 0,
+            "byteLength": 3768,
+            "byteOffset": 318052,
+            "byteStride": 12,
+            "name": "bufferView_buffer_Cube.011_POSITION_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 3768,
+            "byteOffset": 321820,
+            "byteStride": 12,
+            "name": "bufferView_buffer_Cube.011_NORMAL_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 772,
+            "byteOffset": 325588,
+            "name": "bufferView_buffer_Cube.011_0",
+            "target": 34963
+        },
+        {
+            "buffer": 0,
+            "byteLength": 1092,
+            "byteOffset": 326360,
+            "byteStride": 12,
+            "name": "bufferView_buffer_Cube.023_POSITION_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 1092,
+            "byteOffset": 327452,
+            "byteStride": 12,
+            "name": "bufferView_buffer_Cube.023_NORMAL_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 412,
+            "byteOffset": 328544,
+            "name": "bufferView_buffer_Cube.023_0",
+            "target": 34963
+        },
+        {
+            "buffer": 0,
+            "byteLength": 1764,
+            "byteOffset": 328956,
+            "byteStride": 12,
+            "name": "bufferView_buffer_Cube.025_POSITION_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 1764,
+            "byteOffset": 330720,
+            "byteStride": 12,
+            "name": "bufferView_buffer_Cube.025_NORMAL_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 556,
+            "byteOffset": 332484,
+            "name": "bufferView_buffer_Cube.025_0",
+            "target": 34963
+        },
+        {
+            "buffer": 0,
+            "byteLength": 5832,
+            "byteOffset": 333040,
+            "byteStride": 12,
+            "name": "bufferView_buffer_Cube.052_POSITION_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 5832,
+            "byteOffset": 338872,
+            "byteStride": 12,
+            "name": "bufferView_buffer_Cube.052_NORMAL_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 1528,
+            "byteOffset": 344704,
+            "name": "bufferView_buffer_Cube.052_0",
+            "target": 34963
+        },
+        {
+            "buffer": 0,
+            "byteLength": 1680,
+            "byteOffset": 346232,
+            "byteStride": 12,
+            "name": "bufferView_buffer_Cube.570_POSITION_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 1680,
+            "byteOffset": 347912,
+            "byteStride": 12,
+            "name": "bufferView_buffer_Cube.570_NORMAL_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 460,
+            "byteOffset": 349592,
+            "name": "bufferView_buffer_Cube.570_0",
+            "target": 34963
+        },
+        {
+            "buffer": 0,
+            "byteLength": 3840,
+            "byteOffset": 350052,
+            "byteStride": 12,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.002_POSITION_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 3840,
+            "byteOffset": 353892,
+            "byteStride": 12,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.002_NORMAL_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 2560,
+            "byteOffset": 357732,
+            "byteStride": 8,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.002_TEXCOORD_0_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 964,
+            "byteOffset": 360292,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.002_0",
+            "target": 34963
+        },
+        {
+            "buffer": 0,
+            "byteLength": 5340,
+            "byteOffset": 361256,
+            "byteStride": 12,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.005_POSITION_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 5340,
+            "byteOffset": 366596,
+            "byteStride": 12,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.005_NORMAL_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 3560,
+            "byteOffset": 371936,
+            "byteStride": 8,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.005_TEXCOORD_0_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 1468,
+            "byteOffset": 375496,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.005_0",
+            "target": 34963
+        },
+        {
+            "buffer": 0,
+            "byteLength": 2664,
+            "byteOffset": 376964,
+            "byteStride": 12,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.006_POSITION_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 2664,
+            "byteOffset": 379628,
+            "byteStride": 12,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.006_NORMAL_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 1776,
+            "byteOffset": 382292,
+            "byteStride": 8,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.006_TEXCOORD_0_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 676,
+            "byteOffset": 384068,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.006_0",
+            "target": 34963
+        },
+        {
+            "buffer": 0,
+            "byteLength": 1344,
+            "byteOffset": 384744,
+            "byteStride": 12,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.008_POSITION_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 1344,
+            "byteOffset": 386088,
+            "byteStride": 12,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.008_NORMAL_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 896,
+            "byteOffset": 387432,
+            "byteStride": 8,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.008_TEXCOORD_0_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 388,
+            "byteOffset": 388328,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.008_0",
+            "target": 34963
+        },
+        {
+            "buffer": 0,
+            "byteLength": 6432,
+            "byteOffset": 388716,
+            "byteStride": 12,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.009_POSITION_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 6432,
+            "byteOffset": 395148,
+            "byteStride": 12,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.009_NORMAL_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 4288,
+            "byteOffset": 401580,
+            "byteStride": 8,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.009_TEXCOORD_0_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 1576,
+            "byteOffset": 405868,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.009_0",
+            "target": 34963
+        },
+        {
+            "buffer": 0,
+            "byteLength": 3072,
+            "byteOffset": 407444,
+            "byteStride": 12,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.010_POSITION_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 3072,
+            "byteOffset": 410516,
+            "byteStride": 12,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.010_NORMAL_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 2048,
+            "byteOffset": 413588,
+            "byteStride": 8,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.010_TEXCOORD_0_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 772,
+            "byteOffset": 415636,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.010_0",
+            "target": 34963
+        },
+        {
+            "buffer": 0,
+            "byteLength": 6576,
+            "byteOffset": 416408,
+            "byteStride": 12,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.011_POSITION_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 6576,
+            "byteOffset": 422984,
+            "byteStride": 12,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.011_NORMAL_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 4384,
+            "byteOffset": 429560,
+            "byteStride": 8,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.011_TEXCOORD_0_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 1612,
+            "byteOffset": 433944,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.011_0",
+            "target": 34963
+        },
+        {
+            "buffer": 0,
+            "byteLength": 3408,
+            "byteOffset": 435556,
+            "byteStride": 12,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.012_POSITION_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 3408,
+            "byteOffset": 438964,
+            "byteStride": 12,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.012_NORMAL_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 2272,
+            "byteOffset": 442372,
+            "byteStride": 8,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.012_TEXCOORD_0_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 748,
+            "byteOffset": 444644,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.012_0",
+            "target": 34963
+        },
+        {
+            "buffer": 0,
+            "byteLength": 696,
+            "byteOffset": 445392,
+            "byteStride": 12,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.014_POSITION_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 696,
+            "byteOffset": 446088,
+            "byteStride": 12,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.014_NORMAL_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 464,
+            "byteOffset": 446784,
+            "byteStride": 8,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.014_TEXCOORD_0_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 196,
+            "byteOffset": 447248,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.014_0",
+            "target": 34963
+        },
+        {
+            "buffer": 0,
+            "byteLength": 7404,
+            "byteOffset": 447444,
+            "byteStride": 12,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.019_POSITION_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 7404,
+            "byteOffset": 454848,
+            "byteStride": 12,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.019_NORMAL_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 4936,
+            "byteOffset": 462252,
+            "byteStride": 8,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.019_TEXCOORD_0_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 1924,
+            "byteOffset": 467188,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.019_0",
+            "target": 34963
+        },
+        {
+            "buffer": 0,
+            "byteLength": 5232,
+            "byteOffset": 469112,
+            "byteStride": 12,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.020_POSITION_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 5232,
+            "byteOffset": 474344,
+            "byteStride": 12,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.020_NORMAL_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 3488,
+            "byteOffset": 479576,
+            "byteStride": 8,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.020_TEXCOORD_0_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 1408,
+            "byteOffset": 483064,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.020_0",
+            "target": 34963
+        },
+        {
+            "buffer": 0,
+            "byteLength": 2928,
+            "byteOffset": 484472,
+            "byteStride": 12,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.025_POSITION_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 2928,
+            "byteOffset": 487400,
+            "byteStride": 12,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.025_NORMAL_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 1952,
+            "byteOffset": 490328,
+            "byteStride": 8,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.025_TEXCOORD_0_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 820,
+            "byteOffset": 492280,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.025_0",
+            "target": 34963
+        },
+        {
+            "buffer": 0,
+            "byteLength": 2016,
+            "byteOffset": 493100,
+            "byteStride": 12,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.026_POSITION_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 2016,
+            "byteOffset": 495116,
+            "byteStride": 12,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.026_NORMAL_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 1344,
+            "byteOffset": 497132,
+            "byteStride": 8,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.026_TEXCOORD_0_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 508,
+            "byteOffset": 498476,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.026_0",
+            "target": 34963
+        },
+        {
+            "buffer": 0,
+            "byteLength": 768,
+            "byteOffset": 498984,
+            "byteStride": 12,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.040_POSITION_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 768,
+            "byteOffset": 499752,
+            "byteStride": 12,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.040_NORMAL_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 512,
+            "byteOffset": 500520,
+            "byteStride": 8,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.040_TEXCOORD_0_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 196,
+            "byteOffset": 501032,
+            "name": "bufferView_buffer_hall_circ1125_fences_1Base.040_0",
+            "target": 34963
+        },
+        {
+            "buffer": 0,
+            "byteLength": 1296,
+            "byteOffset": 501228,
+            "byteStride": 12,
+            "name": "bufferView_buffer_Plane.000_POSITION_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 1296,
+            "byteOffset": 502524,
+            "byteStride": 12,
+            "name": "bufferView_buffer_Plane.000_NORMAL_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 316,
+            "byteOffset": 503820,
+            "name": "bufferView_buffer_Plane.000_0",
+            "target": 34963
+        },
+        {
+            "buffer": 0,
+            "byteLength": 288,
+            "byteOffset": 504136,
+            "byteStride": 12,
+            "name": "bufferView_buffer_Plane.024_POSITION_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 288,
+            "byteOffset": 504424,
+            "byteStride": 12,
+            "name": "bufferView_buffer_Plane.024_NORMAL_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 192,
+            "byteOffset": 504712,
+            "byteStride": 8,
+            "name": "bufferView_buffer_Plane.024_TEXCOORD_0_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 76,
+            "byteOffset": 504904,
+            "name": "bufferView_buffer_Plane.024_0",
+            "target": 34963
+        },
+        {
+            "buffer": 0,
+            "byteLength": 1296,
+            "byteOffset": 504980,
+            "byteStride": 12,
+            "name": "bufferView_buffer_Plane.025_POSITION_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 1296,
+            "byteOffset": 506276,
+            "byteStride": 12,
+            "name": "bufferView_buffer_Plane.025_NORMAL_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 316,
+            "byteOffset": 507572,
+            "name": "bufferView_buffer_Plane.025_0",
+            "target": 34963
+        },
+        {
+            "buffer": 0,
+            "byteLength": 2100,
+            "byteOffset": 507888,
+            "byteStride": 12,
+            "name": "bufferView_buffer_Plane.026_POSITION_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 2100,
+            "byteOffset": 509988,
+            "byteStride": 12,
+            "name": "bufferView_buffer_Plane.026_NORMAL_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 580,
+            "byteOffset": 512088,
+            "name": "bufferView_buffer_Plane.026_0",
+            "target": 34963
+        },
+        {
+            "buffer": 0,
+            "byteLength": 288,
+            "byteOffset": 512668,
+            "byteStride": 12,
+            "name": "bufferView_buffer_Plane.033_POSITION_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 288,
+            "byteOffset": 512956,
+            "byteStride": 12,
+            "name": "bufferView_buffer_Plane.033_NORMAL_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 192,
+            "byteOffset": 513244,
+            "byteStride": 8,
+            "name": "bufferView_buffer_Plane.033_TEXCOORD_0_0",
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteLength": 76,
+            "byteOffset": 513436,
+            "name": "bufferView_buffer_Plane.033_0",
+            "target": 34963
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 513512,
+            "name": "reactor.collision",
+            "uri": "reactor.collision.bin"
+        }
+    ],
+    "materials": [
+        {
+            "alphaMode": "OPAQUE",
+            "doubleSided": false,
+            "emissiveFactor": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "name": "collision",
+            "pbrMetallicRoughness": {
+                "baseColorFactor": [
+                    0.64000004529953,
+                    0.6177111268043518,
+                    0.0,
+                    1.0
+                ],
+                "metallicFactor": 0.0,
+                "roughnessFactor": 1.0
+            }
+        }
+    ],
+    "meshes": [
+        {
+            "name": "Circle.012",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 88,
+                        "POSITION": 90,
+                        "TEXCOORD_0": 74
+                    },
+                    "indices": 114,
+                    "material": 0,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "name": "Circle.013",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 69,
+                        "POSITION": 14,
+                        "TEXCOORD_0": 42
+                    },
+                    "indices": 100,
+                    "material": 0,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "name": "Circle.022",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 57,
+                        "POSITION": 59,
+                        "TEXCOORD_0": 68
+                    },
+                    "indices": 52,
+                    "material": 0,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "name": "Circle.025",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 31,
+                        "POSITION": 101,
+                        "TEXCOORD_0": 122
+                    },
+                    "indices": 79,
+                    "material": 0,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "name": "Circle.044",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 115,
+                        "POSITION": 26
+                    },
+                    "indices": 113,
+                    "material": 0,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "name": "Circle.055",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 10,
+                        "POSITION": 102,
+                        "TEXCOORD_0": 71
+                    },
+                    "indices": 99,
+                    "material": 0,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "name": "Cube.001",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 112,
+                        "POSITION": 120
+                    },
+                    "indices": 28,
+                    "material": 0,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "name": "Cube.003",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 16,
+                        "POSITION": 20
+                    },
+                    "indices": 8,
+                    "material": 0,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "name": "Cube.004",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 25,
+                        "POSITION": 37
+                    },
+                    "indices": 19,
+                    "material": 0,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "name": "Cube.007",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 66,
+                        "POSITION": 17
+                    },
+                    "indices": 73,
+                    "material": 0,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "name": "Cube.011",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 47,
+                        "POSITION": 82
+                    },
+                    "indices": 48,
+                    "material": 0,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "name": "Cube.023",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 5,
+                        "POSITION": 76
+                    },
+                    "indices": 67,
+                    "material": 0,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "name": "Cube.025",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 23,
+                        "POSITION": 30
+                    },
+                    "indices": 109,
+                    "material": 0,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "name": "Cube.052",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 81,
+                        "POSITION": 108
+                    },
+                    "indices": 96,
+                    "material": 0,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "name": "Cube.570",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 21,
+                        "POSITION": 18
+                    },
+                    "indices": 104,
+                    "material": 0,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "name": "hall_circ1125_fences_1Base.002",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 12,
+                        "POSITION": 55,
+                        "TEXCOORD_0": 121
+                    },
+                    "indices": 51,
+                    "material": 0,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "name": "hall_circ1125_fences_1Base.005",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 63,
+                        "POSITION": 9,
+                        "TEXCOORD_0": 105
+                    },
+                    "indices": 117,
+                    "material": 0,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "name": "hall_circ1125_fences_1Base.006",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 15,
+                        "POSITION": 11,
+                        "TEXCOORD_0": 41
+                    },
+                    "indices": 13,
+                    "material": 0,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "name": "hall_circ1125_fences_1Base.008",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 107,
+                        "POSITION": 87,
+                        "TEXCOORD_0": 84
+                    },
+                    "indices": 62,
+                    "material": 0,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "name": "hall_circ1125_fences_1Base.009",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 77,
+                        "POSITION": 89,
+                        "TEXCOORD_0": 98
+                    },
+                    "indices": 70,
+                    "material": 0,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "name": "hall_circ1125_fences_1Base.010",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 103,
+                        "POSITION": 53,
+                        "TEXCOORD_0": 83
+                    },
+                    "indices": 7,
+                    "material": 0,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "name": "hall_circ1125_fences_1Base.011",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 64,
+                        "POSITION": 2,
+                        "TEXCOORD_0": 65
+                    },
+                    "indices": 40,
+                    "material": 0,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "name": "hall_circ1125_fences_1Base.012",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 94,
+                        "POSITION": 50,
+                        "TEXCOORD_0": 58
+                    },
+                    "indices": 92,
+                    "material": 0,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "name": "hall_circ1125_fences_1Base.014",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 43,
+                        "POSITION": 39,
+                        "TEXCOORD_0": 0
+                    },
+                    "indices": 75,
+                    "material": 0,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "name": "hall_circ1125_fences_1Base.019",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 44,
+                        "POSITION": 45,
+                        "TEXCOORD_0": 61
+                    },
+                    "indices": 29,
+                    "material": 0,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "name": "hall_circ1125_fences_1Base.020",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 91,
+                        "POSITION": 85,
+                        "TEXCOORD_0": 34
+                    },
+                    "indices": 116,
+                    "material": 0,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "name": "hall_circ1125_fences_1Base.025",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 95,
+                        "POSITION": 32,
+                        "TEXCOORD_0": 4
+                    },
+                    "indices": 78,
+                    "material": 0,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "name": "hall_circ1125_fences_1Base.026",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 80,
+                        "POSITION": 35,
+                        "TEXCOORD_0": 1
+                    },
+                    "indices": 72,
+                    "material": 0,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "name": "hall_circ1125_fences_1Base.040",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 111,
+                        "POSITION": 97,
+                        "TEXCOORD_0": 27
+                    },
+                    "indices": 106,
+                    "material": 0,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "name": "Plane.000",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 6,
+                        "POSITION": 54
+                    },
+                    "indices": 24,
+                    "material": 0,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "name": "Plane.024",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 38,
+                        "POSITION": 49,
+                        "TEXCOORD_0": 46
+                    },
+                    "indices": 119,
+                    "material": 0,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "name": "Plane.025",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 56,
+                        "POSITION": 110
+                    },
+                    "indices": 3,
+                    "material": 0,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "name": "Plane.026",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 93,
+                        "POSITION": 33
+                    },
+                    "indices": 60,
+                    "material": 0,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "name": "Plane.033",
+            "primitives": [
+                {
+                    "attributes": {
+                        "NORMAL": 36,
+                        "POSITION": 86,
+                        "TEXCOORD_0": 118
+                    },
+                    "indices": 22,
+                    "material": 0,
+                    "mode": 4
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "mesh": 33,
+            "name": "doorsimple_colonly",
+            "rotation": [
+                0.0,
+                0.3406674563884735,
+                0.0,
+                0.9401838779449463
+            ],
+            "scale": [
+                0.9999998807907104,
+                1.0,
+                0.9999999403953552
+            ],
+            "translation": [
+                -4.862942218780518,
+                5.23738956451416,
+                -7.163186073303223
+            ]
+        },
+        {
+            "mesh": 33,
+            "name": "doorsimple_colonly.001",
+            "rotation": [
+                2.3132153970095715e-08,
+                0.15124624967575073,
+                -1.3473641757855148e-08,
+                0.9884961247444153
+            ],
+            "scale": [
+                0.9999999403953552,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -1.7608940601348877,
+                5.23738956451416,
+                -8.476950645446777
+            ]
+        },
+        {
+            "mesh": 33,
+            "name": "doorsimple_colonly.002",
+            "rotation": [
+                0.0,
+                0.6744850873947144,
+                0.0,
+                0.7382884621620178
+            ],
+            "scale": [
+                0.9999998211860657,
+                1.0,
+                0.9999998211860657
+            ],
+            "translation": [
+                -8.503564834594727,
+                5.23738956451416,
+                -1.627516269683838
+            ]
+        },
+        {
+            "mesh": 33,
+            "name": "doorsimple_colonly.003",
+            "rotation": [
+                0.0,
+                0.33751973509788513,
+                0.0,
+                0.9413184523582458
+            ],
+            "scale": [
+                0.9999998211860657,
+                1.0,
+                0.9999998807907104
+            ],
+            "translation": [
+                0.24719533324241638,
+                0.03679347038269043,
+                0.2619609534740448
+            ]
+        },
+        {
+            "mesh": 30,
+            "name": "doorsimple_colonly.004",
+            "rotation": [
+                2.6341799852502845e-09,
+                -0.7071068286895752,
+                2.6341835379639633e-09,
+                0.7071067094802856
+            ],
+            "scale": [
+                1.0,
+                0.9999998807907104,
+                0.9999999403953552
+            ],
+            "translation": [
+                5.067008972167969,
+                -4.480278491973877,
+                -86.37639617919922
+            ]
+        },
+        {
+            "mesh": 30,
+            "name": "doorsimple_colonly.005",
+            "rotation": [
+                2.468502957597707e-09,
+                -0.4010029733181,
+                -1.3527872155805198e-08,
+                0.9160767197608948
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                0.9999998807907104
+            ],
+            "translation": [
+                26.94934844970703,
+                -4.480280876159668,
+                -25.183652877807617
+            ]
+        },
+        {
+            "mesh": 30,
+            "name": "doorsimple_colonly.006",
+            "rotation": [
+                3.2318151710342136e-08,
+                -0.9938471913337708,
+                1.4000028158989153e-07,
+                0.11075977981090546
+            ],
+            "scale": [
+                0.9999998211860657,
+                1.0000001192092896,
+                0.9999998211860657
+            ],
+            "translation": [
+                8.335003852844238,
+                -4.480280876159668,
+                35.93064498901367
+            ]
+        },
+        {
+            "mesh": 8,
+            "name": "FLOOR_120_ReactorEntrancePlatform.003-colonly",
+            "rotation": [
+                0.0,
+                -0.1477951854467392,
+                0.0,
+                0.9890179634094238
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 8,
+            "name": "FLOOR_120_ReactorEntrancePlatform.003-colonly.001",
+            "rotation": [
+                0.0,
+                -0.9304122924804688,
+                0.0,
+                0.3665146231651306
+            ],
+            "scale": [
+                0.9999998807907104,
+                1.0,
+                0.9999998807907104
+            ],
+            "translation": [
+                -1.1368683772161603e-13,
+                0.0,
+                2.842170943040401e-14
+            ]
+        },
+        {
+            "mesh": 8,
+            "name": "FLOOR_120_ReactorEntrancePlatform.003-colonly.002",
+            "rotation": [
+                0.0,
+                0.782616913318634,
+                0.0,
+                0.6225036382675171
+            ],
+            "scale": [
+                0.9999999403953552,
+                1.0,
+                0.9999999403953552
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                2.842170943040401e-14
+            ]
+        },
+        {
+            "mesh": 7,
+            "name": "FLOOR_BRIDGE-colonly",
+            "rotation": [
+                0.0,
+                0.59577476978302,
+                0.0,
+                0.803151547908783
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -2.3786540168657666e-06,
+                0.0,
+                1.2719915503112134e-06
+            ]
+        },
+        {
+            "mesh": 1,
+            "name": "FLOOR_core_120_innercore_walls.001-colonly",
+            "rotation": [
+                0.0,
+                0.11320337653160095,
+                0.0,
+                0.9935718178749084
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                -12.4399995803833,
+                0.0
+            ]
+        },
+        {
+            "mesh": 1,
+            "name": "FLOOR_core_120_innercore_walls.001-colonly.001",
+            "rotation": [
+                0.0,
+                0.9170603156089783,
+                0.0,
+                0.3987485468387604
+            ],
+            "scale": [
+                0.9999999403953552,
+                1.0,
+                0.9999999403953552
+            ],
+            "translation": [
+                0.0,
+                -12.4399995803833,
+                0.0
+            ]
+        },
+        {
+            "mesh": 1,
+            "name": "FLOOR_core_120_innercore_walls.001-colonly.002",
+            "rotation": [
+                0.0,
+                -0.8038564324378967,
+                0.0,
+                0.5948233604431152
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                -12.4399995803833,
+                0.0
+            ]
+        },
+        {
+            "mesh": 32,
+            "name": "FLOOR_reactor120_Eleavotr-colonly",
+            "rotation": [
+                3.7103708994123963e-09,
+                0.916999876499176,
+                -3.867462083917417e-08,
+                0.3988874852657318
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -13.375341415405273,
+                -13.83887767791748,
+                12.472123146057129
+            ]
+        },
+        {
+            "mesh": 32,
+            "name": "FLOOR_reactor120_Eleavotr-colonly.001",
+            "rotation": [
+                1.983464414934133e-08,
+                -0.8039466738700867,
+                3.046489993607793e-08,
+                0.5947014093399048
+            ],
+            "scale": [
+                0.9999998211860657,
+                0.9999999403953552,
+                0.9999998807907104
+            ],
+            "translation": [
+                17.488845825195312,
+                -13.838874816894531,
+                5.347323417663574
+            ]
+        },
+        {
+            "mesh": 32,
+            "name": "FLOOR_reactor120_Eleavotr-colonly.002",
+            "rotation": [
+                -7.756233155742365e-11,
+                0.11305323243141174,
+                -4.946058753535487e-12,
+                0.993588924407959
+            ],
+            "scale": [
+                1.0,
+                0.9999999403953552,
+                1.0
+            ],
+            "translation": [
+                -4.11350679397583,
+                -13.838875770568848,
+                -17.819446563720703
+            ]
+        },
+        {
+            "mesh": 3,
+            "name": "FLOOR_reactorcore_outerrim_A-colonly.001",
+            "rotation": [
+                0.0,
+                0.5948221683502197,
+                0.0,
+                0.8038573265075684
+            ],
+            "scale": [
+                0.9999998807907104,
+                1.0,
+                0.9999998807907104
+            ],
+            "translation": [
+                0.0,
+                -12.4399995803833,
+                0.0
+            ]
+        },
+        {
+            "mesh": 3,
+            "name": "FLOOR_reactorcore_outerrim_A-colonly.002",
+            "rotation": [
+                0.0,
+                -0.993571937084198,
+                0.0,
+                0.11320241540670395
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                -12.4399995803833,
+                0.0
+            ]
+        },
+        {
+            "mesh": 5,
+            "name": "FLOOR_reactorcore_outerrim_A-colonly",
+            "rotation": [
+                -3.377904197051351e-17,
+                0.1132022812962532,
+                1.0054383654304502e-16,
+                0.993571937084198
+            ],
+            "scale": [
+                0.9999999403953552,
+                1.0,
+                0.9999999403953552
+            ],
+            "translation": [
+                -0.0,
+                -12.4399995803833,
+                -6.323831093653885e-15
+            ]
+        },
+        {
+            "mesh": 3,
+            "name": "FLOOR_reactorcore_outerrim_A-colonly.003",
+            "rotation": [
+                0.0,
+                -0.39874985814094543,
+                0.0,
+                0.9170597195625305
+            ],
+            "scale": [
+                0.9999999403953552,
+                1.0,
+                0.9999999403953552
+            ],
+            "translation": [
+                0.0,
+                -12.4399995803833,
+                0.0
+            ]
+        },
+        {
+            "mesh": 5,
+            "name": "FLOOR_reactorcore_outerrim_A-colonly.004",
+            "rotation": [
+                -7.59541961220338e-16,
+                0.9170596599578857,
+                -1.0491716248629932e-22,
+                0.39875006675720215
+            ],
+            "scale": [
+                0.9999998807907104,
+                1.0,
+                0.9999998807907104
+            ],
+            "translation": [
+                0.0,
+                -12.4399995803833,
+                6.323831093653885e-15
+            ]
+        },
+        {
+            "mesh": 5,
+            "name": "FLOOR_reactorcore_outerrim_A-colonly.005",
+            "rotation": [
+                -2.0308142188431516e-15,
+                -0.8038575649261475,
+                -1.6620127913559587e-15,
+                0.5948218703269958
+            ],
+            "scale": [
+                0.9999998807907104,
+                1.0,
+                0.9999998211860657
+            ],
+            "translation": [
+                -4.4195756673500244e-14,
+                -12.4399995803833,
+                3.552713678800501e-15
+            ]
+        },
+        {
+            "mesh": 18,
+            "name": "FLOORhall_circ1125_Road_0Base-colonly",
+            "rotation": [
+                0.0,
+                0.04913746193051338,
+                0.0,
+                0.9987920522689819
+            ],
+            "scale": [
+                0.9999998211860657,
+                1.0,
+                0.9999998211860657
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 18,
+            "name": "FLOORhall_circ1125_Road_0Base-colonly.001",
+            "rotation": [
+                0.0,
+                0.24304798245429993,
+                0.0,
+                0.9700142741203308
+            ],
+            "scale": [
+                0.9999999403953552,
+                1.0,
+                0.9999999403953552
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 18,
+            "name": "FLOORhall_circ1125_Road_0Base-colonly.002",
+            "rotation": [
+                0.0,
+                0.42761823534965515,
+                0.0,
+                0.9039593935012817
+            ],
+            "scale": [
+                0.9999998211860657,
+                1.0,
+                0.9999998211860657
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 18,
+            "name": "FLOORhall_circ1125_Road_0Base-colonly.003",
+            "rotation": [
+                0.0,
+                0.5957555174827576,
+                0.0,
+                0.803165853023529
+            ],
+            "scale": [
+                0.9999999403953552,
+                1.0,
+                0.9999999403953552
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 18,
+            "name": "FLOORhall_circ1125_Road_0Base-colonly.004",
+            "rotation": [
+                0.0,
+                0.5141627192497253,
+                0.0,
+                0.8576926589012146
+            ],
+            "scale": [
+                0.9999999403953552,
+                1.0,
+                0.9999999403953552
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 18,
+            "name": "FLOORhall_circ1125_Road_0Base-colonly.005",
+            "rotation": [
+                0.0,
+                0.941567599773407,
+                0.0,
+                0.33682405948638916
+            ],
+            "scale": [
+                0.9999998807907104,
+                1.0,
+                0.9999998807907104
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 18,
+            "name": "FLOORhall_circ1125_Road_0Base-colonly.007",
+            "rotation": [
+                0.0,
+                0.9891867637634277,
+                0.0,
+                0.14666138589382172
+            ],
+            "scale": [
+                0.9999998807907104,
+                1.0,
+                0.9999998807907104
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 18,
+            "name": "FLOORhall_circ1125_Road_0Base-colonly.008",
+            "rotation": [
+                0.0,
+                0.9987989068031311,
+                0.0,
+                0.04899775981903076
+            ],
+            "scale": [
+                0.9999998807907104,
+                1.0,
+                0.9999998807907104
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 18,
+            "name": "FLOORhall_circ1125_Road_0Base-colonly.009",
+            "rotation": [
+                0.0,
+                -0.9987919926643372,
+                0.0,
+                0.04913754388689995
+            ],
+            "scale": [
+                0.9999998807907104,
+                1.0,
+                0.9999998807907104
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 18,
+            "name": "FLOORhall_circ1125_Road_0Base-colonly.010",
+            "rotation": [
+                0.0,
+                0.7409980893135071,
+                0.0,
+                0.6715071201324463
+            ],
+            "scale": [
+                0.9999998807907104,
+                1.0,
+                0.9999998807907104
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 18,
+            "name": "FLOORhall_circ1125_Road_0Base-colonly.011",
+            "rotation": [
+                0.0,
+                0.8577645421028137,
+                0.0,
+                0.5140427947044373
+            ],
+            "scale": [
+                0.9999998211860657,
+                1.0,
+                0.9999998211860657
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 18,
+            "name": "FLOORhall_circ1125_Road_0Base-colonly.012",
+            "rotation": [
+                0.0,
+                0.8032492399215698,
+                0.0,
+                0.5956431031227112
+            ],
+            "scale": [
+                0.9999998807907104,
+                1.0,
+                0.9999998807907104
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 26,
+            "name": "FLOORhall_circ1125_Road_2Tjoint-colonly",
+            "rotation": [
+                -4.053906567701778e-16,
+                0.3369556665420532,
+                2.858476255475769e-18,
+                0.9415205121040344
+            ],
+            "scale": [
+                0.9999999403953552,
+                1.0,
+                0.9999999403953552
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 26,
+            "name": "FLOORhall_circ1125_Road_2Tjoint-colonly.001",
+            "rotation": [
+                4.840711898986051e-17,
+                0.9700482487678528,
+                4.357355326962243e-16,
+                0.24291223287582397
+            ],
+            "scale": [
+                0.9999999403953552,
+                1.0,
+                0.9999999403953552
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 16,
+            "name": "FLOORhall_circ1125_upperdeckfloor_0Base-colonly",
+            "rotation": [
+                0.0,
+                0.04913746938109398,
+                0.0,
+                0.9987920522689819
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                0.9999998807907104
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 16,
+            "name": "FLOORhall_circ1125_upperdeckfloor_0Base-colonly.001",
+            "rotation": [
+                0.0,
+                0.24304796755313873,
+                0.0,
+                0.9700142741203308
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 16,
+            "name": "FLOORhall_circ1125_upperdeckfloor_0Base-colonly.002",
+            "rotation": [
+                0.0,
+                0.42761826515197754,
+                0.0,
+                0.9039593935012817
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 16,
+            "name": "FLOORhall_circ1125_upperdeckfloor_0Base-colonly.003",
+            "rotation": [
+                0.0,
+                0.5957554578781128,
+                0.0,
+                0.803165853023529
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 16,
+            "name": "FLOORhall_circ1125_upperdeckfloor_0Base-colonly.004",
+            "rotation": [
+                0.0,
+                0.3369556665420532,
+                0.0,
+                0.9415205121040344
+            ],
+            "scale": [
+                0.9999999403953552,
+                1.0,
+                0.9999999403953552
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 16,
+            "name": "FLOORhall_circ1125_upperdeckfloor_0Base-colonly.005",
+            "rotation": [
+                0.0,
+                0.5141627192497253,
+                0.0,
+                0.8576926589012146
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 16,
+            "name": "FLOORhall_circ1125_upperdeckfloor_0Base-colonly.006",
+            "rotation": [
+                0.0,
+                0.7409980893135071,
+                0.0,
+                0.6715071201324463
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 16,
+            "name": "FLOORhall_circ1125_upperdeckfloor_0Base-colonly.007",
+            "rotation": [
+                0.0,
+                0.8577646017074585,
+                0.0,
+                0.5140426754951477
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 16,
+            "name": "FLOORhall_circ1125_upperdeckfloor_0Base-colonly.008",
+            "rotation": [
+                0.0,
+                0.941567599773407,
+                0.0,
+                0.33682405948638916
+            ],
+            "scale": [
+                0.9999999403953552,
+                1.0,
+                0.9999999403953552
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 16,
+            "name": "FLOORhall_circ1125_upperdeckfloor_0Base-colonly.009",
+            "rotation": [
+                0.0,
+                0.9891867637634277,
+                0.0,
+                0.14666114747524261
+            ],
+            "scale": [
+                0.9999999403953552,
+                1.0,
+                0.9999999403953552
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 16,
+            "name": "FLOORhall_circ1125_upperdeckfloor_0Base-colonly.010",
+            "rotation": [
+                0.0,
+                -0.9987919926643372,
+                0.0,
+                0.0491378977894783
+            ],
+            "scale": [
+                0.9999999403953552,
+                1.0,
+                0.9999999403953552
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 16,
+            "name": "FLOORhall_circ1125_upperdeckfloor_0Base-colonly.011",
+            "rotation": [
+                0.0,
+                0.9987989068031311,
+                0.0,
+                0.04899740219116211
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 16,
+            "name": "FLOORhall_circ1125_upperdeckfloor_0Base-colonly.012",
+            "rotation": [
+                0.0,
+                0.8032492399215698,
+                0.0,
+                0.5956431031227112
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 16,
+            "name": "FLOORhall_circ1125_upperdeckfloor_0Base-colonly.013",
+            "rotation": [
+                0.0,
+                0.9700482487678528,
+                0.0,
+                0.24291235208511353
+            ],
+            "scale": [
+                0.9999999403953552,
+                1.0,
+                0.9999999403953552
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 24,
+            "name": "FLOORhall_circ1125_upperdeckfloor_2Elevator.001-colonly",
+            "rotation": [
+                0.0,
+                0.14679959416389465,
+                0.0,
+                0.989166259765625
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 24,
+            "name": "FLOORhall_circ1125_upperdeckfloor_2Elevator.001-colonly.001",
+            "rotation": [
+                0.0,
+                0.6716107130050659,
+                0.0,
+                0.7409042119979858
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 24,
+            "name": "FLOORhall_circ1125_upperdeckfloor_2Elevator.001-colonly.002",
+            "rotation": [
+                0.0,
+                0.9040191769599915,
+                0.0,
+                0.42749184370040894
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 23,
+            "name": "FLOORhall_Road2-colonly",
+            "rotation": [
+                -4.625359396974811e-17,
+                0.04913747310638428,
+                2.2041255772412948e-16,
+                0.9987920522689819
+            ],
+            "scale": [
+                0.9999999403953552,
+                1.0,
+                0.9999999403953552
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 23,
+            "name": "FLOORhall_Road2-colonly.001",
+            "rotation": [
+                5.634916327762387e-16,
+                0.24304796755313873,
+                -3.3468730788542404e-16,
+                0.9700142741203308
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 23,
+            "name": "FLOORhall_Road2-colonly.002",
+            "rotation": [
+                -1.2868928554242732e-17,
+                0.42761826515197754,
+                -1.7026166921111328e-16,
+                0.9039593935012817
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 23,
+            "name": "FLOORhall_Road2-colonly.003",
+            "rotation": [
+                1.5041276896374394e-17,
+                0.5141627192497253,
+                -1.4711228523243286e-16,
+                0.8576926589012146
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 23,
+            "name": "FLOORhall_Road2-colonly.005",
+            "rotation": [
+                1.424504607362065e-17,
+                0.5957554578781128,
+                -9.07068127926623e-17,
+                0.803165853023529
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 23,
+            "name": "FLOORhall_Road2-colonly.006",
+            "rotation": [
+                1.9180065826860607e-16,
+                0.941567599773407,
+                4.069458291136714e-17,
+                0.33682405948638916
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 23,
+            "name": "FLOORhall_Road2-colonly.007",
+            "rotation": [
+                2.290842428101026e-16,
+                0.9891867637634277,
+                9.482683398766642e-17,
+                0.14666138589382172
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 23,
+            "name": "FLOORhall_Road2-colonly.008",
+            "rotation": [
+                2.4450161887867015e-16,
+                0.9987989068031311,
+                1.2065178328848637e-16,
+                0.04899775981903076
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 23,
+            "name": "FLOORhall_Road2-colonly.009",
+            "rotation": [
+                -2.5756429629342995e-16,
+                -0.9987919926643372,
+                -1.4531511954637565e-16,
+                0.04913754388689995
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 23,
+            "name": "FLOORhall_Road2-colonly.011",
+            "rotation": [
+                9.68371806611908e-17,
+                0.7409980893135071,
+                -7.012118578708383e-17,
+                0.6715071201324463
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 23,
+            "name": "FLOORhall_Road2-colonly.012",
+            "rotation": [
+                1.4714629889922104e-16,
+                0.8577645421028137,
+                -1.5001542448469797e-17,
+                0.5140427947044373
+            ],
+            "scale": [
+                0.9999999403953552,
+                1.0,
+                0.9999999403953552
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 23,
+            "name": "FLOORhall_Road2-colonly.013",
+            "rotation": [
+                1.225819993217115e-16,
+                0.8032492399215698,
+                -4.276726922457596e-17,
+                0.5956431031227112
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 6,
+            "name": "hall_circ1125_column1-colonly",
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 6,
+            "name": "hall_circ1125_column1-colonly.001",
+            "rotation": [
+                0.0,
+                0.09801715612411499,
+                0.0,
+                0.9951847195625305
+            ],
+            "scale": [
+                0.9999998211860657,
+                1.0,
+                0.9999999403953552
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 6,
+            "name": "hall_circ1125_column1-colonly.002",
+            "rotation": [
+                0.0,
+                0.1950903683900833,
+                0.0,
+                0.9807852506637573
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                0.9999998807907104
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 6,
+            "name": "hall_circ1125_column1-colonly.003",
+            "rotation": [
+                0.0,
+                0.29028475284576416,
+                0.0,
+                0.9569402933120728
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 6,
+            "name": "hall_circ1125_column1-colonly.004",
+            "rotation": [
+                0.0,
+                0.3826834559440613,
+                0.0,
+                0.9238795042037964
+            ],
+            "scale": [
+                0.9999999403953552,
+                1.0,
+                0.9999999403953552
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 6,
+            "name": "hall_circ1125_column1-colonly.005",
+            "rotation": [
+                0.0,
+                0.4713968336582184,
+                0.0,
+                0.8819212317466736
+            ],
+            "scale": [
+                0.9999998807907104,
+                1.0,
+                0.9999998807907104
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 6,
+            "name": "hall_circ1125_column1-colonly.006",
+            "rotation": [
+                0.0,
+                0.5555704236030579,
+                0.0,
+                0.8314694762229919
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 6,
+            "name": "hall_circ1125_column1-colonly.007",
+            "rotation": [
+                0.0,
+                0.6343933343887329,
+                0.0,
+                0.7730104327201843
+            ],
+            "scale": [
+                1.0000001192092896,
+                1.0,
+                1.0000001192092896
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 6,
+            "name": "hall_circ1125_column1-colonly.008",
+            "rotation": [
+                0.0,
+                0.7071068286895752,
+                0.0,
+                0.7071067094802856
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 6,
+            "name": "hall_circ1125_column1-colonly.009",
+            "rotation": [
+                0.0,
+                -0.9951847195625305,
+                0.0,
+                0.0980173721909523
+            ],
+            "scale": [
+                0.9999999403953552,
+                1.0,
+                0.9999999403953552
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 6,
+            "name": "hall_circ1125_column1-colonly.010",
+            "rotation": [
+                0.0,
+                -1.0,
+                0.0,
+                1.9470718370939721e-07
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 6,
+            "name": "hall_circ1125_column1-colonly.011",
+            "rotation": [
+                0.0,
+                0.9238795638084412,
+                0.0,
+                0.38268330693244934
+            ],
+            "scale": [
+                0.9999999403953552,
+                1.0,
+                0.9999999403953552
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 6,
+            "name": "hall_circ1125_column1-colonly.012",
+            "rotation": [
+                0.0,
+                0.9569404125213623,
+                0.0,
+                0.2902843952178955
+            ],
+            "scale": [
+                0.9999998807907104,
+                1.0,
+                0.9999998807907104
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 6,
+            "name": "hall_circ1125_column1-colonly.013",
+            "rotation": [
+                0.0,
+                0.9807853102684021,
+                0.0,
+                0.1950901299715042
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 6,
+            "name": "hall_circ1125_column1-colonly.014",
+            "rotation": [
+                0.0,
+                0.9951847791671753,
+                0.0,
+                0.09801654517650604
+            ],
+            "scale": [
+                1.0000001192092896,
+                1.0,
+                1.0000001192092896
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 6,
+            "name": "hall_circ1125_column1-colonly.015",
+            "rotation": [
+                0.0,
+                0.8819212913513184,
+                0.0,
+                0.47139665484428406
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 6,
+            "name": "hall_circ1125_column1-colonly.016",
+            "rotation": [
+                0.0,
+                0.8314696550369263,
+                0.0,
+                0.5555701851844788
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                0.9999998807907104
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 6,
+            "name": "hall_circ1125_column1-colonly.017",
+            "rotation": [
+                6.151957165911881e-08,
+                0.7730104327201843,
+                -6.151957165911881e-08,
+                0.6343932747840881
+            ],
+            "scale": [
+                0.9999998211860657,
+                1.0,
+                0.9999999403953552
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 31,
+            "name": "hall_circ1125_ElevatorFloor.001-colonly",
+            "rotation": [
+                -4.300658440481442e-11,
+                -1.1935623422249348e-28,
+                -1.4177099771917057e-10,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -28.51211929321289,
+                -3.8106625080108643,
+                -93.93264770507812
+            ]
+        },
+        {
+            "mesh": 31,
+            "name": "hall_circ1125_ElevatorFloor.001-colonly.001",
+            "rotation": [
+                0.0,
+                0.5555703043937683,
+                0.0,
+                0.8314695954322815
+            ],
+            "scale": [
+                0.9999999403953552,
+                0.9999999403953552,
+                0.9999999403953552
+            ],
+            "translation": [
+                -98.3233413696289,
+                -1.2479792833328247,
+                -9.663944244384766
+            ]
+        },
+        {
+            "mesh": 29,
+            "name": "hall_circ1125_ElevatorFloor.001-colonly.002",
+            "rotation": [
+                7.268938873039588e-08,
+                0.831469714641571,
+                -4.8569482657967455e-08,
+                0.555570125579834
+            ],
+            "scale": [
+                0.9999999403953552,
+                0.9999999403953552,
+                0.9999999403953552
+            ],
+            "translation": [
+                -76.3585433959961,
+                -1.2479792833328247,
+                62.6916618347168
+            ]
+        },
+        {
+            "mesh": 27,
+            "name": "hall_circ1125_LowerDeckWall_0Base-colonly",
+            "rotation": [
+                -2.326749478224116e-16,
+                0.3369556665420532,
+                -5.087340430830167e-17,
+                0.9415205121040344
+            ],
+            "scale": [
+                0.9999999403953552,
+                1.0,
+                0.9999999403953552
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 27,
+            "name": "hall_circ1125_LowerDeckWall_0Base-colonly.001",
+            "rotation": [
+                0.857764482498169,
+                4.629649552612136e-08,
+                -0.514042854309082,
+                6.924644679884295e-08
+            ],
+            "scale": [
+                -0.9999998211860657,
+                -1.0,
+                -0.9999998211860657
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 27,
+            "name": "hall_circ1125_LowerDeckWall_0Base-colonly.002",
+            "rotation": [
+                8.42752717718257e-17,
+                0.9700482487678528,
+                2.56760435556706e-16,
+                0.24291223287582397
+            ],
+            "scale": [
+                0.9999999403953552,
+                1.0,
+                0.9999999403953552
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 25,
+            "name": "hall_circ1125_upperdeckfloor_1Door.000-colonly",
+            "rotation": [
+                3.3394657757305015e-16,
+                0.14679959416389465,
+                1.9349979643463085e-17,
+                0.989166259765625
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 25,
+            "name": "hall_circ1125_upperdeckfloor_1Door.000-colonly.001",
+            "rotation": [
+                1.4980631322584456e-17,
+                0.6716107130050659,
+                -1.1108012569605556e-16,
+                0.7409042119979858
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 25,
+            "name": "hall_circ1125_upperdeckfloor_1Door.000-colonly.002",
+            "rotation": [
+                5.820219328711573e-08,
+                0.9040191769599915,
+                -5.820220039254309e-08,
+                0.42749184370040894
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 19,
+            "name": "hall_circ1125_upperdeckwall_1doorinset-colonly",
+            "rotation": [
+                0.0,
+                0.14679959416389465,
+                0.0,
+                0.989166259765625
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 19,
+            "name": "hall_circ1125_upperdeckwall_1doorinset-colonly.001",
+            "rotation": [
+                0.0,
+                0.3369556665420532,
+                0.0,
+                0.9415205121040344
+            ],
+            "scale": [
+                0.9999999403953552,
+                1.0,
+                0.9999999403953552
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 19,
+            "name": "hall_circ1125_upperdeckwall_1doorinset-colonly.002",
+            "rotation": [
+                0.0,
+                0.6716107130050659,
+                0.0,
+                0.7409042119979858
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 19,
+            "name": "hall_circ1125_upperdeckwall_1doorinset-colonly.003",
+            "rotation": [
+                0.0,
+                0.9040191769599915,
+                0.0,
+                0.42749184370040894
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 21,
+            "name": "hall_circ1125_upperdeckwall_4PipesInset-colonly",
+            "rotation": [
+                0.0,
+                0.5141627192497253,
+                0.0,
+                0.8576926589012146
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 21,
+            "name": "hall_circ1125_upperdeckwall_4PipesInset-colonly.001",
+            "rotation": [
+                0.0,
+                0.8032492399215698,
+                0.0,
+                0.5956431031227112
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 21,
+            "name": "hall_circ1125_upperdeckwall_4PipesInset-colonly.002",
+            "rotation": [
+                0.0,
+                0.9700482487678528,
+                0.0,
+                0.24291235208511353
+            ],
+            "scale": [
+                0.9999999403953552,
+                1.0,
+                0.9999999403953552
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 22,
+            "name": "hall_endcap-colonly",
+            "rotation": [
+                0.0,
+                0.04913747310638428,
+                0.0,
+                0.9987920522689819
+            ],
+            "scale": [
+                0.9999999403953552,
+                1.0,
+                0.9999999403953552
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 2,
+            "name": "reactor_120_exteriorwall_doorInsetHallAndWall-colonly",
+            "rotation": [
+                9.436012379681297e-18,
+                -0.39803290367126465,
+                -1.3056472898421165e-16,
+                0.9173711538314819
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -1.6940658945086007e-21,
+                -2.86102294921875e-06,
+                -1.6940658945086007e-21
+            ]
+        },
+        {
+            "mesh": 2,
+            "name": "reactor_120_exteriorwall_doorInsetHallAndWall-colonly.001",
+            "rotation": [
+                -1.2140708521453099e-16,
+                0.5954504013061523,
+                1.6709088078240562e-16,
+                0.8033920526504517
+            ],
+            "scale": [
+                0.9999999403953552,
+                1.0,
+                0.9999999403953552
+            ],
+            "translation": [
+                3.3881317890172014e-21,
+                -2.86102294921875e-06,
+                -6.776263578034403e-21
+            ]
+        },
+        {
+            "mesh": 2,
+            "name": "reactor_120_exteriorwall_doorInsetHallAndWall-colonly.002",
+            "rotation": [
+                0.0,
+                -0.9934831857681274,
+                0.0,
+                0.11397901177406311
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                -2.86102294921875e-06,
+                0.0
+            ]
+        },
+        {
+            "mesh": 0,
+            "name": "Reactor_emitter_lower-colonly",
+            "rotation": [
+                0.0,
+                -0.1470278799533844,
+                0.0,
+                0.9891323447227478
+            ],
+            "scale": [
+                0.2166012078523636,
+                0.2166011929512024,
+                0.21660123765468597
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 0,
+            "name": "Reactor_emitter_lower-colonly.002",
+            "rotation": [
+                0.0,
+                0.7830998301506042,
+                0.0,
+                0.6218960285186768
+            ],
+            "scale": [
+                0.2166011929512024,
+                0.2166011929512024,
+                0.2166011929512024
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 0,
+            "name": "Reactor_emitter_lower-colonly.003",
+            "rotation": [
+                0.0,
+                -0.9301276206970215,
+                0.0,
+                0.367236465215683
+            ],
+            "scale": [
+                0.2166011929512024,
+                0.2166011929512024,
+                0.2166011929512024
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 9,
+            "name": "Reactor_greeblemachine-colonly",
+            "rotation": [
+                -2.0237940212552985e-09,
+                -2.9802322387695312e-08,
+                2.9812201596257637e-09,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                0.9999999403953552,
+                1.0
+            ],
+            "translation": [
+                -49.92000961303711,
+                -5.110191822052002,
+                -75.1939468383789
+            ]
+        },
+        {
+            "mesh": 15,
+            "name": "road-colonly.001",
+            "rotation": [
+                0.0,
+                0.04913746193051338,
+                0.0,
+                0.9987920522689819
+            ],
+            "scale": [
+                0.9999998211860657,
+                1.0,
+                0.9999998211860657
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 15,
+            "name": "road-colonly.002",
+            "rotation": [
+                0.0,
+                0.24304796755313873,
+                0.0,
+                0.9700142741203308
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 15,
+            "name": "road-colonly.003",
+            "rotation": [
+                0.0,
+                0.3369556665420532,
+                0.0,
+                0.9415205121040344
+            ],
+            "scale": [
+                0.9999999403953552,
+                1.0,
+                0.9999999403953552
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 15,
+            "name": "road-colonly.004",
+            "rotation": [
+                0.0,
+                0.5141627192497253,
+                0.0,
+                0.8576926589012146
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 15,
+            "name": "road-colonly.005",
+            "rotation": [
+                0.0,
+                0.42761826515197754,
+                0.0,
+                0.9039593935012817
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 15,
+            "name": "road-colonly.007",
+            "rotation": [
+                0.0,
+                0.6716107726097107,
+                0.0,
+                0.7409041523933411
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 15,
+            "name": "road-colonly.008",
+            "rotation": [
+                0.0,
+                0.14679959416389465,
+                0.0,
+                0.989166259765625
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 28,
+            "name": "road-colonly.009",
+            "rotation": [
+                0.0,
+                0.24304796755313873,
+                0.0,
+                0.9700142741203308
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 20,
+            "name": "road-colonly.010",
+            "rotation": [
+                0.0,
+                0.24304796755313873,
+                0.0,
+                0.9700142741203308
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 20,
+            "name": "road-colonly.011",
+            "rotation": [
+                0.0,
+                0.04913747310638428,
+                0.0,
+                0.9987920522689819
+            ],
+            "scale": [
+                0.9999999403953552,
+                1.0,
+                0.9999999403953552
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 20,
+            "name": "road-colonly.012",
+            "rotation": [
+                0.0,
+                0.42761826515197754,
+                0.0,
+                0.9039593935012817
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 20,
+            "name": "road-colonly.013",
+            "rotation": [
+                0.0,
+                0.5963160395622253,
+                0.0,
+                0.802749752998352
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 20,
+            "name": "road-colonly.014",
+            "rotation": [
+                0.0,
+                0.741466760635376,
+                0.0,
+                0.6709895730018616
+            ],
+            "scale": [
+                0.9999999403953552,
+                1.0,
+                0.9999999403953552
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 28,
+            "name": "road-colonly.015",
+            "rotation": [
+                0.0,
+                0.42761826515197754,
+                0.0,
+                0.9039593935012817
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 28,
+            "name": "road-colonly.016",
+            "rotation": [
+                0.0,
+                0.5957554578781128,
+                0.0,
+                0.803165853023529
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 17,
+            "name": "road-colonly",
+            "rotation": [
+                0.0,
+                0.6716107726097107,
+                0.0,
+                0.7409041523933411
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 28,
+            "name": "road-colonly.017",
+            "rotation": [
+                0.0,
+                0.04913746193051338,
+                0.0,
+                0.9987920522689819
+            ],
+            "scale": [
+                0.9999998211860657,
+                1.0,
+                0.9999998211860657
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 15,
+            "name": "road-colonly.019",
+            "rotation": [
+                0.0,
+                0.941567599773407,
+                0.0,
+                0.33682405948638916
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 28,
+            "name": "road-colonly.020",
+            "rotation": [
+                0.0,
+                0.941567599773407,
+                0.0,
+                0.33682405948638916
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 28,
+            "name": "road-colonly.021",
+            "rotation": [
+                0.0,
+                0.9891867637634277,
+                0.0,
+                0.14666138589382172
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 15,
+            "name": "road-colonly.022",
+            "rotation": [
+                0.0,
+                0.9891867637634277,
+                0.0,
+                0.14666138589382172
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 15,
+            "name": "road-colonly.023",
+            "rotation": [
+                0.0,
+                0.9987989068031311,
+                0.0,
+                0.04899775981903076
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 28,
+            "name": "road-colonly.024",
+            "rotation": [
+                0.0,
+                0.9987989068031311,
+                0.0,
+                0.04899775981903076
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 28,
+            "name": "road-colonly.025",
+            "rotation": [
+                0.0,
+                -0.9987919926643372,
+                0.0,
+                0.04913754388689995
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 15,
+            "name": "road-colonly.026",
+            "rotation": [
+                0.0,
+                -0.9987919926643372,
+                0.0,
+                0.04913754388689995
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 28,
+            "name": "road-colonly.029",
+            "rotation": [
+                0.0,
+                0.7409980893135071,
+                0.0,
+                0.6715071201324463
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 15,
+            "name": "road-colonly.030",
+            "rotation": [
+                0.0,
+                0.7409980893135071,
+                0.0,
+                0.6715071201324463
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 15,
+            "name": "road-colonly.031",
+            "rotation": [
+                0.0,
+                0.8577645421028137,
+                0.0,
+                0.5140427947044373
+            ],
+            "scale": [
+                0.9999999403953552,
+                1.0,
+                0.9999999403953552
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 28,
+            "name": "road-colonly.032",
+            "rotation": [
+                0.0,
+                0.8577645421028137,
+                0.0,
+                0.5140427947044373
+            ],
+            "scale": [
+                0.9999999403953552,
+                1.0,
+                0.9999999403953552
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 15,
+            "name": "road-colonly.033",
+            "rotation": [
+                0.0,
+                0.8032492399215698,
+                0.0,
+                0.5956431031227112
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 28,
+            "name": "road-colonly.034",
+            "rotation": [
+                0.0,
+                0.8032492399215698,
+                0.0,
+                0.5956431031227112
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 20,
+            "name": "road-colonly.035",
+            "rotation": [
+                0.0,
+                0.858123242855072,
+                0.0,
+                0.5134437680244446
+            ],
+            "scale": [
+                0.9999998807907104,
+                1.0,
+                0.9999998807907104
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 20,
+            "name": "road-colonly.036",
+            "rotation": [
+                0.0,
+                0.9418026208877563,
+                0.0,
+                0.3361663520336151
+            ],
+            "scale": [
+                0.9999999403953552,
+                1.0,
+                0.9999999403953552
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 20,
+            "name": "road-colonly.037",
+            "rotation": [
+                0.0,
+                0.9892889857292175,
+                0.0,
+                0.14597022533416748
+            ],
+            "scale": [
+                0.9999999403953552,
+                1.0,
+                0.9999999403953552
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 20,
+            "name": "road-colonly.038",
+            "rotation": [
+                0.0,
+                -0.9987574815750122,
+                0.0,
+                0.049834657460451126
+            ],
+            "scale": [
+                0.9999998807907104,
+                1.0,
+                0.9999998807907104
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 20,
+            "name": "road-colonly.039",
+            "rotation": [
+                0.0,
+                0.9988328814506531,
+                0.0,
+                0.04829990118741989
+            ],
+            "scale": [
+                0.9999998807907104,
+                1.0,
+                0.9999998807907104
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 15,
+            "name": "road-colonly.040",
+            "rotation": [
+                0.0,
+                0.9700482487678528,
+                0.0,
+                0.24291223287582397
+            ],
+            "scale": [
+                0.9999999403953552,
+                1.0,
+                0.9999999403953552
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 15,
+            "name": "road-colonly.041",
+            "rotation": [
+                5.820219328711573e-08,
+                0.904019296169281,
+                -5.820219328711573e-08,
+                0.4274916350841522
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": 10,
+            "name": "scificar_body-colonly",
+            "rotation": [
+                8.849994515003345e-08,
+                -0.7423907518386841,
+                7.986638905776999e-08,
+                0.6699671745300293
+            ],
+            "scale": [
+                1.1000005006790161,
+                1.100000023841858,
+                1.1000005006790161
+            ],
+            "translation": [
+                -45.295814514160156,
+                -6.3925604820251465,
+                -79.15630340576172
+            ]
+        },
+        {
+            "mesh": 10,
+            "name": "scificar_body-colonly.001",
+            "rotation": [
+                0.0,
+                -0.9416422247886658,
+                0.0,
+                0.3366153836250305
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -86.1424789428711,
+                -6.275941371917725,
+                -45.67001724243164
+            ]
+        },
+        {
+            "mesh": 4,
+            "name": "scificarwheel1-colonly",
+            "rotation": [
+                -0.2094118744134903,
+                -0.5676397681236267,
+                -0.1520986407995224,
+                0.7815355062484741
+            ],
+            "scale": [
+                1.100000262260437,
+                1.1000001430511475,
+                1.1000005006790161
+            ],
+            "translation": [
+                -41.98657989501953,
+                -5.421700954437256,
+                -80.13636779785156
+            ]
+        },
+        {
+            "mesh": 4,
+            "name": "scificarwheel1-colonly.001",
+            "rotation": [
+                2.0915926768338977e-09,
+                -0.8688839077949524,
+                2.929229969694802e-09,
+                0.49501585960388184
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -83.37966918945312,
+                -5.39333963394165,
+                -44.18300247192383
+            ]
+        },
+        {
+            "mesh": 4,
+            "name": "scificarwheel1-colonly.003",
+            "rotation": [
+                -0.010102666914463043,
+                9.526182509489445e-09,
+                -0.7071074843406677,
+                0.7070339322090149
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -78.2235336303711,
+                -6.4803242683410645,
+                -50.04811096191406
+            ]
+        },
+        {
+            "mesh": 4,
+            "name": "scificarwheel1-colonly.004",
+            "rotation": [
+                0.11790918558835983,
+                -0.11790896952152252,
+                -0.6972062587738037,
+                0.6972075700759888
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -78.37890625,
+                -5.719807147979736,
+                -50.04811096191406
+            ]
+        },
+        {
+            "mesh": 4,
+            "name": "scificarwheel1-colonly.005",
+            "rotation": [
+                -0.15685425698757172,
+                0.7683320641517639,
+                0.20587410032749176,
+                0.5853874683380127
+            ],
+            "scale": [
+                1.100000262260437,
+                1.1000003814697266,
+                1.100000262260437
+            ],
+            "translation": [
+                -42.19887924194336,
+                -5.421694755554199,
+                -77.53441619873047
+            ]
+        },
+        {
+            "mesh": 4,
+            "name": "scificarwheel2-colonly",
+            "rotation": [
+                -0.5802085995674133,
+                -0.3711952269077301,
+                -0.6429293751716614,
+                0.33498337864875793
+            ],
+            "scale": [
+                1.1000005006790161,
+                1.1000003814697266,
+                1.100000262260437
+            ],
+            "translation": [
+                -45.64690017700195,
+                -5.421697616577148,
+                -80.51274108886719
+            ]
+        },
+        {
+            "mesh": 4,
+            "name": "scificarwheel2-colonly.001",
+            "rotation": [
+                1.7630356896614074e-10,
+                -0.9416422247886658,
+                8.173546284240274e-10,
+                0.3366153836250305
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -85.50028991699219,
+                -5.39333963394165,
+                -46.77005386352539
+            ]
+        },
+        {
+            "mesh": 4,
+            "name": "scificarwheel3-colonly",
+            "rotation": [
+                8.994226874392552e-08,
+                -0.7423907518386841,
+                8.124617778548782e-08,
+                0.6699671745300293
+            ],
+            "scale": [
+                1.1000005006790161,
+                1.100000023841858,
+                1.1000005006790161
+            ],
+            "translation": [
+                -47.687286376953125,
+                -5.421699523925781,
+                -80.7225570678711
+            ]
+        },
+        {
+            "mesh": 4,
+            "name": "scificarwheel3-colonly.001",
+            "rotation": [
+                -2.536740373315638e-09,
+                -0.9416422843933105,
+                -1.322185028129752e-09,
+                0.3366151750087738
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                0.9999999403953552
+            ],
+            "translation": [
+                -86.682373046875,
+                -5.393340110778809,
+                -48.212154388427734
+            ]
+        },
+        {
+            "mesh": 4,
+            "name": "scificarwheel4-colonly.001",
+            "rotation": [
+                -3.6147895787763673e-10,
+                0.4950161576271057,
+                5.972285443966996e-10,
+                0.8688837885856628
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -85.22653198242188,
+                -5.393340110778809,
+                -42.669124603271484
+            ]
+        },
+        {
+            "mesh": 4,
+            "name": "scificarwheel5-colonly",
+            "rotation": [
+                -0.6429291367530823,
+                0.3349836468696594,
+                0.5802087783813477,
+                0.3711951971054077
+            ],
+            "scale": [
+                1.100000262260437,
+                1.100000262260437,
+                1.1000001430511475
+            ],
+            "translation": [
+                -45.915592193603516,
+                -5.4217000007629395,
+                -77.89967346191406
+            ]
+        },
+        {
+            "mesh": 4,
+            "name": "scificarwheel5-colonly.001",
+            "rotation": [
+                1.4845641382876806e-10,
+                0.3366157114505768,
+                -9.881501172870344e-10,
+                0.9416421055793762
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -87.34715270996094,
+                -5.39333963394165,
+                -45.25617218017578
+            ]
+        },
+        {
+            "mesh": 4,
+            "name": "scificarwheel6-colonly",
+            "rotation": [
+                0.742390513420105,
+                1.9259590544606908e-07,
+                -0.6699674129486084,
+                2.3348393085598218e-07
+            ],
+            "scale": [
+                1.1000003814697266,
+                1.100000023841858,
+                1.1000005006790161
+            ],
+            "translation": [
+                -47.95597457885742,
+                -5.421699047088623,
+                -78.1094970703125
+            ]
+        },
+        {
+            "mesh": 4,
+            "name": "scificarwheel6-colonly.001",
+            "rotation": [
+                -4.3304648755793096e-10,
+                0.33661559224128723,
+                1.0306384634617416e-09,
+                0.941642165184021
+            ],
+            "scale": [
+                0.9999998807907104,
+                1.0,
+                0.9999998807907104
+            ],
+            "translation": [
+                -88.52923583984375,
+                -5.39333963394165,
+                -46.69826889038086
+            ]
+        },
+        {
+            "mesh": 13,
+            "name": "Scifitrain_locomotive-colonly.001",
+            "rotation": [
+                1.0849993820061243e-10,
+                0.09499803185462952,
+                1.8057715045483036e-11,
+                0.9954774379730225
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -9.55483341217041,
+                0.9981510639190674,
+                -85.65050506591797
+            ]
+        },
+        {
+            "mesh": 14,
+            "name": "Scifitrain_passenger-colonly.004",
+            "rotation": [
+                1.1496140844835523e-10,
+                0.014405270107090473,
+                6.667728435355569e-12,
+                0.999896228313446
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -9.554832458496094,
+                0.9981508255004883,
+                -85.65049743652344
+            ]
+        },
+        {
+            "mesh": 14,
+            "name": "Scifitrain_passenger-colonly.005",
+            "rotation": [
+                1.151169368163174e-10,
+                0.11315184086561203,
+                -1.8095943146723137e-11,
+                0.9935777187347412
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                7.438112258911133,
+                0.9981508255004883,
+                -86.14022827148438
+            ]
+        },
+        {
+            "mesh": 12,
+            "name": "scifitrain_wheels-colonly.009",
+            "rotation": [
+                -9.43739975056701e-10,
+                0.14037200808525085,
+                3.785789015608998e-09,
+                0.9900988340377808
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -22.37911033630371,
+                0.9981505870819092,
+                -83.18038177490234
+            ]
+        },
+        {
+            "mesh": 11,
+            "name": "scifitrain_wheels-colonly.011",
+            "rotation": [
+                1.1152296447436427e-10,
+                0.22110731899738312,
+                -2.13562292850078e-11,
+                0.9752494692802429
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                24.002798080444336,
+                0.9981508255004883,
+                -89.96268463134766
+            ]
+        },
+        {
+            "mesh": 11,
+            "name": "scifitrain_wheels-colonly.012",
+            "rotation": [
+                1.1539304928254168e-10,
+                0.002520844107493758,
+                -9.561114785094568e-14,
+                0.9999968409538269
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                7.4381103515625,
+                0.9981508255004883,
+                -86.14022827148438
+            ]
+        },
+        {
+            "mesh": 11,
+            "name": "scifitrain_wheels-colonly.013",
+            "rotation": [
+                1.1277659361930148e-10,
+                0.05044788122177124,
+                1.2949991773369973e-11,
+                0.9987266659736633
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "translation": [
+                -9.554832458496094,
+                0.9981508255004883,
+                -85.65049743652344
+            ]
+        }
+    ],
+    "scene": 0,
+    "scenes": [
+        {
+            "extras": {
+                "background_color": [
+                    0.05087608844041824,
+                    0.05087608844041824,
+                    0.05087608844041824
+                ],
+                "frames_per_second": 24,
+                "uv_packing_progress": ""
+            },
+            "name": "Scene",
+            "nodes": [
+                86,
+                53,
+                92,
+                145,
+                144,
+                36,
+                89,
+                50,
+                99,
+                98,
+                49,
+                96,
+                143,
+                48,
+                142,
+                47,
+                46,
+                141,
+                140,
+                45,
+                44,
+                139,
+                65,
+                138,
+                137,
+                34,
+                64,
+                136,
+                135,
+                33,
+                32,
+                134,
+                133,
+                63,
+                132,
+                131,
+                62,
+                31,
+                30,
+                61,
+                130,
+                129,
+                128,
+                127,
+                60,
+                29,
+                28,
+                59,
+                126,
+                125,
+                75,
+                83,
+                82,
+                81,
+                80,
+                79,
+                78,
+                77,
+                76,
+                168,
+                167,
+                166,
+                164,
+                163,
+                165,
+                162,
+                15,
+                14,
+                16,
+                13,
+                12,
+                11,
+                151,
+                150,
+                152,
+                107,
+                161,
+                159,
+                154,
+                149,
+                147,
+                157,
+                156,
+                6,
+                5,
+                4,
+                106,
+                105,
+                104,
+                7,
+                9,
+                8,
+                102,
+                101,
+                103,
+                20,
+                22,
+                19,
+                17,
+                18,
+                21,
+                55,
+                54,
+                113,
+                88,
+                2,
+                0,
+                1,
+                100,
+                51,
+                90,
+                84,
+                10,
+                123,
+                57,
+                56,
+                42,
+                66,
+                41,
+                120,
+                43,
+                52,
+                91,
+                58,
+                95,
+                85,
+                40,
+                119,
+                97,
+                122,
+                121,
+                115,
+                118,
+                39,
+                117,
+                37,
+                38,
+                93,
+                116,
+                3,
+                87,
+                94,
+                35,
+                112,
+                111,
+                110,
+                109,
+                114,
+                124,
+                27,
+                26,
+                25,
+                24,
+                23,
+                108,
+                74,
+                70,
+                71,
+                72,
+                73,
+                69,
+                68,
+                67,
+                155,
+                148,
+                153,
+                158,
+                160,
+                146
+            ]
+        }
+    ]
+}

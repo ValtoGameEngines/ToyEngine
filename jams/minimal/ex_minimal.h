@@ -15,13 +15,26 @@ extern "C"
 	//_MINIMAL_EXPORT void ex_minimal_game(GameShell& app, Game& game);
 }
 
-class refl_ _MINIMAL_EXPORT Bullet : public Complex
+namespace mud
+{
+	template <> struct TypedBuffer<Bullet> { static size_t index() { return 20; } };
+	template <> struct TypedBuffer<Human>  { static size_t index() { return 21; } };
+	template <> struct TypedBuffer<Crate>  { static size_t index() { return 22; } };
+}
+
+using HBullet = ComponentHandle<Bullet>;
+using HHuman = ComponentHandle<Human>;
+using HCrate = ComponentHandle<Crate>;
+
+class refl_ _MINIMAL_EXPORT Bullet
 {
 public:
-	Bullet(Entity& parent, const vec3& source, const quat& rotation, float velocity);
-	~Bullet();
+	Bullet() {}
+	Bullet(HSpatial spatial, const vec3& source, const quat& rotation, float velocity);
 
-	comp_ attr_ Entity m_entity;
+	static Entity create(ECS& ecs, HSpatial parent, const vec3& source, const quat& rotation, float velocity);
+
+	comp_ HSpatial m_spatial;
 
 	attr_ vec3 m_source;
 	attr_ vec3 m_velocity;
@@ -30,8 +43,8 @@ public:
 	bool m_destroy = false;
 	vec3 m_impact = Zero3;
 
-	//Solid m_solid;
-	Collider m_collider;
+	//OSolid m_solid;
+	OCollider m_collider;
 
 	void update();
 };
@@ -48,16 +61,18 @@ struct HumanController
 	vec3 m_torque = Zero3;
 };
 
-class refl_ _MINIMAL_EXPORT Human : public Complex, public Updatable
+class refl_ _MINIMAL_EXPORT Human
 {
 public:
-	constr_ Human(Id id, Entity& parent, const vec3& position);
-	~Human();
+	constr_ Human() {}
+	constr_ Human(HSpatial spatial, HMovable movable);
 
-	comp_ attr_ Entity m_entity;
-	comp_ attr_ Movable m_movable;
+	static Entity create(ECS& ecs, HSpatial parent, const vec3& position);
 
-	Solid m_solid;
+	comp_ HSpatial m_spatial;
+	comp_ HMovable m_movable;
+
+	OSolid m_solid;
 
 	vec2 m_angles = Zero2;
 	bool m_aiming = false;
@@ -69,7 +84,7 @@ public:
 	struct State { std::string name; bool loop; };
 	State m_state = { "IdleAim", true };
 
-	void next_frame(size_t tick, size_t delta);
+	void next_frame(Spatial& spatial, size_t tick, size_t delta);
 
 	quat sight(bool aiming = true);
 	Aim aim();
@@ -79,16 +94,19 @@ public:
 	static float headlight_angle;
 };
 
-class refl_ _MINIMAL_EXPORT Crate : public Complex
+class refl_ _MINIMAL_EXPORT Crate
 {
 public:
-	constr_ Crate(Id id, Entity& parent, const vec3& position, const vec3& extents);
+	constr_ Crate() {}
+	constr_ Crate(HSpatial spatial, HMovable movable, const vec3& extents);
 
-	comp_ attr_ Entity m_entity;
-	comp_ attr_ Movable m_movable;
+	static Entity create(ECS& ecs, HSpatial parent, const vec3& position, const vec3& extents);
+
+	comp_ HSpatial m_spatial;
+	comp_ HMovable m_movable;
 
 	attr_ vec3 m_extents;
-	Solid m_solid;
+	OSolid m_solid;
 };
 
 class refl_ _MINIMAL_EXPORT Player
@@ -97,5 +115,5 @@ public:
 	Player(World& world);
 	
 	World* m_world;
-	Human* m_human = nullptr;
+	HHuman m_human = {};
 };
