@@ -1,29 +1,29 @@
-//  Copyright (c) 2018 Hugo Amiard hugo.amiard@laposte.net
+//  Copyright (c) 2019 Hugo Amiard hugo.amiard@laposte.net
 //  This software is licensed  under the terms of the GNU General Public License v3.0.
 //  See the attached LICENSE.txt file or https://www.gnu.org/licenses/gpl-3.0.en.html.
 //  This notice and the license may not be removed or altered from any source distribution.
 
+#ifdef TWO_MODULES
+module toy.core
+#else
+#include <ecs/ECS.hpp>
 #include <core/Types.h>
 #include <core/Path/DetourPath.h>
-
 #include <core/Spatial/Spatial.h>
 #include <core/Path/Pathfinder.h>
+#endif
 
 #include <DetourNavMeshQuery.h>
 
-using namespace mud; namespace toy
+namespace toy
 {
 	Entity Waypoint::create(ECS& ecs, HSpatial parent, const vec3& position)
 	{
-		Entity entity = { ecs.CreateEntity<Spatial, Waypoint>(), ecs.m_index };
-		ecs.SetComponent(entity, Spatial(parent, position, ZeroQuat));
-		ecs.SetComponent(entity, Waypoint(HSpatial(entity)));
+		Entity entity = ecs.create<Spatial, Waypoint>();
+		ecs.set(entity, Spatial(parent, position, ZeroQuat));
+		ecs.set(entity, Waypoint());
 		return entity;
 	}
-
-	Waypoint::Waypoint(HSpatial spatial)
-		: m_spatial(spatial)
-	{}
 
 	DetourPath::DetourPath(Pathfinder& pathfinder, const vec3& origin, const vec3& destination)
 		: m_pathfinder(pathfinder)
@@ -57,14 +57,14 @@ using namespace mud; namespace toy
 		if(!query.findNearestPoly(&m_destination[0], &extents[0], &filter, &end_poly, &end_pos[0]))
 			return false;
 
-		std::vector<dtPolyRef> poly_path(m_pathfinder.m_max_polys);
+		vector<dtPolyRef> poly_path(m_pathfinder.m_max_polys);
 		int polyCount = 0;
 
 		if(!query.findPath(start_poly, end_poly, &start_pos[0], &end_pos[0], &filter, poly_path.data(), &polyCount, int(m_pathfinder.m_max_polys)))
 			return false;
 
-		std::vector<vec3> point_path(m_pathfinder.m_max_waypoints);
-		std::vector<dtPolyRef> poly_refs(m_pathfinder.m_max_waypoints);
+		vector<vec3> point_path(m_pathfinder.m_max_waypoints);
+		vector<dtPolyRef> poly_refs(m_pathfinder.m_max_waypoints);
 
 		int count;
 

@@ -1,46 +1,46 @@
-//  Copyright (c) 2018 Hugo Amiard hugo.amiard@laposte.net
+//  Copyright (c) 2019 Hugo Amiard hugo.amiard@laposte.net
 //  This software is licensed  under the terms of the GNU General Public License v3.0.
 //  See the attached LICENSE.txt file or https://www.gnu.org/licenses/gpl-3.0.en.html.
 //  This notice and the license may not be removed or altered from any source distribution.
 
-
-#include <edit/Edit/Editor.h>
-
-#include <tool//EditContext.h>
-#include <edit/Editor/Editor.h>
-
-#include <infra/StringConvert.h>
+#ifdef TWO_MODULES
+module toy.edit
+#else
+#include <stl/hash_base.hpp>
+#include <infra/ToString.h>
 #include <type/Indexer.h>
+#include <pool/Pool.hpp>
+#include <ecs/ECS.hpp>
 #include <refl/System.h>
 #include <refl/Class.h>
 #include <refl/Meta.h>
-
-#include <edit/Editor/Editor.h>
-#include <edit/Editor/Toolbox.h>
-
-#include <core/Spatial/Spatial.h>
-#include <core/World/World.h>
-//#include <core/Selector/Selector.h>
-
+#include <ui/Section.h>
+#include <ui/Style/Layout.h>
+#include <ui/ContainerStruct.h>
+#include <ui/DockStruct.h>
+#include <uio/InjectorEdit.h>
+#include <uio/IndexerEdit.h>
+#include <uio/GraphEdit.h>
+#include <uio/Inspector.h>
+#include <uio/Object.h>
 #include <gfx/Item.h>
 #include <gfx/GfxSystem.h>
-#include <gfx-ui/Viewport.h>
+#include <gfx-pbr/Lighting.h>
+#include <gfx-ui/Viewer.h>
 #include <gfx-edit/GfxEdit.h>
-
-#include <uio/Edit/Section.h>
-#include <uio/Edit/Injector.h>
-#include <uio/Edit/Indexer.h>
-#include <uio/Edit/Structure.h>
-#include <uio/Edit/Inspector.h>
-#include <uio/Object.h>
-
-#include <ui/Style/Layout.h>
-#include <ui/Structs/Container.h>
-#include <ui/Structs/Dock.h>
-
+#include <tool//EditContext.h>
+#include <core/Spatial/Spatial.h>
+#include <core/World/World.h>
+#include <core/Selector/Selection.h>
 #include <visu/VisuScene.h>
+#include <edit/Edit/Editor.h>
+#include <edit/Editor/Editor.h>
+#include <edit/Editor/Editor.h>
+#include <edit/Editor/Toolbox.h>
+//#include <core/Selector/Selector.h>
+#endif
 
-using namespace mud; namespace toy
+namespace toy
 {
 #if 0
 	void context_menu(Widget& parent, Selector& selector, Ref object)
@@ -64,7 +64,7 @@ using namespace mud; namespace toy
 
 	string to_icon(const string& name)
 	{
-		string clean = replace_all(to_lower(name), " ", "_");
+		string clean = replace(to_lower(name), " ", "_");
 		return "(" + clean + ")";
 	}
 
@@ -72,7 +72,7 @@ using namespace mud; namespace toy
 	{
 		Widget& button = ui::button(parent, to_icon(tool.m_name).c_str());
 		button.set_state(ACTIVE, tool.m_state == ToolState::Active);
-		if (button.activated())
+		if(button.activated())
 			tool.activate();
 	}
 
@@ -93,8 +93,11 @@ using namespace mud; namespace toy
 	{
 		Widget& self = ui::select_list(parent);
 
-		for(Ref object : selection)
+		for(Ref object : selection.objects)
 			object_item(self, object);
+
+		//for(Entity entity : selection.entities)
+		//	object_item(self, object);
 	}
 
 #if 0
@@ -113,7 +116,7 @@ using namespace mud; namespace toy
 		UNUSED(parent); UNUSED(world);
 	}
 
-	std::vector<Type*> entity_types()
+	vector<Type*> entity_types()
 	{
 		auto has_component = [](Class& cls, Type& component)
 		{
@@ -123,11 +126,11 @@ using namespace mud; namespace toy
 			return false;
 		};
 
-		std::vector<Type*> types;
+		vector<Type*> types;
 		for(Type* type : system().m_types)
 			if(g_class[type->m_id])
 			{
-				if(has_component(cls(*type), mud::type<Spatial>()))
+				if(has_component(cls(*type), two::type<Spatial>()))
 					types.push_back(type);
 			}
 		return types;
@@ -137,19 +140,19 @@ using namespace mud; namespace toy
 	{
 		enum Modes { CREATE = 1 << 0 };
 
-		Section& self = section(parent, (string(indexer.m_type.m_name) + " Registry").c_str());
-		complex_indexer(*self.m_body, indexer, &selection);
+		Section& self = section(parent, string(indexer.m_type->m_name) + " Registry");
+		complex_indexer(*self.m_body, indexer, &selection.objects);
 
 		if(ui::modal_button(self, *self.m_toolbar, "Create", CREATE))
 		{
-			static std::vector<Type*> types = entity_types();
+			static vector<Type*> types = entity_types();
 
 			Widget& modal = ui::auto_modal(self, CREATE); //, { 600, 400 });
 			object_switch_creator(modal, types);
 		}
 	}
 
-	void library(Widget& parent, const std::vector<Type*>& types, Selection& selection)
+	void library(Widget& parent, span<Type*> types, Selection& selection)
 	{
 		Tabber& self = ui::tabber(parent);
 
@@ -160,7 +163,7 @@ using namespace mud; namespace toy
 			}
 	}
 
-	void library_section(Widget& parent, const std::vector<Type*>& types, Selection& selection)
+	void library_section(Widget& parent, span<Type*> types, Selection& selection)
 	{
 		Section& self = section(parent, "Library");
 		library(*self.m_body, types, selection);
@@ -186,39 +189,39 @@ using namespace mud; namespace toy
 			editor_menu(self, name_group.second);
 	}
 
-	string entity_name(uint32_t entity)
+	string entity_name(Entity entity)
 	{
-		return string(entity_prototype({ entity, 0 })) + ":" + to_string(entity);
+		return entity_prototype(entity) + ":" + to_string(entity.m_handle);
 	}
 
-	string entity_icon(uint32_t entity)
+	string entity_icon(Entity entity)
 	{
-		return "(" + string(entity_prototype({ entity, 0 })) + ")";
+		return "(" + entity_prototype(entity) + ")";
 	}
 
-	void outliner_node(Widget& parent, uint32_t entity, HSpatial spatial, std::vector<Ref>& selection)
+	void outliner_node(Widget& parent, Entity entity, HSpatial spatial, Selection& selection)
 	{
-		TreeNode& self = ui::tree_node(parent, carray<cstring, 2>{ entity_icon(entity).c_str(), entity_name(entity).c_str() }, false, false);
+		TreeNode& self = ui::tree_node(parent, { entity_icon(entity).c_str(), entity_name(entity).c_str() }, false, false);
 
-		self.m_header->set_state(SELECTED, vector_has(selection, ent_ref(entity)));
+		self.m_header->set_state(SELECTED, has(selection.entities, entity));
 
 		if(self.m_header->activated())
-			vector_select(selection, ent_ref(entity));
+			select(selection.entities, entity);
 
 		//object_item(self, object);
 
 		if(self.m_body)
 			for(HSpatial child : spatial->m_contents)
 			{
-				outliner_node(*self.m_body, child.m_handle, child, selection);
+				outliner_node(*self.m_body, child, child, selection);
 			}
 	}
 
-	void outliner_graph(Widget& parent, HSpatial spatial, std::vector<Ref>& selection)
+	void outliner_graph(Widget& parent, HSpatial spatial, Selection& selection)
 	{
 		ScrollSheet& sheet = ui::scroll_sheet(parent);
 		Widget& tree = ui::tree(*sheet.m_body);
-		outliner_node(tree, spatial.m_handle, spatial, selection);
+		outliner_node(tree, spatial, spatial, selection);
 	}
 
 	void editor_graph(Widget& parent, Editor& editor, Selection& selection)
@@ -241,7 +244,7 @@ using namespace mud; namespace toy
 			editor.m_graphics_debug.m_debug_draw_csm = true;
 			if(editor.m_graphics_debug.m_debug_draw_csm)
 			{
-				//Widget* dock = ui::dockitem(dockspace, "Screen", carray<uint16_t, 2>{ 0U, 1U });
+				//Widget* dock = ui::dockitem(dockspace, "Screen", { 0U, 1U });
 				//if(dock)
 				{
 					//Viewer& viewer = ui::viewer(*dock, *scene);
@@ -268,22 +271,22 @@ using namespace mud; namespace toy
 		static Docksystem& docksystem = editor_docksystem();
 		Dockspace& dockspace = ui::dockspace(parent, docksystem);
 
-		std::vector<Type*> library_types = { &type<Spatial>(), &type<World>() };
-		if(Widget* dock = ui::dockitem(dockspace, "Outliner", carray<uint16_t, 2>{ 0U, 0U }))
+		vector<Type*> library_types = { &type<Spatial>(), &type<World>() };
+		if(Widget* dock = ui::dockitem(dockspace, "Outliner", { 0U, 0U }))
 			editor_graph(*dock, editor, editor.m_selection);
-		if(Widget* dock = ui::dockitem(dockspace, "Library", carray<uint16_t, 2>{ 0U, 0U }))
+		if(Widget* dock = ui::dockitem(dockspace, "Library", { 0U, 0U }))
 			library_section(*dock, library_types, editor.m_selection);
-		if(Widget* dock = ui::dockitem(dockspace, "Inspector", carray<uint16_t, 2>{ 0U, 2U }))
+		if(Widget* dock = ui::dockitem(dockspace, "Inspector", { 0U, 2U }))
 			object_editor(*dock, editor.m_selection);
 		//edit_selector(self, editor.m_selection); // dockid { 0, 2 }
-		if(Widget* dock = ui::dockitem(dockspace, "Script", carray<uint16_t, 2>{ 0U, 2U }))
+		if(Widget* dock = ui::dockitem(dockspace, "Script", { 0U, 2U }))
 			script_editor(*dock, editor.m_script_editor);
 		//current_brush_edit(self, editor); // dockid { 0, 0 }
 		//ui_edit(self, editor.m_selection); // dockid { 0, 2 }
-		if (Widget* dock = ui::dockitem(dockspace, "Graphics", carray<uint16_t, 2>{ 0U, 2U }))
-			edit_gfx_system(*dock, editor.m_gfx_system);
+		if(Widget* dock = ui::dockitem(dockspace, "Graphics", { 0U, 2U }))
+			edit_gfx(*dock, editor.m_gfx);
 
-		editor.m_screen = ui::dockitem(dockspace, "Screen", carray<uint16_t, 2>{ 0U, 1U }, 4.f);
+		editor.m_screen = ui::dockitem(dockspace, "Screen", { 0U, 1U }, 4.f);
 		
 		//if(editor.m_editedScene)
 		{
@@ -293,10 +296,10 @@ using namespace mud; namespace toy
 
 		if(editor.m_viewer)
 		{
-			if(MouseEvent mouse_event = editor.m_viewer->mouse_event(DeviceType::MouseLeft, EventType::Stroked, InputMod::None, false))
+			if(MouseEvent event = editor.m_viewer->mouse_event(DeviceType::MouseLeft, EventType::Stroked, InputMod::None, false))
 				editor.m_viewer->take_focus();
 
-			viewport_picker(*editor.m_viewer, *editor.m_viewer, editor.m_selection);
+			ui::viewport_picker(*editor.m_viewer, *editor.m_viewer, editor.m_selection.objects);
 
 			KeyEvent key_event = editor.m_viewer->key_event(Key::F, EventType::Pressed);
 			if(key_event)
@@ -304,7 +307,7 @@ using namespace mud; namespace toy
 		}
 
 		if(editor.m_spatial_tool && editor.m_viewer)
-			editor.m_spatial_tool->process(*editor.m_viewer, editor.m_selection);
+			editor.m_spatial_tool->process(*editor.m_viewer, editor.m_selection.objects);
 	}
 
 	Widget& editor_viewer_overlay(Viewer& viewer, Editor& editor)
@@ -322,8 +325,8 @@ using namespace mud; namespace toy
 		};
 
 		float eps = 0.0000001f;
-		entry(layout, "frame time", int(editor.m_gfx_system.m_frame_time * 1000.f));
-		entry(layout, "frame per second", int(1.f / max(editor.m_gfx_system.m_frame_time, eps)));
+		entry(layout, "frame time", int(editor.m_gfx.m_frame_time * 1000.f));
+		entry(layout, "frame per second", int(1.f / max(editor.m_gfx.m_frame_time, eps)));
 
 		return layout;
 	}
@@ -362,7 +365,7 @@ using namespace mud; namespace toy
 
 		if(editor.m_viewer)
 		{
-			Ref hovered = editor.m_viewer->m_hovered ? editor.m_viewer->m_hovered->m_node->m_object : Ref();
+			Ref hovered = Ref(); // editor.m_viewer->m_hovered ? editor.m_viewer->m_hovered->m_node->m_object : Ref();
 			paint_selection(editor.m_viewer->m_scene->m_graph, editor.m_selection, hovered);
 			//Widget& layout = toy::editor_viewer_overlay(*editor.m_viewer, editor);
 			//time_entries(layout);

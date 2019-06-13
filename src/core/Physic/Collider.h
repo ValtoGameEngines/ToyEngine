@@ -1,10 +1,11 @@
-//  Copyright (c) 2018 Hugo Amiard hugo.amiard@laposte.net
+//  Copyright (c) 2019 Hugo Amiard hugo.amiard@laposte.net
 //  This software is licensed  under the terms of the GNU General Public License v3.0.
 //  See the attached LICENSE.txt file or https://www.gnu.org/licenses/gpl-3.0.en.html.
 //  This notice and the license may not be removed or altered from any source distribution.
 
 #pragma once
 
+#include <stl/memory.h>
 #include <math/Vec.h>
 #include <pool/Pool.h>
 #include <core/Forward.h>
@@ -12,11 +13,7 @@
 #include <core/Physic/CollisionShape.h>
 #include <core/Movable/MotionState.h>
 
-#ifndef MUD_CPP_20
-#include <memory>
-#endif
-
-using namespace mud; namespace toy
+namespace toy
 {
 	struct refl_ TOY_CORE_EXPORT Collision
 	{
@@ -24,7 +21,7 @@ using namespace mud; namespace toy
 		Collision(HCollider first, HCollider second, const vec3& hit_point) : m_first(first), m_second(second), m_hit_point(hit_point) {}
 		attr_ HCollider m_first = {};
 		attr_ HCollider m_second = {};
-		attr_ vec3 m_hit_point = Zero3;
+		attr_ vec3 m_hit_point = vec3(0.f);
 	};
 
 	class refl_ TOY_CORE_EXPORT ColliderImpl : public TransformSource
@@ -35,8 +32,8 @@ using namespace mud; namespace toy
 		virtual void update_transform(const vec3& position, const quat& rotation) = 0;
 		virtual void update_transform() = 0;
 
-		virtual void project(const vec3& position, std::vector<Collision>& collisions, short int mask) = 0;
-		virtual void raycast(const vec3& position, std::vector<Collision>& collisions, short int mask) = 0;
+		virtual void project(const vec3& position, vector<Collision>& collisions, short int mask) = 0;
+		virtual void raycast(const vec3& position, vector<Collision>& collisions, short int mask) = 0;
 		virtual Collision raycast(const vec3& position, short int mask) = 0;
 	};
 
@@ -67,13 +64,13 @@ using namespace mud; namespace toy
 		attr_ ColliderObject* m_object = nullptr;
 
 		PhysicMedium* m_world;
-		object_ptr<ColliderImpl> m_impl;
+		object<ColliderImpl> m_impl;
 
 		attr_ ColliderImpl& impl() { return *m_impl; }
 
 		MotionState m_motion_state;
 
-		void init(object_ptr<ColliderImpl> impl);
+		void init(object<ColliderImpl> impl);
 
 		void next_frame(size_t tick, size_t delta);
 		void next_frame(Spatial& spatial, size_t tick, size_t delta);
@@ -113,21 +110,22 @@ using namespace mud; namespace toy
 	class refl_ TOY_CORE_EXPORT Solid
 	{
 	public:
-		constr_ Solid() {}
-		constr_ Solid(HSpatial spatial, HMovable movable, OCollider collider, bool isstatic, float mass = 0.f);
+		Solid() {}
+		Solid(HSpatial spatial, HMovable movable, OCollider collider, bool isstatic, float mass = 0.f);
 		virtual ~Solid();
 
 		Solid(Solid&& other) = default;
 		Solid& operator=(Solid&& other) = default;
 
 		attr_ HSpatial m_spatial;
-		attr_ OCollider m_collider;
+		//attr_ nomut_ OCollider m_collider;
+		OCollider m_collider;
 		attr_ bool m_static = false;
 		attr_ float m_mass = 0.f;
 
-		void init(object_ptr<SolidImpl> impl);
+		void init(object<SolidImpl> impl);
 
-		object_ptr<SolidImpl> m_impl;
+		object<SolidImpl> m_impl;
 
 		SolidImpl* operator->() { return m_impl.get(); }
 		const SolidImpl* operator->() const { return m_impl.get(); }
@@ -138,17 +136,17 @@ using namespace mud; namespace toy
 	};
 }
 
-namespace mud
+namespace two
 {
 	template <>
 	struct DestroyHandle<toy::Collider>
 	{
-		static void destroy(const OwnedHandle<toy::Collider>& handle) { toy::Collider::destroy(handle); }
+		static void destroy(const SparseHandle<toy::Collider>& handle) { toy::Collider::destroy(handle); }
 	};
 
 	template <>
 	struct DestroyHandle<toy::Solid>
 	{
-		static void destroy(const OwnedHandle<toy::Solid>& handle) { toy::Solid::destroy(handle); }
+		static void destroy(const SparseHandle<toy::Solid>& handle) { toy::Solid::destroy(handle); }
 	};
 }

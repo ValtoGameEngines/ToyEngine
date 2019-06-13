@@ -1,15 +1,17 @@
-//  Copyright (c) 2018 Hugo Amiard hugo.amiard@laposte.net
+//  Copyright (c) 2019 Hugo Amiard hugo.amiard@laposte.net
 //  This software is licensed  under the terms of the GNU General Public License v3.0.
 //  See the attached LICENSE.txt file or https://www.gnu.org/licenses/gpl-3.0.en.html.
 //  This notice and the license may not be removed or altered from any source distribution.
 
 #pragma once
 
-#include <tree/Node.h>
+#include <stl/string.h>
+#include <stl/function.h>
+#include <tree/Graph.h>
 #include <math/Timer.h>
 #include <visu/Forward.h>
 
-#include <ecs/Registry.h>
+#include <ecs/ECS.h>
 
 #include <core/World/World.h>
 #include <core/Spatial/Spatial.h>
@@ -18,20 +20,13 @@
 
 #include <gfx/Scene.h>
 
-#ifndef MUD_CPP_20
-#include <functional>
-#include <string>
-#endif
-
 #define TOY_PHYSIC_DEBUG_DRAW
 
-using namespace mud; namespace toy
+namespace toy
 {
-	using string = std::string;
-
 	struct TOY_VISU_EXPORT VisuPainter
 	{
-		VisuPainter(cstring name, size_t index, std::function<void(size_t, VisuScene&, Gnode&)> paint)
+		VisuPainter(cstring name, size_t index, function<void(size_t, VisuScene&, Gnode&)> paint)
 			: m_name(name)
 			, m_index(index)
 			, m_paint(paint)
@@ -41,7 +36,7 @@ using namespace mud; namespace toy
 		size_t m_index;
 		bool m_enabled = true;
 
-		std::function<void(size_t, VisuScene&, Gnode&)> m_paint;
+		function<void(size_t, VisuScene&, Gnode&)> m_paint;
 	};
 
 	class refl_ TOY_VISU_EXPORT PhysicDebugDraw
@@ -53,16 +48,16 @@ using namespace mud; namespace toy
 		void draw_physics(Gnode& parent, World& world, Medium& medium);
 
 		class Impl;
-		unique_ptr<Impl> m_impl;
+		unique<Impl> m_impl;
 	};
 
-	class refl_ TOY_VISU_EXPORT VisuScene : public NonCopy
+	class refl_ TOY_VISU_EXPORT VisuScene
     {
     public:
-        VisuScene(GfxSystem& gfx_system, SoundManager* sound_system = nullptr);
+        VisuScene(GfxSystem& gfx, SoundManager* sound_system = nullptr);
         ~VisuScene();
 
-		attr_ GfxSystem& m_gfx_system;
+		attr_ GfxSystem& m_gfx;
 		attr_ Scene m_scene;
 
 		Ref m_player;
@@ -71,66 +66,33 @@ using namespace mud; namespace toy
 		SoundManager& m_snd_manager;
 #endif
 
-		std::vector<Gnode*> m_entities;
+		vector<vector<Gnode*>> m_entities;
 
-		std::vector<unique_ptr<VisuPainter>> m_painters;
+		vector<unique<VisuPainter>> m_painters;
 
 		meth_ void next_frame();
 
-		Gnode& entity_node(Gnode& parent, uint32_t entity, Spatial& spatial, size_t painter);
+		Gnode& entity_node(Gnode& parent, Entity entity, Spatial& spatial, size_t painter);
 
-		inline void painter(cstring name, std::function<void(size_t, VisuScene&, Gnode&)> paint)
+		inline void painter(cstring name, function<void(size_t, VisuScene&, Gnode&)> paint)
 		{
-			m_painters.emplace_back(make_unique<VisuPainter>(name, m_painters.size(), paint));
+			m_painters.push_back(construct<VisuPainter>(name, m_painters.size(), paint));
 		}
 
 		template <class T>
-		inline void entity_painter(cstring name, World& world, void (*paint_func)(Gnode&, T&))
-		{
-			auto paint = [this, &world, paint_func](size_t index, VisuScene&, Gnode& parent)
-			{
-				world.m_ecs.Loop<Spatial, T>([this, paint_func, index, &parent](uint32_t entity, Spatial& spatial, T& component)
-				{
-					paint_func(this->entity_node(parent, entity, spatial, index), component);
-				});
-			};
-			m_painters.emplace_back(make_unique<VisuPainter>(name, m_painters.size(), paint));
-		}
+		inline void entity_painter(cstring name, World& world, void(*paint_func)(Gnode&, T&));
 
 		template <class T, class T_PaintFunc>
-		inline void range_entity_painter(HSpatial reference, float range, cstring name, World& world, T_PaintFunc paint_func)
-		{
-			float range2 = range * range;
-			auto paint = [reference, range2, this, &world, paint_func](size_t index, VisuScene&, Gnode& parent)
-			{
-				vec3 position = reference->m_position;
-				world.m_ecs.Loop<Spatial, T>([&position, range2, this, paint_func, index, &parent](uint32_t entity, Spatial& spatial, T& component)
-				{
-					UNUSED(entity);
-					float dist2 = distance2(spatial.m_position, position);
-					if(dist2 < range2)
-						paint_func(this->entity_node(parent, entity, spatial, index), component);
-				});
-			};
-			m_painters.emplace_back(make_unique<VisuPainter>(name, m_painters.size(), paint));
-		}
+		inline void range_entity_painter(HSpatial reference, float range, cstring name, World& world, T_PaintFunc paint_func);
 
 		template <class T, class T_Container>
-		inline void object_painter(cstring name, T_Container& objects, void (*paint_func)(Gnode&, T&))
-		{
-			auto paint = [this, &objects, paint_func](size_t index, VisuScene&, Gnode& parent)
-			{
-				for(auto object : objects)
-					paint_func(this->entity_node(parent, object->m_spatial.m_handle, object->m_spatial, index), *object);
-			};
-			m_painters.emplace_back(make_unique<VisuPainter>(name, m_painters.size(), paint));
-		}
+		inline void object_painter(cstring name, T_Container& objects, void(*paint_func)(Gnode&, T&));
 
 	private:
 		Clock m_clock;
     };
 
-	export_ TOY_VISU_EXPORT void update_camera(Camera& camera, mud::Camera& gfx_camera);
+	export_ TOY_VISU_EXPORT void update_camera(Camera& camera, two::Camera& gfx_camera);
 
 	export_ TOY_VISU_EXPORT void paint_selection(Gnode& parent, Selection& selection, Ref hovered);
 

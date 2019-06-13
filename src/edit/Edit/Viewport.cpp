@@ -1,4 +1,4 @@
-//  Copyright (c) 2018 Hugo Amiard hugo.amiard@laposte.net
+//  Copyright (c) 2019 Hugo Amiard hugo.amiard@laposte.net
 //  This software is licensed  under the terms of the GNU General Public License v3.0.
 //  See the attached LICENSE.txt file or https://www.gnu.org/licenses/gpl-3.0.en.html.
 //  This notice and the license may not be removed or altered from any source distribution.
@@ -6,21 +6,23 @@
 #include <edit/Types.h>
 #include <edit/Edit/Viewport.h>
 
-#include <gfx-ui/Viewport.h>
-#include <gfx-ui/Viewer.h>
+#include <tree/Graph.hpp>
+#include <ecs/Complex.h>
 #include <gfx/Item.h>
+#include <gfx-ui/Viewer.h>
 
 #include <core/Camera/Camera.h>
 #include <core/Selector/Selection.h>
 #include <core/World/World.h>
 #include <core/Physic/PhysicWorld.h>
 
-#include <uio/Edit/Section.h>
+#include <ui/Section.h>
+#include <ui/Style/Styles.h>
 #include <visu/VisuScene.h>
 
 #include <edit/Controller/RTSCameraController.h>
 
-using namespace mud; namespace toy
+namespace toy
 {
 	vec3 pick_terrain(Viewer& viewer, World& world, vec2 position)
 	{
@@ -40,7 +42,7 @@ using namespace mud; namespace toy
 		update_camera(camera, viewer.m_camera);
 
 		viewer.m_controller->process(viewer);
-		viewport_picker(viewer, viewer, selection);
+		ui::viewport_picker(viewer, viewer, selection);
 		return viewer;
 	}
 }

@@ -1,29 +1,30 @@
-﻿//  Copyright (c) 2018 Hugo Amiard hugo.amiard@laposte.net
+//  Copyright (c) 2019 Hugo Amiard hugo.amiard@laposte.net
 //  This software is licensed  under the terms of the GNU General Public License v3.0.
 //  See the attached LICENSE.txt file or https://www.gnu.org/licenses/gpl-3.0.en.html.
 //  This notice and the license may not be removed or altered from any source distribution.
 
-
-#include <core/Types.h>
-#include <core/Bullet/BulletWorld.h>
-
+#ifndef USE_STL
+#include <stl/vector.hpp>
+#endif
+#include <math/Timer.h>
 #include <geom/Geom.h>
 #include <geom/Shape.h>
-
-#define TOY_PRIVATE
-#include <core/Bullet.h>
-
-#include <core/World/World.h>
+#include <core/Types.h>
+#include <core/Bullet/BulletWorld.h>
+#include <core/World/World.hpp>
 #include <core/Bullet/BulletSolid.h>
 #include <core/Bullet/BulletCollider.h>
 #include <core/Physic/Solid.h>
 
-#include <math/Timer.h>
-
 #ifdef _MSC_VER
 #	pragma warning (push)
 #	pragma warning (disable : 4127) // members are private, so there's no risk them being accessed by the user
+#	pragma warning (disable : 4100)
+#	pragma warning (disable : 4305)
+#	pragma warning (disable : 5033) // @todo deal with this ?
 #endif
+
+#include <core/Bullet/Bullet.h.inl>
 
 #include <BulletDynamics/ConstraintSolver/btSequentialImpulseConstraintSolver.h>
 #include <BulletDynamics/Dynamics/btDiscreteDynamicsWorld.h>
@@ -40,7 +41,7 @@ extern CollisionStartedCallback gCollisionStartedCallback;
 extern CollisionEndedCallback gCollisionEndedCallback;
 #endif
 
-using namespace mud; namespace toy
+namespace toy
 {
 #ifdef TRIGGER_COLLISIONS
 	static void collisionStarted(btPersistentManifold* manifold)
@@ -55,9 +56,9 @@ using namespace mud; namespace toy
 		if(&col0->m_spatial == &col1->m_spatial)
 			return;
 
-		if (col0->m_object && col1->m_object)
+		if(col0->m_object && col1->m_object)
 		{
-			// printf << "Remove contact " << col0->m_spatial.m_id << " : " << col1->m_spatial.m_id << std::endl;
+			// printf << "Remove contact " << col0->m_spatial.m_id << " : " << col1->m_spatial.m_id << endl;
 			col0->m_object->remove_contact(*col1);
 			col1->m_object->remove_contact(*col0); // @todo : replace this with buffered action (set a flag on bullet object ?) to not loop infinitely from bullet code
 		}
@@ -98,14 +99,14 @@ using namespace mud; namespace toy
     BulletMedium::~BulletMedium()
     {}
 
-	object_ptr<ColliderImpl> BulletMedium::make_collider(HCollider collider)
+	object<ColliderImpl> BulletMedium::make_collider(HCollider collider)
 	{
-		return make_object<BulletCollider>(*this, collider->m_spatial, collider, collider->m_collision_shape);
+		return oconstruct<BulletCollider>(*this, collider->m_spatial, collider, collider->m_collision_shape);
 	}
 
-	object_ptr<SolidImpl> BulletMedium::make_solid(HSolid solid)
+	object<SolidImpl> BulletMedium::make_solid(HSolid solid)
 	{
-		return make_object<BulletSolid>(*this, as<BulletCollider>(*solid->m_collider->m_impl), solid->m_spatial, solid->m_collider, solid);
+		return oconstruct<BulletSolid>(*this, as<BulletCollider>(*solid->m_collider->m_impl), solid->m_spatial, solid->m_collider, solid);
 	}
 
 	void BulletMedium::add_solid(HCollider collider, HSolid solid)
@@ -156,7 +157,7 @@ using namespace mud; namespace toy
 			return 0.f;
 		}
 
-		std::vector<Contact> m_contacts;
+		vector<Contact> m_contacts;
 		float m_margin;
 	};
 
@@ -181,7 +182,7 @@ using namespace mud; namespace toy
 		collision_world.rayTest(to_btvec3(start), to_btvec3(end), callback);
 	}
 
-	void BulletMedium::project(HCollider collider, const vec3& position, const quat& rotation, std::vector<Collision>& collisions, short int mask)
+	void BulletMedium::project(HCollider collider, const vec3& position, const quat& rotation, vector<Collision>& collisions, short int mask)
 	{
 		ContactCheck callback;
 		BulletCollider& bullet_collider = as<BulletCollider>(*collider->m_impl);
@@ -197,14 +198,14 @@ using namespace mud; namespace toy
 		}
 	}
 	
-	void BulletMedium::raycast(HCollider collider, const vec3& start, const vec3& end, std::vector<Collision>& collisions, short int mask)
+	void BulletMedium::raycast(HCollider collider, const vec3& start, const vec3& end, vector<Collision>& collisions, short int mask)
 	{
 		btCollisionWorld::AllHitsRayResultCallback callback(to_btvec3(start), to_btvec3(end));
 		ray_test(*m_collision_world, callback, start, end, mask);
 
 		SparsePool<Collider>& pool = m_bullet_world.m_world.pool<Collider>();
 
-		for(size_t i = 0; i < callback.m_collisionObjects.size(); ++i)
+		for(int i = 0; i < callback.m_collisionObjects.size(); ++i)
 		{
 			HCollider collision = { pool, uint32_t((uintptr_t)callback.m_collisionObjects[i]->getUserPointer()) };
 			collisions.push_back({ collider, collision, to_vec3(callback.m_hitPointWorld[i]) });
@@ -245,7 +246,7 @@ using namespace mud; namespace toy
 		}
 
 		m_contacts.back()->m_index = index;
-		std::swap(m_contacts[index], m_contacts.back());
+		swap(m_contacts[index], m_contacts.back());
 		m_contacts.pop_back();
 
 		remove_contact(contact.m_col0, contact.m_col1);
@@ -325,7 +326,7 @@ using namespace mud; namespace toy
 		m_last_tick = tick;
 
 		if(m_dynamics_world)
-#ifdef MUD_PLATFORM_EMSCRIPTEN
+#ifdef TWO_PLATFORM_EMSCRIPTEN
 			m_dynamics_world->stepSimulation(float(delta * c_tick_interval), 3, 0.032f);
 #else
 			m_dynamics_world->stepSimulation(float(delta * c_tick_interval), 3);
@@ -348,9 +349,9 @@ using namespace mud; namespace toy
 	BulletWorld::~BulletWorld()
     {}
 
-	object_ptr<PhysicMedium> BulletWorld::create_sub_world(Medium& medium)
+	object<PhysicMedium> BulletWorld::create_sub_world(Medium& medium)
 	{
-		return make_object<BulletMedium>(m_world, *this, medium);
+		return oconstruct<BulletMedium>(m_world, *this, medium);
 	}
 
 	vec3 BulletWorld::ground_point(const Ray& ray)

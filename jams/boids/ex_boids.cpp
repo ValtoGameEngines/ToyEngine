@@ -1,3 +1,5 @@
+#define STD_HASHMAP
+
 #if !defined STD_HASHMAP && !defined FLAT_HASHMAP
 #define STD_HASHMAP
 #endif
@@ -12,16 +14,27 @@
 #include <toy/toy.h>
 
 #include <boids/Api.h>
-#include <meta/boids/Module.h>
+#include <meta/_boids.meta.h>
 
-#include <jobs/JobLoop.h>
-#include <ecs/Loop.h>
+#include <pool/Pool.hpp>
+#include <pool/ObjectPool.hpp>
+#include <jobs/JobLoop.hpp>
+#include <ecs/Loop.hpp>
+
+#include <stl/vector.hpp>
+#include <stl/string.hpp>
 
 #include <Tracy.hpp>
 
 namespace boids
 {
 	constexpr size_t c_max_threads = 40;
+
+#ifdef BOIDS_SIMD
+	inline two::vec3 to_mud(const vec3& v) { return v; }
+#else
+	inline two::vec3 to_mud(const vec3& v) { return two::vec3(v); }
+#endif
 
 	struct GridHash
 	{
@@ -80,15 +93,15 @@ namespace boids
 		Cells(size_t count)
 			: indices(count), hash(count), alignment(count), separation(count), obstacle(count), obstacle_distance(count), target(count), count(count), thread(count)
 		{}
-		std::vector<int>    indices;
-		std::vector<int>	hash;
-		std::vector<int>	thread;
-		std::vector<vec3>	alignment;
-		std::vector<vec3>	separation;
-		std::vector<int>	obstacle;
-		std::vector<float>  obstacle_distance;
-		std::vector<int>    target;
-		std::vector<int>    count;
+		vector<int>   indices;
+		vector<int>	  hash;
+		vector<int>	  thread;
+		vector<vec3>  alignment;
+		vector<vec3>  separation;
+		vector<int>	  obstacle;
+		vector<float> obstacle_distance;
+		vector<int>   target;
+		vector<int>   count;
 		void resize(size_t size)
 		{
 			indices.resize(size); hash.resize(size), alignment.resize(size); separation.resize(size);
@@ -106,10 +119,10 @@ namespace boids
 	struct BoidsData
 	{
 		BoidsData() {}
-		Cells					cells;
-		CellMap					cell_hashes[c_max_threads];
-		std::vector<Position>   targets;
-		std::vector<Position>   obstacles;
+		Cells				cells;
+		CellMap				cell_hashes[c_max_threads];
+		vector<Position>    targets;
+		vector<Position>    obstacles;
 		void resize(size_t num_threads, size_t num_cells, size_t num_targets, size_t num_obstacles)
 		{
 			cells.resize(num_cells); targets.resize(num_targets); obstacles.resize(num_obstacles);
@@ -120,11 +133,11 @@ namespace boids
 
 	struct HashPositions
 	{
-		const std::vector<Position>&	positions;
-		std::vector<int>&				hashes;
-		std::vector<int>&				threads;
-		float                           cell_radius;
-		size_t							num_threads;
+		span<Position>	positions;
+		vector<int>&	hashes;
+		vector<int>&	threads;
+		float           cell_radius;
+		size_t			num_threads;
 
 		inline void operator()(JobSystem& js, Job* job, uint32_t index) const
 		{
@@ -136,10 +149,10 @@ namespace boids
 	};
 
 
-	void init_cell(Cells& cells, const std::vector<Position>& targets, const std::vector<Position>& obstacles, int index)
+	void init_cell(Cells& cells, span<Position> targets, span<Position> obstacles, int index)
 	{
 		struct Result { size_t index; float distance; };
-		auto nearest = [](const std::vector<Position>& targets, const vec3& position) -> Result
+		auto nearest = [](span<Position> targets, const vec3& position) -> Result
 		{
 			size_t index = 0;
 			float distance = length2(position - targets[0].m_value);
@@ -151,7 +164,7 @@ namespace boids
 				distance = nearest ? d : distance;
 				index = nearest ? i : index;
 			}
-			return { index, bx::sqrt(distance) };
+			return { index, sqrtf(distance) };
 		};
 
 		vec3 position = cells.separation[index] / vec3(float(cells.count[index]));
@@ -177,11 +190,11 @@ namespace boids
 	struct MergeCells
 	{
 		Cells& cells;
-		const std::vector<int>& hashes;
-		const std::vector<int>& threads;
+		span<int> hashes;
+		span<int> threads;
 		CellMap* cell_hashes_mt;
-		const std::vector<Position>& targets;
-		const std::vector<Position>& obstacles;
+		span<Position> targets;
+		span<Position> obstacles;
 
 		inline void operator()(JobSystem& js, Job* job, uint32_t start, uint32_t count) const
 		{
@@ -256,13 +269,13 @@ namespace boids
 
 	struct Steer
 	{
-		const BoidParams4&				m_params;
-		const Cells&					m_cells;
-		const std::vector<Position>&	m_targets;
-		const std::vector<Position>&	m_obstacles;
-		const std::vector<Position>&	m_positions;
-		std::vector<Heading>&			m_headings;
-		float                           m_dt;
+		const BoidParams4&	m_params;
+		const Cells&		m_cells;
+		span<Position>		m_targets;
+		span<Position>		m_obstacles;
+		span<Position>		m_positions;
+		vector<Heading>&	m_headings;
+		float               m_dt;
 
 		uint32_t m_start;
 		uint32_t m_count;
@@ -291,27 +304,38 @@ namespace boids
 		}
 	};
 
+	template <class T>
+	struct ComponentArray
+	{
+		size_t size() const { return m_components.size(); }
+
+		T& operator[](size_t index) { return *m_components[index]; }
+		const T& operator[](size_t index) const { return *m_components[index]; }
+
+		vector<T*> m_components;
+	};
+
 	class BoidSystem
 	{
 	public:
-		//std::vector<BoidsData> m_data;
+		//vector<BoidsData> m_data;
 		BoidsData m_data;
 
 		void update(JobSystem& job_system, ECS& ecs, const BoidParams& params, float delta)
 		{
-			EntFlags prototype = (1ULL << TypedBuffer<Position>::index()) | (1ULL << TypedBuffer<Heading>::index()) | (1ULL << TypedBuffer<Boid>::index());
+			uint64_t prototype = ecs.prototype<Position, Heading, Boid>();
 
 			BoidsData& data = m_data;
 			BoidParams4 params4 = params;
 
-			std::vector<ParallelBuffers*> matches = ecs.Match(prototype);
-			for(ParallelBuffers* stream : matches)
-			{
-				ComponentArray<Position> obstacles = ecs.Components<Position, BoidObstacle>();
-				ComponentArray<Position> targets = ecs.Components<Position, BoidTarget>();
+			ComponentArray<Position> obstacles = { ecs.gather<Position, BoidObstacle>() };
+			ComponentArray<Position> targets = { ecs.gather<Position, BoidTarget>() };
 
-				const ComponentBuffer<Position>& positions = stream->Buffer<Position>();
-				ComponentBuffer<Heading>& headings = stream->Buffer<Heading>();
+			vector<EntityStream*> matches = ecs.match(prototype);
+			for(EntityStream* stream : matches)
+			{
+				const TBuffer<Position>& positions = stream->buffer<Position>();
+				TBuffer<Heading>& headings = stream->buffer<Heading>();
 				const uint32_t count = uint32_t(positions.m_data.size());
 
 				const size_t num_threads = job_system.m_thread_count + 1;
@@ -386,18 +410,16 @@ namespace boids
 
 			Job* job_move = job_system.job();
 
-			auto move_forward_rotation = [delta](uint32_t handle, Position& position, const Rotation& rotation, const MoveSpeed& move_speed)
+			auto move_forward_rotation = [delta](Position& position, const Rotation& rotation, const MoveSpeed& move_speed)
 			{
-				UNUSED(handle);
-				position = position.m_value + (delta * move_speed.m_value * rotate(rotation.m_value, -Z3), 0.f);
+				position = position.m_value + (delta * move_speed.m_value * rotate(rotation.m_value, -z3), 0.f);
 			};
 
 			Job* job_move_rotation = for_components<Position, Rotation, MoveSpeed>(job_system, job_move, ecs, move_forward_rotation);
 			job_system.run(job_move_rotation);
 
-			auto move_forward_heading = [delta](uint32_t handle, Position& position, const Heading& heading, const MoveSpeed& move_speed)
+			auto move_forward_heading = [delta](Position& position, const Heading& heading, const MoveSpeed& move_speed)
 			{
-				UNUSED(handle);
 				position = position.m_value + (delta * move_speed.m_value * heading.m_value);
 			};
 
@@ -415,16 +437,16 @@ namespace boids
 		{
 			ZoneScopedNC("transform", tracy::Color::SteelBlue);
 
-			auto transform_heading = [delta](uint32_t handle, const Position& position, const Heading& heading, Transform4& transform)
+			auto transform_heading = [delta](const Position& position, const Heading& heading, Transform4& transform)
 			{
-				UNUSED(handle); UNUSED(heading);
+				UNUSED(heading);
 #ifdef BOIDS_SIMD
 				static vec3 up = vec3(0.f, 1.f, 0.f);
 				lookat(transform, position.m_value, heading.m_value, up);
 #else
-				//bxlookat(transform, position.m_value, position.m_value + heading.m_value, Y3);
-				//transform = bxTRS(Unit3, look_dir(position.m_value, heading.m_value), position.m_value);
-				transform = bxtranslation(position.m_value);
+				//bxlookat(transform, position.m_value, position.m_value + heading.m_value, y3);
+				//transform = bxTRS(vec3(1.f), look_dir(position.m_value, heading.m_value), position.m_value);
+				transform = bxtranslation(two::vec3(position.m_value));
 #endif
 			};
 
@@ -458,42 +480,42 @@ namespace boids
 
 		void destroy_entities(ECS& ecs)
 		{
-			ecs.Stream<Position, Rotation, Transform4, BoidObstacle>().Clear();
-			ecs.Stream<Position, Rotation, Transform4, BoidTarget>().Clear();
-			ecs.Stream<Position, Heading, MoveForward, MoveSpeed, Transform4, Boid>().Clear();
+			ecs.stream<Position, Rotation, Transform4, BoidObstacle>().clear();
+			ecs.stream<Position, Rotation, Transform4, BoidTarget>().clear();
+			ecs.stream<Position, Heading, MoveForward, MoveSpeed, Transform4, Boid>().clear();
 		}
 
 		void create_entities(ECS& ecs)
 		{
 			for(size_t i = 0; i < m_num_obstacles; ++i)
 			{
-				uint32_t obstacle = ecs.CreateEntity<Position, Rotation, Transform4, BoidObstacle>();
-				ecs.SetComponent<Position>(obstacle, random_vec3(m_extents));
+				Entity obstacle = ecs.create<Position, Rotation, Transform4, BoidObstacle>();
+				ecs.set<Position>(obstacle, random_vec3(m_extents));
 			}
 
 			for(size_t i = 0; i < m_num_targets; ++i)
 			{
-				uint32_t target = ecs.CreateEntity<Position, Rotation, Transform4, BoidTarget>();
-				ecs.SetComponent<Position>(target, random_vec3(m_extents));
+				Entity target = ecs.create<Position, Rotation, Transform4, BoidTarget>();
+				ecs.set<Position>(target, random_vec3(m_extents));
 			}
 
 			for(size_t i = 0; i < m_num_boids; ++i)
 			{
-				Entity entity = { ecs.CreateEntity<Position, Heading, MoveForward, MoveSpeed, Transform4, Boid>(), ecs.m_index };
-				ecs.SetComponent<Position>(entity, random_vec3(m_extents));
-				ecs.SetComponent<Heading>(entity, normalize(random_vec3(1.f)));
+				Entity entity = ecs.create<Position, Heading, MoveForward, MoveSpeed, Transform4, Boid>();
+				ecs.set<Position>(entity, random_vec3(m_extents));
+				ecs.set<Heading>(entity, normalize(random_vec3(1.f)));
 			}
 		}
 
 		virtual void init(GameShell& app, Game& game) final
 		{
 			UNUSED(game);
-			app.m_gfx_system->add_resource_path("examples/ex_boids/");
+			app.m_gfx->add_resource_path("examples/ex_boids");
 		}
 
 		vec3 random_vec3(float ext)
 		{
-			return vec3(random_scalar(-ext, ext), random_scalar(-ext, ext), random_scalar(-ext, ext), 0.f);
+			return vec3(randf(-ext, ext), randf(-ext, ext), randf(-ext, ext), 0.f);
 		}
 
 		virtual void start(GameShell& app, Game& game) final
@@ -502,23 +524,6 @@ namespace boids
 			DefaultWorld& default_world = global_pool<DefaultWorld>().construct("Arcadia", *app.m_job_system);
 			World& world = default_world.m_world;
 			game.m_world = &world;
-
-			// @todo add this to ECS to select name of last component and remove AddBuffers calls
-			// template<typename T>
-			// struct tag
-			// {
-			// 	using type = T;
-			// };
-			// 
-			// template<typename... Ts>
-			// struct select_last
-			// {
-			// 	using type = typename decltype((tag<Ts>{}, ...))::type;
-			// };
-
-			world.m_ecs.AddBuffers<Position, Heading, MoveForward, MoveSpeed, Transform4, Boid>("Boid");
-			world.m_ecs.AddBuffers<Position, Rotation, Transform4, BoidObstacle>("BoidObstacle");
-			world.m_ecs.AddBuffers<Position, Rotation, Transform4, BoidTarget>("BoidTarget");
 
 			static Player player = { *game.m_world };
 			game.m_player = Ref(&player);
@@ -535,31 +540,32 @@ namespace boids
 			scene.painter("World", [&](size_t index, VisuScene& visu_scene, Gnode& parent) {
 				UNUSED(visu_scene);
 				Gnode& self = parent.subi((void*)index);
-				parent.m_scene->m_environment.m_radiance.m_energy = 0.2f;
-				parent.m_scene->m_environment.m_radiance.m_ambient = 0.04f;
+				parent.m_scene->m_env.m_radiance.m_energy = 0.2f;
+				//parent.m_scene->m_env.m_radiance.m_ambient = 0.04f;
 				gfx::radiance(self, "radiance/tiber_1_1k.hdr", BackgroundMode::Radiance);
 			});
 
 			auto paint_boids = [&](size_t index, VisuScene& scene, Gnode& parent)
 			{
 				UNUSED(index); UNUSED(scene);
-				EntFlags prototype = (1ULL << TypedBuffer<Transform4>::index()) | (1ULL << TypedBuffer<Boid>::index());
+				uint64_t prototype = ecs.prototype<Transform4, Boid>();
 
-				Model& model = parent.m_scene->m_gfx_system.fetch_symbol({ Colour::White, Colour::White }, Sphere(0.01f), PLAIN);
-				Material& material = parent.m_scene->m_gfx_system.fetch_symbol_material(Symbol::plain(Colour::White), PLAIN);
-				//Material& material = gfx::pbr_material(parent.m_scene->m_gfx_system, "boid", Colour::White);
+				Model& model = parent.m_scene->m_gfx.shape(Sphere(0.01f));
+				Material& material = parent.m_scene->m_gfx.symbol_material(Symbol::plain(Colour::White), PLAIN);
+				//Material& material = gfx::pbr_material(parent.m_scene->m_gfx, "boid", Colour::White);
 
-				std::vector<ParallelBuffers*> matches = ecs.Match(prototype);
-				for(ParallelBuffers* stream : matches)
+				vector<EntityStream*> matches = ecs.match(prototype);
+				for(EntityStream* stream : matches)
 				{
-					const ComponentBuffer<Transform4>& components = stream->Buffer<Transform4>();
-					std::vector<mat4>& transforms = (std::vector<mat4>&) components.m_data;
+					const TBuffer<Transform4>& components = stream->buffer<Transform4>();
+					span<mat4> transforms = { (mat4*)components.m_data.data(), components.m_data.size() };
 
-					const size_t size = std::min(m_num_visible, transforms.size());
+					const size_t size = min(m_num_visible, transforms.size());
 					for(size_t i = 0; i < size; i += 4096)
 					{
-						const size_t count = std::min(size - i, size_t(4096U));
-						gfx::item(parent, model, ItemFlag::Default | ItemFlag::NoUpdate, &material, count, { transforms.data() + i, count });
+						const size_t count = min(size - i, size_t(4096U));
+						Item& item = gfx::item(parent, model, ItemFlag::Default | ItemFlag::NoUpdate, &material);
+						gfx::instances(parent, item, { transforms.data() + i, count });
 					}
 				}
 			};
@@ -567,27 +573,25 @@ namespace boids
 			auto paint_targets = [&](size_t index, VisuScene& scene, Gnode& parent)
 			{ 
 				UNUSED(index); UNUSED(scene);
-				Model& model = parent.m_scene->m_gfx_system.fetch_symbol({ Colour::White, Colour::White }, Sphere(0.1f), PLAIN);
-				Material& target_material = parent.m_scene->m_gfx_system.fetch_symbol_material(Symbol::plain(Colour::Red), PLAIN);
-				Material& obstacle_material = parent.m_scene->m_gfx_system.fetch_symbol_material(Symbol::plain(Colour::Black), PLAIN);
+				Model& model = app.m_gfx->shape(Sphere(0.1f), { Colour::White, Colour::White }, PLAIN);
+				Material& target_material = app.m_gfx->symbol_material(Symbol::plain(Colour::Red), PLAIN);
+				Material& obstacle_material = app.m_gfx->symbol_material(Symbol::plain(Colour::Black), PLAIN);
 
-				ecs.Loop<Position, BoidObstacle>([&](uint32_t entity, Position& position, BoidObstacle& obstacle)
+				ecs.loop<Position, BoidObstacle>([&](Position& position, BoidObstacle&)
 				{
-					UNUSED(entity); UNUSED(obstacle);
-					Gnode& node = gfx::node(parent, {}, position.m_value);
+					Gnode& node = gfx::node(parent, to_mud(position.m_value));
 					gfx::item(node, model, 0U, &obstacle_material);
 				});
 
-				ecs.Loop<Position, BoidTarget>([&](uint32_t entity, Position& position, BoidTarget& target)
+				ecs.loop<Position, BoidTarget>([&](Position& position, BoidTarget&)
 				{
-					UNUSED(entity); UNUSED(target);
-					Gnode& node = gfx::node(parent, {}, position.m_value);
+					Gnode& node = gfx::node(parent, to_mud(position.m_value));
 					gfx::item(node, model, 0U, &target_material);
 				});
 			};
 		
-			scene.m_painters.emplace_back(make_unique<VisuPainter>("boids", scene.m_painters.size(), paint_boids));
-			scene.m_painters.emplace_back(make_unique<VisuPainter>("targets", scene.m_painters.size(), paint_targets));
+			scene.m_painters.push_back(construct<VisuPainter>("boids", scene.m_painters.size(), paint_boids));
+			scene.m_painters.push_back(construct<VisuPainter>("targets", scene.m_painters.size(), paint_targets));
 		}
 
 		virtual void pump(GameShell& app, Game& game, Widget& ui) final
@@ -608,16 +612,16 @@ namespace boids
 
 				Widget& header = ui::row(viewer);
 
-				static Style panel_style("SpacePanel", styles().wedge, [](Layout& l) { l.m_space = STACK; l.m_align = { CENTER, CENTER }; 
+				static Style panel_style("SpacePanel", styles().wedge, [](Layout& l) { l.m_space = Preset::Stack; l.m_align = { Align::Center, Align::Center }; 
 																					   l.m_padding = vec4(15.f); l.m_spacing = vec2(10.f); });
 
 				Widget& left = ui::widget(header, panel_style);
-				Widget& numbers = ui::columns(left, carray<float, 2>{ 0.15f, 0.85f });
+				Widget& numbers = ui::columns(left, { 0.15f, 0.85f });
 
-				ui::slider_field<size_t>(numbers, "num targets", { m_num_targets, { 0, 10, 1 } });
-				ui::slider_field<size_t>(numbers, "num obstacles", { m_num_obstacles, { 0, 10, 1 } });
-				ui::slider_field<size_t>(numbers, "num boids", { m_num_boids, { 0, 250'000, 1000 } });
-				ui::slider_field<size_t>(numbers, "num visible", { m_num_visible, { 0, 250'000, 100 } });
+				ui::slider_field(numbers, "num targets",   m_num_targets, { 0, 10, 1 });
+				ui::slider_field(numbers, "num obstacles", m_num_obstacles, { 0, 10, 1 });
+				ui::slider_field(numbers, "num boids",     m_num_boids, { 0, 250'000, 1000 });
+				ui::slider_field(numbers, "num visible",   m_num_visible, { 0, 250'000, 100 });
 				if(ui::button(numbers, "reset").activated())
 				{
 					this->destroy_entities(ecs);
@@ -628,13 +632,13 @@ namespace boids
 				UNUSED(middle);
 
 				Widget& right = ui::widget(header, panel_style);
-				Widget& edit = ui::columns(middle, carray<float, 2>{ 0.2f, 0.8f });
+				Widget& edit = ui::columns(middle, { 0.2f, 0.8f });
 
-				ui::number_field<float>(edit, "cell radius",		{ params.cell_radius,		{ 1.f, 10.f, 0.1f } });
-				ui::number_field<float>(edit, "separation weight",	{ params.separation_weight, { 0.f, 10.f, 0.1f } });
-				ui::number_field<float>(edit, "alignment weight",	{ params.alignment_weight,	{ 0.f, 10.f, 0.1f } });
-				ui::number_field<float>(edit, "target weight",		{ params.target_weight,		{ 0.f, 10.f, 0.1f } });
-				ui::number_field<float>(edit, "obstacle aversion",  { params.obstacle_aversion_distance, { 0.f, 10.f, 0.1f } });
+				ui::field<float>(edit, "cell radius",		params.cell_radius,		    { 1.f, 10.f, 0.1f });
+				ui::field<float>(edit, "separation weight",	params.separation_weight,   { 0.f, 10.f, 0.1f });
+				ui::field<float>(edit, "alignment weight",	params.alignment_weight,	{ 0.f, 10.f, 0.1f });
+				ui::field<float>(edit, "target weight",		params.target_weight,		{ 0.f, 10.f, 0.1f });
+				ui::field<float>(edit, "obstacle aversion", params.obstacle_aversion_distance, { 0.f, 10.f, 0.1f });
 
 				static BoidSystem boid_system;
 				static MoveForwardSystem move_forward_system;
@@ -654,10 +658,37 @@ namespace boids
 
 }
 
+using namespace boids;
+
 #ifdef _EX_BOIDS_EXE
 int main(int argc, char *argv[])
 {
-	GameShell app(carray<cstring, 1>{ TOY_RESOURCE_PATH }, argc, argv);
+	GameShell app(TOY_RESOURCE_PATH, exec_path(argc, argv).c_str());
+
+#if 0
+	//Any any; TAnyHandlerImpl<Heading>::create(any, TAnyHandler<Heading>::me, static_cast<Heading&&>(Heading()));
+	Any any; new ((void*)&any.m_storage) Heading(static_cast<Heading&&>(Heading())); any.m_handler = &TAnyHandler<Heading>::me;
+	auto moveany = [](Any& any2, Any& any)
+	{
+		//printf("move\n");
+		using two::move;
+		TAnyHandlerImpl<Heading>::create(any2, *static_cast<const TAnyHandler<Heading>*>(any.m_handler), move(TAnyHandler<Heading>::value(any)));
+		TAnyHandler<Heading>::me.destroy(any);
+		//printf("move\n");
+	};
+	Any any2;
+	any.m_handler->move(any2, any);
+	//moveany(any2, any);
+	//TAnyHandlerImpl<Heading>::create(any2, TAnyHandler<Heading>::me, move(*static_cast<Heading*>((void*)&any.m_storage))); TAnyHandler<Heading>::me.destroy(any);
+	//TAnyHandlerImpl<Heading>::create(any2, TAnyHandler<Heading>::me, move(TAnyHandler<Heading>::value(any))); TAnyHandler<Heading>::me.destroy(any);
+
+	//any.~Any();
+	//Any any2(move(any));
+
+	Any test0 = TAnyHandler<Heading>::create(static_cast<Heading&&>(Heading()));
+
+	Var test = var(Heading());
+#endif
 
 	boids::ExBoids module = { _boids::m() };
 	app.run_game(module);

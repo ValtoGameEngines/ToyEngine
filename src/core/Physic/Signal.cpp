@@ -1,4 +1,4 @@
-//  Copyright (c) 2018 Hugo Amiard hugo.amiard@laposte.net
+//  Copyright (c) 2019 Hugo Amiard hugo.amiard@laposte.net
 //  This software is licensed  under the terms of the GNU General Public License v3.0.
 //  See the attached LICENSE.txt file or https://www.gnu.org/licenses/gpl-3.0.en.html.
 //  This notice and the license may not be removed or altered from any source distribution.
@@ -13,14 +13,11 @@
 #include <core/Physic/PhysicWorld.h>
 #include <core/Physic/Obstacle.h>
 
-using namespace mud; namespace toy
+namespace toy
 {
 	Signal::Signal(EmitterScope& emitter, ReceptorScope& receptor)
 		: m_emitter(&emitter)
 		, m_receptor(&receptor)
-		, m_strength(0.f)
-		, m_on(false)
-		, m_occluding()
 	{
 		if(!m_emitter->m_collider->m_medium->m_occlusions)
 			this->on();
@@ -38,7 +35,7 @@ using namespace mud; namespace toy
 	{
 		if(m_emitter->m_collider->m_medium->m_occlusions)
 		{
-			std::vector<Collision> occluding;
+			vector<Collision> occluding;
 
 			Spatial& receptor = m_receptor->m_spatial;
 			m_emitter->m_collider->m_impl->raycast(receptor.m_position, occluding, CM_OBSTACLE);

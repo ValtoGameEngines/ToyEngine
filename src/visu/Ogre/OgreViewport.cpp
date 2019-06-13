@@ -1,11 +1,11 @@
-//  Copyright (c) 2018 Hugo Amiard hugo.amiard@laposte.net
+//  Copyright (c) 2019 Hugo Amiard hugo.amiard@laposte.net
 //  This software is licensed  under the terms of the GNU General Public License v3.0.
 //  See the attached LICENSE.txt file or https://www.gnu.org/licenses/gpl-3.0.en.html.
 //  This notice and the license may not be removed or altered from any source distribution.
 
 #include <visu/Ogre/OgreViewport.h>
 
-using namespace mud; namespace toy
+namespace toy
 {
 	OgreViewport::OgreViewport(Widget* parent, void* identity, Scene& scene)
 		: Viewer(parent, identity, scene)
@@ -21,7 +21,7 @@ using namespace mud; namespace toy
 
 	void OgreViewport::removeFocusObject(VisuEntity* object)
 	{
-		vector_remove(mFocusObjects, object);
+		remove(mFocusObjects, object);
 		object->removeFocusObserver(this);
 	}*/
 
@@ -61,10 +61,10 @@ using namespace mud; namespace toy
 		uint32_t queryMask = SHADEABLE_OGRE_MASK;
 
 		float f = 0.f;
-		if (mCollisionTools->raycast(ray, result, object, f, queryMask))
+		if(mCollisionTools->raycast(ray, result, object, f, queryMask))
 		{
 			const Ogre::Any& any = object->getUserObjectBindings().getUserAny();
-			if (!any.isEmpty())
+			if(!any.isEmpty())
 				return Ogre::any_cast<VisuEntity*> (any);
 		}
 

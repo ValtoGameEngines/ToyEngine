@@ -1,29 +1,28 @@
-//  Copyright (c) 2018 Hugo Amiard hugo.amiard@laposte.net
+//  Copyright (c) 2019 Hugo Amiard hugo.amiard@laposte.net
 //  This software is licensed  under the terms of the GNU General Public License v3.0.
 //  See the attached LICENSE.txt file or https://www.gnu.org/licenses/gpl-3.0.en.html.
 //  This notice and the license may not be removed or altered from any source distribution.
 
 #pragma once
 
-#include <ecs/Proto.h>
+#include <stl/vector.h>
+#include <stl/memory.h>
+#include <type/Proto.h>
 #include <math/Vec.h>
 #include <math/Grid.h>
 #include <core/Spatial/Spatial.h>
 #include <core/Physic/Scope.h>
 #include <block/Forward.h>
-#include <block/Components.h>
+#include <block/Handles.h>
 
-#ifndef MUD_CPP_20
-#include <vector>
-#include <memory>
+#ifdef TWO_META_GENERATOR
+namespace two
+{
+	extern template class refl_ vector2d<toy::Block*>;
+}
 #endif
 
-namespace mud
-{
-	template struct refl_ struct_ TOY_BLOCK_EXPORT Grid<toy::Block*>;
-}
-
-using namespace mud; namespace toy
+namespace toy
 {
 	struct Hunk
 	{
@@ -38,12 +37,12 @@ using namespace mud; namespace toy
 	};
 
 	TOY_BLOCK_EXPORT func_ void paint_block_height(Block& block, Image256& image, Element& element);
-	TOY_BLOCK_EXPORT func_ void paint_block_elements(Block& block, Image256& image, array<Element*> elements);
+	TOY_BLOCK_EXPORT func_ void paint_block_elements(Block& block, Image256& image, span<Element*> elements);
 
 	class refl_ TOY_BLOCK_EXPORT Block
 	{
 	public:
-		constr_ Block() {}
+		constr_ Block();
 		constr_ Block(HSpatial spatial, HWorldPage world_page, Block* parentblock, size_t index, const vec3& size);
 
 		static Entity create(ECS& ecs, HSpatial parent, HWorldPage world_page, const vec3& position, Block* parentblock, size_t index, const vec3& size);
@@ -61,10 +60,10 @@ using namespace mud; namespace toy
 
 		bool m_subdived = false;
 
-		Grid<Element*> m_chunks;
-		Grid<HBlock> m_subblocks;
+		vector2d<Element*> m_chunks;
+		vector2d<HBlock> m_subblocks;
 
-		Block* m_neighbours[6] = { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
+		table<Side, Block*> m_neighbours = {};
 
 		meth_ void subdivide();
 
@@ -78,17 +77,17 @@ using namespace mud; namespace toy
 
 		vec3 min(Spatial& self);
 		vec3 max(Spatial& self);
-		vec3 coordinates();
+		uvec3 coordinates();
 
 		uint16_t subdiv();
 		vec3 chunk_size();
 
-		vec3 local_block_coord(size_t index);
-		vec3 local_block_coord(Block& child);
-		vec3 block_coord(Block& child);
-
-		vec3 local_chunk_coord(size_t index);
-		vec3 chunk_coord(size_t index);
+		uvec3 local_block_coord(size_t index);
+		uvec3 local_block_coord(Block& child);
+		uvec3 block_coord(Block& child);
+		
+		uvec3 local_chunk_coord(size_t index);
+		uvec3 chunk_coord(size_t index);
 
 		vec3 chunk_position(size_t index);
 

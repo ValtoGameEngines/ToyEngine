@@ -1,20 +1,19 @@
-//  Copyright (c) 2018 Hugo Amiard hugo.amiard@laposte.net
+//  Copyright (c) 2019 Hugo Amiard hugo.amiard@laposte.net
 //  This software is licensed  under the terms of the GNU General Public License v3.0.
 //  See the attached LICENSE.txt file or https://www.gnu.org/licenses/gpl-3.0.en.html.
 //  This notice and the license may not be removed or altered from any source distribution.
 
 #pragma once
 
-#include <ecs/Entity.h>
 #include <core/Forward.h>
 #include <core/Bullet/BulletCollider.h>
 #include <core/Spatial/Spatial.h>
 
-using namespace mud; namespace toy
+namespace toy
 {
 	class BulletMotionState;
 
-	class refl_ TOY_CORE_EXPORT BulletSolid : public NonCopy, public SolidImpl
+	class refl_ TOY_CORE_EXPORT BulletSolid : public SolidImpl
     {
     public:
 		BulletSolid(BulletMedium& bullet_world, BulletCollider& bullet_collider, HSpatial spatial, HCollider collider, HSolid solid);
@@ -43,6 +42,6 @@ using namespace mud; namespace toy
 		virtual void impulse_torque(const vec3& torque) override;
 
     public:
-		unique_ptr<BulletMotionState> m_motion_state;
+		unique<BulletMotionState> m_motion_state;
     };
 }

@@ -1,4 +1,4 @@
-//  Copyright (c) 2018 Hugo Amiard hugo.amiard@laposte.net
+//  Copyright (c) 2019 Hugo Amiard hugo.amiard@laposte.net
 //  This software is licensed  under the terms of the GNU General Public License v3.0.
 //  See the attached LICENSE.txt file or https://www.gnu.org/licenses/gpl-3.0.en.html.
 //  This notice and the license may not be removed or altered from any source distribution.
@@ -9,46 +9,32 @@
 #include <core/World/World.h>
 #include <math/Timer.h>
 
-using namespace mud; namespace toy
+namespace toy
 {
-    WorldClock::WorldClock(World& world)
-		: m_world(world)
-		, m_clock()
-		, m_speed(1.f)
-		, m_time(0.f)
-		, m_symbolicTime(0.f)
+    WorldClock::WorldClock()
 	{}
 
-	WorldClock::~WorldClock()
-	{}
-
-	void WorldClock::setSpeed(float speed)
-	{
-		m_speed = speed;
-	}
-
-	double WorldClock::stepClock()
+	double WorldClock::step()
 	{
         double timeStep = m_clock.read();
         m_clock.update();
-
-		return this->stepClock(timeStep);
+		return this->step(timeStep);
 	}
 
-    double WorldClock::stepClock(double realStep)
+    double WorldClock::step(double step)
 	{
-		m_symbolicTime += realStep * m_speed;
-		m_time += realStep;
-		return realStep * m_speed;
+		m_symbolic_time += step * m_speed;
+		m_time += step;
+		return step * m_speed;
 	}
 
-	double WorldClock::readClock()
+	double WorldClock::read()
 	{
 		return m_time;
 	}
 
-	double WorldClock::readSymbolic()
+	double WorldClock::symbolic()
 	{
-		return m_symbolicTime;
+		return m_symbolic_time;
 	}
 }

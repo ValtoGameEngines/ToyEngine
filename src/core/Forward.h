@@ -4,6 +4,7 @@
 
 #include <infra/Config.h>
 
+#include <jobs/Forward.h>
 #include <type/Forward.h>
 #include <ecs/Forward.h>
 #include <math/Forward.h>
@@ -12,74 +13,12 @@
 #include <util/Forward.h>
 
 #ifndef TOY_CORE_EXPORT
-#define TOY_CORE_EXPORT MUD_IMPORT
+#define TOY_CORE_EXPORT TWO_IMPORT
 #endif
 
-
-    
-    
-
-namespace std {
-
-    
-    
-}
-
-namespace mud {
-namespace ui {
-
-    
-    
-}
-}
-
-namespace glm {
-
-    
-    
-}
-
-namespace bx {
-
-    
-    
-}
-
-namespace json11 {
-
-    
-    
-}
-
-namespace mud {
-
-    
-    
-}
-
-namespace mud {
-namespace detail {
-
-    
-    
-}
-}
-
-namespace mud {
-namespace gfx {
-
-    
-    
-}
-}
-
-namespace bimg {
-
-    
-    
-}
-
-namespace toy {
+namespace toy
+{
+	using namespace two;
 
     enum class Task : unsigned int;
     enum SamplePolyAreas : unsigned int;
@@ -87,7 +26,7 @@ namespace toy {
     enum CollisionGroup : short;
     
     template <class T> class Array;
-    
+
     class Observer;
     class GenStoreObserver;
     class GenStore;
@@ -152,9 +91,56 @@ namespace toy {
     class WorldPage;
 }
 
-namespace bgfx {
+#ifdef TWO_META_GENERATOR
+#include <pool/SparsePool.h>
+#include <ecs/ECS.h>
+namespace two
+{
+	extern template struct refl_ nocopy_ OwnedHandle<toy::Collider>;
+	extern template struct refl_ nocopy_ OwnedHandle<toy::Solid>;
+	extern template struct refl_ SparseHandle<toy::Collider>;
+	extern template struct refl_ SparseHandle<toy::Solid>;
 
-    
-    
+	extern template struct refl_ ComponentHandle<toy::Spatial>;
+	extern template struct refl_ ComponentHandle<toy::Movable>;
+	extern template struct refl_ ComponentHandle<toy::Camera>;
+	extern template struct refl_ ComponentHandle<toy::Emitter>;
+	extern template struct refl_ ComponentHandle<toy::Receptor>;
+	extern template struct refl_ ComponentHandle<toy::EntityScript>;
+	extern template struct refl_ ComponentHandle<toy::WorldPage>;
+	extern template struct refl_ ComponentHandle<toy::Navblock>;
+	//extern template struct refl_ ComponentHandle<toy::Collider>;
+	//extern template struct refl_ ComponentHandle<toy::Solid>;
+
+	extern template struct refl_ ComponentHandle<toy::Origin>;
+	extern template struct refl_ ComponentHandle<toy::Waypoint>;
+}
+#endif
+
+namespace toy
+{
+	using HCollider = SparseHandle<Collider>;
+	using OCollider = OwnedHandle<Collider>;
+	using HSolid = SparseHandle<Solid>;
+	using OSolid = OwnedHandle<Solid>;
+
+	using HSpatial = ComponentHandle<Spatial>;
+	using HMovable = ComponentHandle<Movable>;
+	using HCamera = ComponentHandle<Camera>;
+	using HEmitter = ComponentHandle<Emitter>;
+	using HReceptor = ComponentHandle<Receptor>;
+	using HEntityScript = ComponentHandle<EntityScript>;
+	using HWorldPage = ComponentHandle<WorldPage>;
+	using HNavblock = ComponentHandle<Navblock>;
+
+	using HOrigin = ComponentHandle<Origin>;
+	using HWaypoint = ComponentHandle<Waypoint>;
 }
 
+#ifdef TWO_META_GENERATOR
+#include <stl/vector.h>
+namespace stl
+{
+	export_ extern template class refl_ seque_ vector<toy::HSpatial>;
+}
+#endif

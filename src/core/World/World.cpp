@@ -1,10 +1,11 @@
-//  Copyright (c) 2018 Hugo Amiard hugo.amiard@laposte.net
+//  Copyright (c) 2019 Hugo Amiard hugo.amiard@laposte.net
 //  This software is licensed  under the terms of the GNU General Public License v3.0.
 //  See the attached LICENSE.txt file or https://www.gnu.org/licenses/gpl-3.0.en.html.
 //  This notice and the license may not be removed or altered from any source distribution.
 
 #include <core/Types.h>
 #include <core/World/World.h>
+#include <core/World/World.hpp>
 
 #include <core/World/Origin.h>
 #include <core/Physic/Collider.h>
@@ -12,33 +13,26 @@
 #include <core/Api.h>
 
 #include <type/Indexer.h>
+#include <type/Proto.h>
 #include <math/Timer.h>
-#include <ecs/Proto.h>
 #include <math/Vec.h>
 #include <core/Spatial/Spatial.h>
-#include <core/World/WorldClock.h>
 #include <core/World/Section.h>
 
-using namespace mud; namespace toy
+namespace toy
 {
-	World::World(Id id, Complex& complex, const string& name, JobSystem& job_system)
+	World::World(uint32_t id, Complex& complex, const string& name, JobSystem& job_system)
         : m_id(complex.m_id)
 		, m_complex(complex)
 		, m_name(name)
-		, m_clock(make_object<WorldClock>(*this))
-		, m_pools(c_max_types)
 		, m_job_system(job_system)
+		, m_pools(c_max_types)
     {
 		UNUSED(id);
 		s_ecs[0] = &m_ecs;
 
-		//m_ecs.AddBuffers<Spatial>();
-		m_ecs.AddBuffers<Spatial, Origin>("Origin");
-		m_ecs.AddBuffers<Spatial, Waypoint>("Waypoint");
-		m_ecs.AddBuffers<Spatial, Movable, Camera>("Camera");
-
-		m_origin = { Origin::create(m_ecs, *this), 0 };
-		m_unworld = { Origin::create(m_ecs, *this), 0 };
+		m_origin = Origin::create(m_ecs, *this);
+		m_unworld = Origin::create(m_ecs, *this);
 
 		auto update_colliders = [&](size_t tick, size_t delta)
 		{

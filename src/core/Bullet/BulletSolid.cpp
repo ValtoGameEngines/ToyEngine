@@ -1,4 +1,4 @@
-//  Copyright (c) 2018 Hugo Amiard hugo.amiard@laposte.net
+//  Copyright (c) 2019 Hugo Amiard hugo.amiard@laposte.net
 //  This software is licensed  under the terms of the GNU General Public License v3.0.
 //  See the attached LICENSE.txt file or https://www.gnu.org/licenses/gpl-3.0.en.html.
 //  This notice and the license may not be removed or altered from any source distribution.
@@ -6,30 +6,29 @@
 
 #include <core/Bullet/BulletSolid.h>
 
-#define TOY_PRIVATE
-#include <core/Bullet.h>
-
 #include <core/Spatial/Spatial.h>
 #include <core/Movable/Movable.h>
 #include <core/Bullet/BulletWorld.h>
-#include <core/Bullet/BulletMotionState.h>
 
-/* bullet */
-
-#if _MSC_VER
+#ifdef _MSC_VER
 #	pragma warning (push)
 #	pragma warning (disable : 4127)
 #	pragma warning (disable : 4100)
+#	pragma warning (disable : 4305)
+#	pragma warning (disable : 5033) // @todo deal with this ?
 #endif
+
+#include <core/Bullet/Bullet.h.inl>
+#include <core/Bullet/BulletMotionState.h.inl>
 
 #include <LinearMath/btMotionState.h>
 #include <btBulletDynamicsCommon.h>
 
-#if _MSC_VER
+#ifdef _MSC_VER
 #	pragma warning (pop)
 #endif
 
-using namespace mud; namespace toy
+namespace toy
 {
     BulletSolid::BulletSolid(BulletMedium& bullet_world, BulletCollider& bullet_collider, HSpatial spatial, HCollider collider, HSolid solid)
 		: m_rigid_body(nullptr)

@@ -1,16 +1,31 @@
-//  Copyright (c) 2018 Hugo Amiard hugo.amiard@laposte.net
+//  Copyright (c) 2019 Hugo Amiard hugo.amiard@laposte.net
 //  This software is provided 'as-is' under the zlib License, see the LICENSE.txt file.
 //  This notice and the license may not be removed or altered from any source distribution.
 
 #pragma once
 
 #include <space/Forward.h>
+
+#include <ecs/ECS.hpp>
+#include <stl/vector.hpp>
+#include <stl/string.hpp>
+#include <pool/SparsePool.hpp>
+#include <pool/ObjectPool.hpp>
+#include <pool/Pool.hpp>
+#include <core/World/World.hpp>
+#include <visu/VisuScene.hpp>
+#include <tree/Graph.hpp>
+
 #include <toy/toy.h>
 
-#include <array>
+#include <stl/array.h>
+#include <infra/Copy.h>
+
+#include <stl/unordered_map.hpp>
+
 #include <map>
 
-using namespace mud;
+using namespace two;
 using namespace toy;
 
 extern "C"
@@ -18,16 +33,32 @@ extern "C"
 	//_SPACE_EXPORT void ex_space_game(GameShell& app, Game& game);
 }
 
-namespace mud
+namespace two
 {
-	template <> struct TypedBuffer<Galaxy>	{ static size_t index() { return 20; } };
-	template <> struct TypedBuffer<Star>	{ static size_t index() { return 21; } };
-	template <> struct TypedBuffer<Fleet>	{ static size_t index() { return 22; } };
+	template <> struct TypedBuffer<Galaxy>	{ static uint32_t index() { return 20; } };
+	template <> struct TypedBuffer<Star>	{ static uint32_t index() { return 21; } };
+	template <> struct TypedBuffer<Fleet>	{ static uint32_t index() { return 22; } };
+}
+
+namespace two
+{
+	template struct refl_ ComponentHandle<Galaxy>;
+	template struct refl_ ComponentHandle<Star>;
+	template struct refl_ ComponentHandle<Fleet>;
 }
 
 using HGalaxy = ComponentHandle<Galaxy>;
 using HStar = ComponentHandle<Star>;
 using HFleet = ComponentHandle<Fleet>;
+
+template class refl_ seque_ vector<HStar>;
+template class refl_ seque_ vector<HFleet>;
+template class refl_ seque_ vector<Commander*>;
+template class refl_ seque_ vector<CombatFleet>;
+
+using Buildings = std::map<BuildingSchema*, uint32_t>;
+using Ships = std::map<ShipSchema*, uint32_t>;
+using Flotilla = vector<Fleet*>;
 
 struct Turn;
 _SPACE_EXPORT void next_turn(Turn& turn);
@@ -68,7 +99,8 @@ enum class refl_ Race : unsigned int
 	Seigneur,
 	Meton,
 	Tissinar,
-	Zwiie
+	Zwiie,
+	Count
 };
 
 enum class refl_ Regime : unsigned int
@@ -159,7 +191,8 @@ enum class refl_ WeaponType : unsigned int
 	Laser = 2,
 	Plasma = 3,
 	Torpedo = 4,
-	Bomb = 5
+	Bomb = 5,
+	Count
 };
 
 enum class refl_ Technology : unsigned int
@@ -210,17 +243,17 @@ struct RacialFactors
 	int m_diplomacy;
 };
 
-const RacialFactors c_race_factors[8] =
+const table<Race, RacialFactors> c_race_factors =
 {
-//    growth	research	mining	planetary	spatial		cmd  dipl com
-	{ 1.f,		1.f,		1.f,	1.f,		1.f,		  0, +10, +10 },
-	{ 0.98f,	1.05f,		1.f,	1.f,		1.f,		  0,   0,   0 },
-	{ 0.95f,	1.15f,		0.95f,	0.85f,		0.90f,		  0, +10, +10 },
-	{ 1.05f,	0.75f,		0.95f,	1.20f,		1.05f,		+10, -10, -10 },
-	{ 0.90f,	1.f,		1.f,	1.f,		1.f,		+10,   0, -10 },
-	{ 1.10f,	1.f,		1.1f,	0.85f,		0.85f,		 -5,  +5,  +5 },
-	{ 1.f,		0.95f,		0.95f,	0.95f,		1.f,		  0,   0,   0 },
-	{ 1.5f,		0.8f,		0.8f,	1.20f,		1.f,		  0, -10, -10 },
+//					growth	research	mining	planetary	spatial	 cmd  dipl com
+	RacialFactors{	1.f,	1.f,		1.f,	1.f,		1.f,	   0, +10, +10 },
+	RacialFactors{	0.98f,	1.05f,		1.f,	1.f,		1.f,	   0,   0,   0 },
+	RacialFactors{	0.95f,	1.15f,		0.95f,	0.85f,		0.90f,	   0, +10, +10 },
+	RacialFactors{	1.05f,	0.75f,		0.95f,	1.20f,		1.05f,	 +10, -10, -10 },
+	RacialFactors{	0.90f,	1.f,		1.f,	1.f,		1.f,	 +10,   0, -10 },
+	RacialFactors{	1.10f,	1.f,		1.1f,	0.85f,		0.85f,	  -5,  +5,  +5 },
+	RacialFactors{	1.f,	0.95f,		0.95f,	0.95f,		1.f,	   0,   0,   0 },
+	RacialFactors{	1.5f,	0.8f,		0.8f,	1.20f,		1.f,	   0, -10, -10 },
 };
 
 inline FleetSize fleet_size(float power)
@@ -335,7 +368,7 @@ inline int techno_level(int points)
 	else return 0;
 }
 
-const float c_fleet_visu_sizes[size_t(FleetSize::Count)] = { 0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f, 1.f, 1.1f };
+const table<FleetSize, float> c_fleet_visu_sizes = { 0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f, 1.f, 1.1f };
 
 struct VisuPlanet
 {
@@ -349,7 +382,7 @@ struct VisuPlanet
 struct VisuStar
 {
 	Commander* m_commander = nullptr;
-	std::vector<VisuPlanet> m_planets;
+	vector<VisuPlanet> m_planets;
 	float m_period = 0.f;
 	size_t m_updated = 0;
 };
@@ -381,11 +414,11 @@ struct VisuShip
 
 struct VisuFleet
 {
-	std::vector<VisuShip> m_ships[8];
+	vector<VisuShip> m_ships[8];
 	Points m_points;
 	float m_angle = 0.f;
 	float m_offset = 0.f;
-	vec3 m_dilate = Unit3;
+	vec3 m_dilate = vec3(1.f);
 	size_t m_updated = 0;
 };
 
@@ -405,41 +438,42 @@ enum class TurnStage : unsigned int
 };
 
 using TurnStep = void(*)(Turn&);
-export_ extern _SPACE_EXPORT TurnStep g_turn_steps[size_t(TurnStage::Count)];
+export_ extern _SPACE_EXPORT table<TurnStage, TurnStep> g_turn_steps;
 
 struct TurnEvents
 {
 	struct Item
 	{
-		std::string m_summary;
+		string m_summary;
 	};
 
-	enum_array<TurnStage, std::vector<Item>> m_items;
+	table<TurnStage, vector<Item>> m_items;
 };
 
 struct refl_ _SPACE_EXPORT Turn
 {
+	Turn() {}
 	Turn(Galaxy& galaxy);
 
-	Galaxy* m_galaxy;
-	std::vector<Commander*> m_commanders;
+	Galaxy* m_galaxy = nullptr;
+	vector<Commander*> m_commanders;
 
 	TurnStage m_stage = TurnStage::None;
 
-	void next_stage() { m_stage = TurnStage(uint(m_stage) + 1); g_turn_steps[size_t(m_stage)](*this);  }
+	void next_stage() { m_stage = TurnStage(uint(m_stage) + 1); g_turn_steps[m_stage](*this);  }
 
-	void add_item(TurnStage stage, Commander& commander, std::string summary)
+	void add_item(TurnStage stage, Commander& commander, string summary)
 	{
-		m_events[&commander].m_items[size_t(stage)].push_back({ summary });
+		m_events[&commander].m_items[stage].push_back({ summary });
 	}
 
-	std::map<Commander*, TurnEvents> m_events;
+	map<Commander*, TurnEvents> m_events;
 
-	std::vector<Split*> m_divisions;
-	std::vector<Jump*> m_jumps;
-	std::vector<Jump*> m_tracks;
-	std::vector<SpatialCombat> m_spatial_combats;
-	std::vector<PlanetaryCombat> m_planetary_combats;
+	vector<Split*> m_divisions;
+	vector<Jump*> m_jumps;
+	vector<Jump*> m_tracks;
+	vector<SpatialCombat> m_spatial_combats;
+	vector<PlanetaryCombat> m_planetary_combats;
 
 	size_t m_split = 0;
 	size_t m_spatial_combat = 0;
@@ -475,9 +509,9 @@ public:
 struct refl_ _SPACE_EXPORT SpatialPower
 {
 	SpatialPower() : m_values{ 0.f } {}
-	SpatialPower(std::array<float, 8> values) : m_values(values) { this->update(); }
+	SpatialPower(array<float, 8> values) { copy<float>(m_values, values); this->update(); }
 	
-	std::array<float, 8> m_values;
+	float m_values[8];
 	float m_average = 0.f;
 
 	void update()
@@ -509,30 +543,30 @@ class refl_ _SPACE_EXPORT Star
 {
 public:
 	constr_ Star() {}
-	constr_ Star(HSpatial spatial, Galaxy& galaxy, const uvec2& coord, const std::string& name);
+	constr_ Star(HSpatial spatial, Galaxy& galaxy, const uvec2& coord, const string& name);
 	~Star();
 
-	static Entity create(ECS& ecs, HSpatial parent, Galaxy& galaxy, const vec3& position, const uvec2& coord, const std::string& name);
+	static Entity create(ECS& ecs, HSpatial parent, Galaxy& galaxy, const vec3& position, const uvec2& coord, const string& name);
 
 	comp_ HSpatial m_spatial;
 
 	attr_ Galaxy* m_galaxy;
 	attr_ uvec2 m_coord;
-	attr_ std::string m_name;
+	attr_ string m_name;
 	
-	enum_array<Resource, uint32_t> m_resources = {};
-	enum_array<Resource, uint32_t> m_stocks = {};
+	table<Resource, uint32_t> m_resources = {};
+	table<Resource, uint32_t> m_stocks = {};
 
-	enum_array<Resource, uint32_t> m_extractors = {};
+	table<Resource, uint32_t> m_extractors = {};
 
 	std::map<BuildingSchema*, uint32_t> m_buildings;
 
-	std::vector<Construction> m_constructions;
+	vector<Construction> m_constructions;
 
 	attr_ int m_stability = 100;
 	attr_ bool m_revolt = false;
 
-	attr_ int m_environment = 10;
+	attr_ int m_env = 10;
 	attr_ int m_terraformation = 0;
 
 	attr_ int m_base_population = 0;
@@ -559,10 +593,10 @@ public:
 	void add_construction(Schema& schema, int number, Fleet* destination = nullptr);
 
 	void set_buildings(BuildingSchema& schema, uint32_t number);
-	void set_buildings(const std::string& code, uint32_t number);
+	void set_buildings(const string& code, uint32_t number);
 
 	void add_buildings(BuildingSchema& schema, int number);
-	void add_buildings(const std::string& code, int number);
+	void add_buildings(const string& code, int number);
 };
 
 struct refl_ _SPACE_EXPORT Jump
@@ -598,7 +632,7 @@ struct refl_ _SPACE_EXPORT Jump
 struct refl_ _SPACE_EXPORT Split
 {
 	Split() : m_state(None) {}
-	Split(Fleet& source, Fleet& dest, const std::string& code, FleetStance stance, std::map<ShipSchema*, uint32_t> ships, size_t tick)
+	Split(Fleet& source, Fleet& dest, const string& code, FleetStance stance, Ships ships, size_t tick)
 		: m_source(&source), m_dest(&dest), m_code(code), m_stance(stance), m_ships(ships), m_state(Ordered), m_state_updated(tick)
 	{}
 
@@ -614,9 +648,9 @@ struct refl_ _SPACE_EXPORT Split
 	attr_ Fleet* m_source;
 	attr_ Fleet* m_dest;
 
-	attr_ std::string m_code;
+	attr_ string m_code;
 	attr_ FleetStance m_stance;
-	std::map<ShipSchema*, uint32_t> m_ships;
+	Ships m_ships;
 
 	State m_state;
 	size_t m_state_updated = 0;
@@ -626,10 +660,10 @@ class refl_ _SPACE_EXPORT Fleet
 {
 public:
 	constr_ Fleet() {}
-	constr_ Fleet(HSpatial spatial, Galaxy& galaxy, Commander& commander, const uvec2& coord, const std::string& name);
+	constr_ Fleet(HSpatial spatial, Galaxy& galaxy, Commander& commander, const uvec2& coord, const string& name);
 	~Fleet();
 
-	static Entity create(ECS& ecs, HSpatial parent, Galaxy& galaxy, const vec3& position, Commander& commander, const uvec2& coord, const std::string& name);
+	static Entity create(ECS& ecs, HSpatial parent, Galaxy& galaxy, const vec3& position, Commander& commander, const uvec2& coord, const string& name);
 
 	comp_ HSpatial m_spatial;
 
@@ -637,7 +671,7 @@ public:
 	attr_ Commander* m_commander = nullptr;
 	attr_ uvec2 m_coord;
 	attr_ vec3 m_slot;
-	attr_ std::string m_name;
+	attr_ string m_name;
 
 	attr_ float m_experience = 0.f;
 	attr_ SpatialPower m_spatial_power = {};
@@ -658,7 +692,7 @@ public:
 
 	attr_ size_t m_ships_updated = 0;
 
-	/*attr_ mut_*/ std::map<ShipSchema*, uint32_t> m_ships;
+	/*attr_ mut_*/ Ships m_ships;
 
 	VisuFleet m_visu;
 
@@ -667,8 +701,8 @@ public:
 	void add_ships(ShipSchema& schema, int number);
 	void set_ships(ShipSchema& schema, uint32_t number);
 
-	void add_ships(const std::string& code, int number);
-	void set_ships(const std::string& code, uint32_t number);
+	void add_ships(const string& code, int number);
+	void set_ships(const string& code, uint32_t number);
 
 	void update_ships();
 
@@ -677,8 +711,8 @@ public:
 
 	void destroy();
 
-	meth_ void order_jump(vec2 coord, FleetStance stance);
-	/*meth_*/ void order_split(cstring name, FleetStance stance, std::map<ShipSchema*, uint32_t> ships);
+	meth_ void order_jump(uvec2 coord, FleetStance stance);
+	/*meth_*/ void order_split(const string& name, FleetStance stance, Ships ships);
 	meth_ void order_attack(Star& star);
 
 	void next_frame(Spatial& spatial, size_t tick, size_t delta);
@@ -687,15 +721,15 @@ public:
 struct refl_ _SPACE_EXPORT Schema
 {
 	Schema() {}
-	Schema(std::string code, std::string name, std::string conceptor, uint8_t level, float cost, float minerals,
-		   float andrium, float resistance = 0.f, uint8_t speed = 0, uint8_t scan = 0, float planetary = 0.f, std::array<float, 8> spatial = {})
+	Schema(string code, string name, string conceptor, uint8_t level, float cost, float minerals,
+		   float andrium, float resistance = 0.f, uint8_t speed = 0, uint8_t scan = 0, float planetary = 0.f, array<float, 8> spatial = {})
 		: m_code(code), m_name(name), m_conceptor(conceptor), m_level(level), m_cost(cost), m_minerals(minerals)
 		, m_andrium(andrium), m_resistance(resistance), m_speed(speed), m_scan(scan), m_planetary(planetary), m_spatial(spatial)
 	{}
 
-	attr_ std::string m_code;
-	attr_ std::string m_name;
-	attr_ std::string m_conceptor;
+	attr_ string m_code;
+	attr_ string m_name;
+	attr_ string m_conceptor;
 
 	attr_ uint8_t m_level = 1;
 
@@ -715,27 +749,31 @@ struct refl_ _SPACE_EXPORT Schema
 
 struct refl_ _SPACE_EXPORT ShipHull : public Schema
 {
+	ShipHull() {}
 	using Schema::Schema;
 };
 
 struct refl_ _SPACE_EXPORT ShipEngine : public Schema
 {
+	ShipEngine() {}
 	using Schema::Schema;
 };
 
 struct refl_ _SPACE_EXPORT ShipComponent : public Schema
 {
+	ShipComponent() {}
 	using Schema::Schema;
 };
 
 struct refl_ _SPACE_EXPORT ShipSchema : public Schema
 {
 	ShipSchema() {}
-	ShipSchema(uint8_t size, std::string code, std::string name, std::string conceptor, uint8_t level, float cost, float minerals,
-			   float andrium, float resistance, uint8_t speed, uint8_t scan, float planetary, std::array<float, 8> spatial, std::array<uint, 6> weapon_count = {})
+	ShipSchema(uint8_t size, string code, string name, string conceptor, uint8_t level, float cost, float minerals,
+			   float andrium, float resistance, uint8_t speed, uint8_t scan, float planetary, array<float, 8> spatial, array<uint, 6> weapon_count = {})
 		: Schema(code, name, conceptor, level, cost, minerals, andrium, resistance, speed, scan, planetary, spatial)
-		, m_size(size), m_class(size - 1), m_weapon_count(weapon_count)
+		, m_size(size), m_class(size - 1)
 	{
+		copy<uint>(m_weapon_count, weapon_count);
 		uint max_weapon = 0;
 		for(size_t i = 0; i < 4; ++i)
 			if(m_weapon_count[i] > max_weapon)
@@ -748,23 +786,25 @@ struct refl_ _SPACE_EXPORT ShipSchema : public Schema
 	attr_ uint8_t m_size;
 	attr_ uint8_t m_class;
 
-	std::array<uint, 6> m_weapon_count;
+	uint m_weapon_count[6];
 
 	attr_ WeaponType m_main_weapon = WeaponType::None;
 
 	//ShipHull* m_hull;
 	//ShipEngine* m_engine;
-	//std::vector<ShipComponent*> m_components;
+	//vector<ShipComponent*> m_components;
 };
 
 struct refl_  _SPACE_EXPORT BuildingSchema : public Schema
 {
-	using Schema::Schema;
+	BuildingSchema() {}
 
-	BuildingSchema(std::string code, std::string name, std::string conceptor, uint8_t level, float cost, float minerals, Resource extractor)
+	BuildingSchema(string code, string name, string conceptor, uint8_t level, float cost, float minerals, Resource extractor)
 		: Schema(code, name, conceptor, level, cost, minerals, 0.f)
 		, m_extractor(extractor)
 	{}
+
+	using Schema::Schema;
 
 	Resource m_extractor = Resource::None;
 };
@@ -775,14 +815,14 @@ class _SPACE_EXPORT SchemaDatabase
 public:
 	SchemaDatabase() {}
 
-	T_Schema& schema(const std::string& code)
+	T_Schema& schema(const string& code)
 	{
 		for(T_Schema& schema : m_schemas)
 			if(schema.m_code == code)
 				return schema;
 	}
 
-	std::vector<T_Schema> m_schemas;
+	vector<T_Schema> m_schemas;
 };
 
 class _SPACE_EXPORT ShipDatabase : public SchemaDatabase<ShipSchema>
@@ -801,10 +841,10 @@ public:
 
 struct refl_ _SPACE_EXPORT Scans
 {
-	std::vector<HStar> m_stars;
-	std::vector<HFleet> m_fleets;
-	//attr_ std::vector<Star*> m_stars;
-	//attr_ std::vector<Fleet*> m_fleets;
+	vector<HStar> m_stars;
+	vector<HFleet> m_fleets;
+	//attr_ vector<Star*> m_stars;
+	//attr_ vector<Fleet*> m_fleets;
 };
 
 // float technology_upkeep(int points, )
@@ -819,13 +859,13 @@ struct refl_ _SPACE_EXPORT TechDomain
 class refl_ _SPACE_EXPORT Commander
 {
 public:
-	constr_ Commander(Id id, const std::string& name, Race race, int command, int commerce, int diplomacy);
+	constr_ Commander(uint32_t id, const string& name, Race race, int command, int commerce, int diplomacy);
 	~Commander();
 
 	//attr_ Entity m_spatial;
 
-	attr_ Id m_id;
-	attr_ std::string m_name;
+	attr_ uint32_t m_id;
+	attr_ string m_name;
 	attr_ Race m_race;
 	attr_ int m_command;
 	attr_ int m_commerce;
@@ -837,8 +877,8 @@ public:
 	Colour m_colour;
 	Image256 m_avatar;
 
-	attr_ std::vector<HStar> m_stars;
-	attr_ std::vector<HFleet> m_fleets;
+	attr_ vector<HStar> m_stars;
+	attr_ vector<HFleet> m_fleets;
 
 	attr_ Star* m_capital = nullptr;
 	attr_ Regime m_regime = Regime::Empire;
@@ -848,9 +888,9 @@ public:
 
 	attr_ Scans m_scans;
 	
-	enum_array<Technology, TechDomain> m_technology = {};
+	table<Technology, TechDomain> m_technology = {};
 
-	inline int level(Technology tech) { return m_technology[size_t(tech)].m_level; }
+	inline int level(Technology tech) { return m_technology[tech].m_level; }
 
 	void next_frame(size_t tick, size_t delta);
 
@@ -874,7 +914,7 @@ public:
 	attr_ uvec2 m_coord;
 	attr_ float m_size;
 
-	attr_ std::vector<Star*> m_stars;
+	attr_ vector<Star*> m_stars;
 };
 #endif
 
@@ -887,13 +927,9 @@ struct GalaxyGrid
 
 	void update_slots(uvec2 coord);
 
-	std::map<uvec2, std::vector<Fleet*>> m_fleets;
+	std::map<uvec2, vector<Fleet*>> m_fleets;
 	std::map<uvec2, Star*> m_stars;
 };
-
-using Buildings = std::map<BuildingSchema*, uint32_t>;
-using Ships = std::map<ShipSchema*, uint32_t>;
-using Flotilla = std::vector<Fleet*>;
 
 struct refl_ _SPACE_EXPORT Combat
 {
@@ -904,6 +940,7 @@ struct refl_ _SPACE_EXPORT Combat
 		ENGAGE,
 	};
 
+	Combat() {}
 	Combat(State state, size_t tick = 0) : m_state(state), m_state_updated(tick) {}
 
 	State m_state;
@@ -928,11 +965,12 @@ struct refl_ _SPACE_EXPORT Combat
 
 struct refl_ _SPACE_EXPORT CombatFleet
 {
+	CombatFleet() {}
 	CombatFleet(Fleet& fleet) : m_fleet(&fleet) {}
-	Fleet* m_fleet;
-	float m_damage = 0.f;
+	attr_ Fleet* m_fleet;
+	attr_ float m_damage = 0.f;
 	Ships m_losses = {};
-	std::array<uint32_t, 8> m_hull_losses = {};
+	uint32_t m_hull_losses[8] = {};
 };
 
 struct refl_ _SPACE_EXPORT CombatStar
@@ -954,7 +992,7 @@ struct refl_ _SPACE_EXPORT PlanetaryCombat : public Combat
 
 	attr_ uvec2 m_coord;
 
-	attr_ std::vector<CombatFleet> m_attack;
+	attr_ vector<CombatFleet> m_attack;
 	attr_ CombatStar m_defense;
 
 	void apply_losses();
@@ -970,8 +1008,8 @@ struct refl_ _SPACE_EXPORT SpatialCombat : public Combat
 
 	attr_ uvec2 m_coord;
 
-	attr_ std::vector<CombatFleet> m_attack;
-	attr_ std::vector<CombatFleet> m_defense;
+	attr_ vector<CombatFleet> m_attack;
+	attr_ vector<CombatFleet> m_defense;
 
 	void apply_losses();
 };
@@ -987,16 +1025,16 @@ public:
 
 	comp_ HSpatial m_spatial;
 
-	//attr_ std::vector<HQuadrant> m_quadrants;
-	attr_ std::vector<HStar> m_stars;
-	attr_ std::vector<HFleet> m_fleets;
-	attr_ std::vector<Commander*> m_commanders;
+	//attr_ vector<HQuadrant> m_quadrants;
+	attr_ vector<HStar> m_stars;
+	attr_ vector<HFleet> m_fleets;
+	attr_ vector<Commander*> m_commanders;
 	attr_ uvec2 m_size;
 
 	GalaxyGrid m_grid;
 
-	uvec3 m_scale = uvec3(1);
-	Plane m_plane = { Y3, 0.5f };
+	uvec3 m_scale = uvec3(1U);
+	Plane m_plane = { y3, 0.5f };
 
 	uvec2 intersect_coord(Ray ray);
 };
@@ -1004,13 +1042,13 @@ public:
 class refl_ _SPACE_EXPORT Universe : public Complex
 {
 public:
-	constr_ Universe(const std::string& name, JobSystem& job_system);
+	constr_ Universe(const string& name, JobSystem& job_system);
 	~Universe();
 
 	attr_ World m_world;
-	attr_ BulletWorld m_bullet_world;
+	attr_ comp_ BulletWorld m_bullet_world;
 
-	std::vector<HGalaxy> m_galaxies;
+	vector<HGalaxy> m_galaxies;
 
 	static const TPool<Universe> s_pool;
 };

@@ -1,19 +1,16 @@
-//  Copyright (c) 2018 Hugo Amiard hugo.amiard@laposte.net
+//  Copyright (c) 2019 Hugo Amiard hugo.amiard@laposte.net
 //  This software is licensed  under the terms of the GNU General Public License v3.0.
 //  See the attached LICENSE.txt file or https://www.gnu.org/licenses/gpl-3.0.en.html.
 //  This notice and the license may not be removed or altered from any source distribution.
 
 #pragma once
 
+#include <stl/vector.h>
+#include <stl/function.h>
 #include <core/Forward.h>
 #include <math/Timer.h>
 
-#ifndef MUD_CPP_20
-#include <vector>
-#include <functional>
-#endif
-
-using namespace mud; namespace toy
+namespace toy
 {
 	enum class Task : unsigned int
 	{
@@ -42,12 +39,12 @@ using namespace mud; namespace toy
 		struct Entry
 		{
 			Task m_task;
-			std::function<void(size_t tick, size_t delta)> m_handler;
+			function<void(size_t tick, size_t delta)> m_handler;
 		};
 
 		void add_step(Entry entry);
 
-		std::vector<Entry> m_steps;
+		vector<Entry> m_steps;
 		Clock m_clock;
 	};
 }

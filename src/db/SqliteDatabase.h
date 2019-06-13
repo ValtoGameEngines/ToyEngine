@@ -1,4 +1,4 @@
-//  Copyright (c) 2018 Hugo Amiard hugo.amiard@laposte.net
+//  Copyright (c) 2019 Hugo Amiard hugo.amiard@laposte.net
 //  This software is provided 'as-is' under the zlib License, see the LICENSE.txt file.
 //  This notice and the license may not be removed or altered from any source distribution.
 
@@ -11,14 +11,14 @@
 #include <util/Loader/DataLoader.h>
 
 /* std */
-#include <vector>
-#include <string>
+#include <stl/vector>
+#include <stl/string>
 
 struct sqlite3;
 
-using namespace mud; namespace toy
+using namespace two; namespace toy
 {
-	using string = std::string;
+	using string = string;
 
     class refl_ TOY_DB_EXPORT SqliteDatabase : public NonCopy, public DataSource
     {
@@ -54,9 +54,9 @@ using namespace mud; namespace toy
         sqlite3* m_database = nullptr;
 		Loader* m_batching = nullptr;
 
-		std::vector<unique_ptr<SqliteModel>> m_models;
+		vector<unique_ptr<SqliteModel>> m_models;
 
-		std::vector<Type*> m_indexToType;
-		std::vector<Id> m_typeToIndex;
+		vector<Type*> m_indexToType;
+		vector<Id> m_typeToIndex;
     };
 }

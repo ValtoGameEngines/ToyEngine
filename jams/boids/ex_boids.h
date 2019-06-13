@@ -1,4 +1,4 @@
-//  Copyright (c) 2018 Hugo Amiard hugo.amiard@laposte.net
+//  Copyright (c) 2019 Hugo Amiard hugo.amiard@laposte.net
 //  This software is provided 'as-is' under the zlib License, see the LICENSE.txt file.
 //  This notice and the license may not be removed or altered from any source distribution.
 
@@ -7,11 +7,12 @@
 #include <boids/Forward.h>
 #include <toy/toy.h>
 
+//#undef BOIDS_SIMD
 #ifdef BOIDS_SIMD
 #include <immintrin.h>
 #endif
 
-using namespace mud;
+using namespace two;
 using namespace toy;
 
 extern "C"
@@ -64,11 +65,11 @@ namespace boids
 		vec3(__m128 v) : value(v) {}
 		vec3(float v) : value(_mm_set_ps1(v)) {}
 		vec3(float* v) : value(_mm_load_ps(v)) {}
-		//vec3(float x, float y, float z, float w = 0.f) : vec3(std::array<float, 4>{ x, y, z, w }.data()) {}
+		//vec3(float x, float y, float z, float w = 0.f) : vec3(std::span<float, 4>{ x, y, z, w }.data()) {}
 		//vec3(float x, float y, float z, float w = 0.f) : value(_mm_set_ps(x, y, z, w)) {}
 		vec3(float x, float y, float z, float w = 0.f) : value(_mm_setr_ps(x, y, z, w)) {}
 		operator float3() const { float3 result; _mm_store_ps(result.m_f, value); return result; }
-		operator mud::vec3() const { float3 result; _mm_store_ps(result.m_f, value); return { result[0], result[1], result[2] }; }
+		operator two::vec3() const { float3 result; _mm_store_ps(result.m_f, value); return { result[0], result[1], result[2] }; }
 		__m128 value;
 	};
 
@@ -86,7 +87,8 @@ namespace boids
 	inline float dot(const vec3& a, const vec3& b) { return dot_simd(a.value, b.value); }
 	inline vec3 cross(const vec3& a, const vec3& b) { return vec3(cross_simd(a.value, b.value)); }
 #else
-	using vec3 = glm::vec4;
+	using vec3 = two::vec4;
+	//using vec3 = two::vec3;
 #endif
 
 	template <class T>
@@ -98,7 +100,7 @@ namespace boids
 		T m_value;
 	};
 
-	struct Position
+	struct refl_ Position
 	{
 		Position() {}
 		Position(vec3 value) : m_value(value) {}
@@ -107,7 +109,7 @@ namespace boids
 		vec3 m_value = vec3(0.f);
 	};
 
-	struct Heading
+	struct refl_ Heading
 	{
 		Heading() {}
 		Heading(vec3 value) : m_value(value) {}
@@ -116,7 +118,7 @@ namespace boids
 		vec3 m_value = { 0.f, 0.f, -1.f, 0.f };
 	};
 
-	struct Rotation
+	struct refl_ Rotation
 	{
 		Rotation() {}
 		Rotation(quat value) : m_value(value) {}
@@ -125,7 +127,7 @@ namespace boids
 		quat m_value = ZeroQuat;
 	};
 
-	struct MoveSpeed
+	struct refl_ MoveSpeed
 	{
 		MoveSpeed() {}
 		MoveSpeed(float value) : m_value(value) {}
@@ -134,7 +136,7 @@ namespace boids
 		float m_value = 1.f;
 	};
 
-	struct Transform4
+	struct refl_ Transform4
 	{
 		Transform4() : m_value(bxidentity()) {}
 		Transform4(mat4 value) : m_value(value) {}
@@ -143,16 +145,16 @@ namespace boids
 		mat4 m_value;
 	};
 
-	struct Boid
+	struct refl_ Boid
 	{};
 
-	struct BoidTarget
+	struct refl_ BoidTarget
 	{};
 
-	struct BoidObstacle
+	struct refl_ BoidObstacle
 	{};
 
-	struct MoveForward
+	struct refl_ MoveForward
 	{};
 
 	class refl_ _BOIDS_EXPORT Player
@@ -164,15 +166,15 @@ namespace boids
 	};
 }
 
-namespace mud
+namespace two
 {
-	template <> struct TypedBuffer<boids::Position> { static size_t index() { return 12; } };
-	template <> struct TypedBuffer<boids::Heading> { static size_t index() { return 13; } };
-	template <> struct TypedBuffer<boids::Rotation> { static size_t index() { return 14; } };
-	template <> struct TypedBuffer<boids::MoveForward> { static size_t index() { return 15; } };
-	template <> struct TypedBuffer<boids::MoveSpeed> { static size_t index() { return 16; } };
-	template <> struct TypedBuffer<boids::Boid> { static size_t index() { return 17; } };
-	template <> struct TypedBuffer<boids::BoidObstacle> { static size_t index() { return 18; } };
-	template <> struct TypedBuffer<boids::BoidTarget> { static size_t index() { return 19; } };
-	template <> struct TypedBuffer<boids::Transform4> { static size_t index() { return 20; } };
+	template <> struct TypedBuffer<boids::Position> { static uint32_t index() { return 12; } };
+	template <> struct TypedBuffer<boids::Heading> { static uint32_t index() { return 13; } };
+	template <> struct TypedBuffer<boids::Rotation> { static uint32_t index() { return 14; } };
+	template <> struct TypedBuffer<boids::MoveForward> { static uint32_t index() { return 15; } };
+	template <> struct TypedBuffer<boids::MoveSpeed> { static uint32_t index() { return 16; } };
+	template <> struct TypedBuffer<boids::Boid> { static uint32_t index() { return 17; } };
+	template <> struct TypedBuffer<boids::BoidObstacle> { static uint32_t index() { return 18; } };
+	template <> struct TypedBuffer<boids::BoidTarget> { static uint32_t index() { return 19; } };
+	template <> struct TypedBuffer<boids::Transform4> { static uint32_t index() { return 20; } };
 }

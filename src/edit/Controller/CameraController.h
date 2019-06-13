@@ -1,4 +1,4 @@
-//  Copyright (c) 2018 Hugo Amiard hugo.amiard@laposte.net
+//  Copyright (c) 2019 Hugo Amiard hugo.amiard@laposte.net
 //  This software is licensed  under the terms of the GNU General Public License v3.0.
 //  See the attached LICENSE.txt file or https://www.gnu.org/licenses/gpl-3.0.en.html.
 //  This notice and the license may not be removed or altered from any source distribution.
@@ -10,7 +10,7 @@
 #include <gfx-ui/Viewer.h>
 #include <edit/Forward.h>
 
-using namespace mud; namespace toy
+namespace toy
 {
 	class TOY_EDIT_EXPORT CameraController : public ViewerController, public EventDispatch
 	{
@@ -18,7 +18,7 @@ using namespace mud; namespace toy
 		CameraController(Viewer& viewer, HCamera camera, HMovable movable);
 
 		void default_velocities();
-		void set_velocities(const std::map<Key, vec3>& velocities);
+		void set_velocities(const map<Key, vec3>& velocities);
 
 		void rotate_left();
 		void rotate_right();

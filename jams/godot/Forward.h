@@ -1,5 +1,3 @@
-
-
 #pragma once
 
 #include <infra/Config.h>
@@ -39,92 +37,18 @@
 #include <shell/Forward.h>
 
 #ifndef _GODOT_EXPORT
-#define _GODOT_EXPORT MUD_IMPORT
+#define _GODOT_EXPORT TWO_IMPORT
 #endif
 
+enum class Faction : int;
 
-    enum class Faction : int;
-    
-    
-    class Bullet;
-    struct Aim;
-    struct HumanController;
-    struct Stance;
-    class Human;
-    class Lamp;
-    class Crate;
-	class WorldBlock;
-    class Player;
 
-namespace std {
-
-    
-    
-}
-
-namespace mud {
-namespace ui {
-
-    
-    
-}
-}
-
-namespace glm {
-
-    
-    
-}
-
-namespace mud {
-namespace gfx {
-
-    
-    
-}
-}
-
-namespace json11 {
-
-    
-    
-}
-
-namespace mud {
-
-    
-    
-}
-
-namespace mud {
-namespace detail {
-
-    
-    
-}
-}
-
-namespace bgfx {
-
-    
-    
-}
-
-namespace bimg {
-
-    
-    
-}
-
-namespace toy {
-
-    
-    
-}
-
-namespace bx {
-
-    
-    
-}
-
+class Bullet;
+struct Aim;
+struct HumanController;
+struct Stance;
+class Human;
+class Lamp;
+class Crate;
+class WorldBlock;
+class Player;

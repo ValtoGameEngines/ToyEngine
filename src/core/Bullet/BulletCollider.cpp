@@ -1,4 +1,4 @@
-//  Copyright (c) 2018 Hugo Amiard hugo.amiard@laposte.net
+//  Copyright (c) 2019 Hugo Amiard hugo.amiard@laposte.net
 //  This software is licensed  under the terms of the GNU General Public License v3.0.
 //  See the attached LICENSE.txt file or https://www.gnu.org/licenses/gpl-3.0.en.html.
 //  This notice and the license may not be removed or altered from any source distribution.
@@ -10,11 +10,9 @@
 
 #include <geom/Shapes.h>
 #include <geom/ShapesComplex.h>
-#include <geom/Mesh.h>
+#include <geom/Geometry.h>
 #include <geom/Geom.h>
 #include <geom/Primitive.h>
-#define TOY_PRIVATE
-#include <core/Bullet.h>
 
 #include <core/World/World.h>
 #include <core/Spatial/Spatial.h>
@@ -22,13 +20,15 @@
 #include <core/Physic/PhysicWorld.h>
 #include <core/Physic/Medium.h>
 
-/* bullet */
-
-#if _MSC_VER
+#ifdef _MSC_VER
 #	pragma warning (push)
 #	pragma warning (disable : 4127)
 #	pragma warning (disable : 4100)
+#	pragma warning (disable : 4305)
+#	pragma warning (disable : 5033) // @todo deal with this ?
 #endif
+
+#include <core/Bullet/Bullet.h.inl>
 
 #include <BulletCollision/CollisionDispatch/btGhostObject.h>
 #include <BulletCollision/CollisionShapes/btConvexHullShape.h>
@@ -36,30 +36,30 @@
 #include <BulletCollision/CollisionShapes/btStaticPlaneShape.h>
 #include <btBulletCollisionCommon.h>
 
-#if _MSC_VER
+#ifdef _MSC_VER
 #	pragma warning (pop)
 #endif
 
-using namespace mud; namespace toy
+namespace toy
 {
-	BulletShape::BulletShape(unique_ptr<btCollisionShape> shape)
-		: shape(std::move(shape))
+	BulletShape::BulletShape(unique<btCollisionShape> shape)
+		: shape(move(shape))
 	{}
 
-	BulletShape::BulletShape(unique_ptr<btCollisionShape> shape, unique_ptr<btStridingMeshInterface> mesh)
-		: shape(std::move(shape))
-		, mesh(std::move(mesh))
+	BulletShape::BulletShape(unique<btCollisionShape> shape, unique<btStridingMeshInterface> mesh)
+		: shape(move(shape))
+		, mesh(move(mesh))
 	{}
 
 	BulletShape::BulletShape(BulletShape&& other)
-		: shape(std::move(other.shape))
-		, mesh(std::move(other.mesh))
+		: shape(move(other.shape))
+		, mesh(move(other.mesh))
 	{}
 
 	BulletShape& BulletShape::operator=(BulletShape&& other)
 	{
-		this->shape = std::move(other.shape);
-		this->mesh = std::move(other.mesh);
+		this->shape = move(other.shape);
+		this->mesh = move(other.mesh);
 		return *this;
 	}
 
@@ -68,7 +68,7 @@ using namespace mud; namespace toy
 
 	BulletShape createGeometryShape(Geometry& geometry)
 	{
-		unique_ptr<btTriangleMesh> trimesh = make_unique<btTriangleMesh>();
+		unique<btTriangleMesh> trimesh = make_unique<btTriangleMesh>();
 
 		btVector3 vertex[3];
 		for(const Tri& triangle : geometry.m_triangles)
@@ -84,29 +84,29 @@ using namespace mud; namespace toy
 		}
 
 		const bool useQuantizedAABB = true;
-		unique_ptr<btCollisionShape> meshShape(make_unique<btBvhTriangleMeshShape>(trimesh.get(), useQuantizedAABB));
+		unique<btCollisionShape> meshShape(make_unique<btBvhTriangleMeshShape>(trimesh.get(), useQuantizedAABB));
 
-		return BulletShape(std::move(meshShape), std::move(trimesh));
+		return BulletShape(move(meshShape), move(trimesh));
 	}
 
 	BulletShape createConvexHullShape(ConvexHull& hull)
 	{
-		unique_ptr<btConvexHullShape> convexHull = make_unique<btConvexHullShape>();
+		unique<btConvexHullShape> convexHull = make_unique<btConvexHullShape>();
 		for(const vec3& point : hull.m_vertices)
 			convexHull->addPoint(to_btvec3(point));
-		return BulletShape(std::move(convexHull));
+		return BulletShape(move(convexHull));
 	}
 
 	DispatchBulletShape::DispatchBulletShape()
 	{
-		dispatch_branch<Plane>(*this, [](Plane& plane) -> BulletShape { return{ make_unique<btStaticPlaneShape>(to_btvec3(plane.m_normal), plane.m_distance) }; });
-		dispatch_branch<Quad>(*this, [](Quad& quad) -> BulletShape { Plane plane = { quad.m_vertices[0], quad.m_vertices[1], quad.m_vertices[2] }; return{ make_unique<btStaticPlaneShape>(to_btvec3(plane.m_normal), plane.m_distance) }; });
-		dispatch_branch<Sphere>(*this, [](Sphere& sphere) -> BulletShape { return{ make_unique<btSphereShape>(sphere.m_radius) }; });
-		dispatch_branch<Capsule>(*this, [](Capsule& capsule) -> BulletShape { return{ make_unique<btCapsuleShape>(capsule.m_radius, capsule.m_height) }; });
-		dispatch_branch<Cylinder>(*this, [](Cylinder& cylinder) -> BulletShape { return{ make_unique<btCylinderShape>(btVector3(cylinder.m_radius, cylinder.m_height / 2.f, cylinder.m_radius)) }; });
-		dispatch_branch<Cube>(*this, [](Cube& box) -> BulletShape { return{ make_unique<btBoxShape>(to_btvec3(box.m_extents)) }; });
-		dispatch_branch<ConvexHull>(*this, &createConvexHullShape);
-		dispatch_branch<Geometry>(*this, &createGeometryShape);
+		dispatch_branch<Plane>	    (*this, +[](Plane& plane) -> BulletShape { return{ make_unique<btStaticPlaneShape>(to_btvec3(plane.m_normal), plane.m_distance) }; });
+		dispatch_branch<Quad>	    (*this, +[](Quad& quad) -> BulletShape { Plane plane = { quad.m_vertices[0], quad.m_vertices[1], quad.m_vertices[2] }; return{ make_unique<btStaticPlaneShape>(to_btvec3(plane.m_normal), plane.m_distance) }; });
+		dispatch_branch<Sphere>     (*this, +[](Sphere& sphere) -> BulletShape { return{ make_unique<btSphereShape>(sphere.m_radius) }; });
+		dispatch_branch<Capsule>    (*this, +[](Capsule& capsule) -> BulletShape { return{ make_unique<btCapsuleShape>(capsule.m_radius, capsule.m_height) }; });
+		dispatch_branch<Cylinder>   (*this, +[](Cylinder& cylinder) -> BulletShape { return{ make_unique<btCylinderShape>(btVector3(cylinder.m_radius, cylinder.m_height / 2.f, cylinder.m_radius)) }; });
+		dispatch_branch<Cube>       (*this, +[](Cube& box) -> BulletShape { return{ make_unique<btBoxShape>(to_btvec3(box.m_extents)) }; });
+		dispatch_branch<ConvexHull> (*this, createConvexHullShape);
+		dispatch_branch<Geometry>   (*this, createGeometryShape);
 	};
 
 	BulletShape DispatchBulletShape::dispatch(CollisionShape& collision_shape)
@@ -157,16 +157,17 @@ using namespace mud; namespace toy
 		this->update_transform(spatial.absolute_position(), spatial.absolute_rotation());
 	}
 
-	void BulletCollider::project(const vec3& position, std::vector<Collision>& collisions, short int mask)
+	void BulletCollider::project(const vec3& position, vector<Collision>& collisions, short int mask)
 	{
 		Spatial& spatial = m_spatial;
 		m_bullet_world.project(m_collider, position, spatial.m_rotation, collisions, mask);
 	}
 
-	void BulletCollider::raycast(const vec3& target, std::vector<Collision>& collisions, short int mask)
+	void BulletCollider::raycast(const vec3& target, vector<Collision>& collisions, short int mask)
 	{
 		Spatial& spatial = m_spatial;
-		m_bullet_world.raycast(m_collider, spatial.m_position, target, mask);
+		Collision coll = m_bullet_world.raycast(m_collider, spatial.m_position, target, mask);
+		collisions.push_back(coll);
 	}
 
 	Collision BulletCollider::raycast(const vec3& target, short int mask)

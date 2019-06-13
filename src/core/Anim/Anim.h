@@ -1,17 +1,17 @@
-//  Copyright (c) 2018 Hugo Amiard hugo.amiard@laposte.net
+//  Copyright (c) 2019 Hugo Amiard hugo.amiard@laposte.net
 //  This software is provided 'as-is' under the zlib License, see the LICENSE.txt file.
 //  This notice and the license may not be removed or altered from any source distribution.
 
 #pragma once
 
-#ifndef MUD_MODULES
+#ifndef TWO_MODULES
 #include <type/Var.h>
 #include <math/Timer.h>
 #endif
 #include <math/Interp.h>
 #include <core/Forward.h>
 
-namespace mud
+namespace two
 {
 	export_ struct TOY_CORE_EXPORT Anim
 	{
@@ -31,15 +31,15 @@ namespace mud
 		Animator();
 
 		void next_frame(size_t tick, size_t delta);
-		void animate(Ref object, Member& member, Var value, float duration);
+		void animate(Ref object, Member& member, const Var& value, float duration);
 
 		Clock m_clock;
-		std::vector<Anim> m_animations;
+		vector<Anim> m_animations;
 
 		static Animator me;
 	};
 
-	inline void animate(Ref object, Member& member, Var value, float duration)
+	inline void animate(Ref object, Member& member, const Var& value, float duration)
 	{
 		Animator::me.animate(object, member, value, duration);
 	}

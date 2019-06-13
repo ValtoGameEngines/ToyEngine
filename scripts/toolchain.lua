@@ -1,25 +1,30 @@
 -- toy toolchain
 
+newoption {
+    trigger = "misc",
+    description = "Use toy misc module",
+}
+
 TOY_DIR        = path.getabsolute("..")
-MUD_DIR        = path.join(TOY_DIR, "mud")
+TWO_DIR        = path.join(TOY_DIR, "two")
 
 TOY_SRC_DIR         = path.join(TOY_DIR, "src")
 TOY_3RDPARTY_DIR    = path.join(TOY_DIR, "3rdparty")
 
-dofile(path.join(MUD_DIR, "scripts/toolchain.lua"))
+dofile(path.join(TWO_DIR, "scripts/toolchain.lua"))
 
 function toy_binary_config()
-    mud_binary_config()
+    two_binary_config()
     
     configuration { "not osx", "not asmjs" }
         defines {
-            "TOY_RESOURCE_PATH=\"" .. path.join(TOY_DIR, "data") .. "/\"",
+            "TOY_RESOURCE_PATH=\"" .. path.join(TOY_DIR, "data") .. "\"",
         }
 
     configuration { "osx", "not asmjs" }
         defines {
             -- might need to update GENie to remove that special case
-            "TOY_RESOURCE_PATH=\\\"" .. path.join(TOY_DIR, "data") .. "/\\\"",
+            "TOY_RESOURCE_PATH=\\\"" .. path.join(TOY_DIR, "data") .. "\\\"",
         }
 
 	configuration {}

@@ -5,31 +5,30 @@ addons:
     sources:
       - ubuntu-toolchain-r-test
     packages:
-      - g++-5
-      - gcc-5
+      - gcc-8
+      - g++-8
       - xorg-dev
-            
-compiler:
-  - gcc
-  - clang
+
+dist: xenial
+
+matrix:
+  include:
+    - os: linux
+      compiler: gcc
+    - os: linux
+      compiler: clang
+    - os: osx
+      compiler: clang
+      osx_image: xcode10
 
 install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then export GENIE_FOLDER="linux"; fi
-  - if [ "$CXX" = "g++" ]; then export CXX="g++-5" CC="gcc-5" COMPILER="gcc" TOOLCHAIN="linux-gcc-5" GMAKE_FOLDER="gmake-linux"; fi
-  - if [ "$CXX" = "clang++" ]; then export CXX="clang++" CC="clang" COMPILER="clang" TOOLCHAIN="linux-clang" GMAKE_FOLDER="gmake-linux-clang"; fi
+  - if [ "$CXX" = "g++" ]; then export TOOLCHAIN="linux-gcc-8" GMAKE_FOLDER="gmake-linux"; fi
+  - if [ "$CXX" = "clang++" ]; then export TOOLCHAIN="linux-clang" GMAKE_FOLDER="gmake-linux-clang"; fi
 
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then export GENIE_FOLDER="darwin" TOOLCHAIN="osx" GMAKE_FOLDER="gmake-osx"; fi
   
 script:
-  - bin/$GENIE_FOLDER/genie --gcc=$TOOLCHAIN gmake
+  - bin/$GENIE_FOLDER/genie --compile-only --gcc=$TOOLCHAIN gmake
   - cd build/projects/$GMAKE_FOLDER
-  - make config=debug64
-
-os:
-  - linux
-  - osx
-  
-matrix:
-  exclude:
-    - os: osx
-      compiler: gcc
+  - time make config=debug64 toy

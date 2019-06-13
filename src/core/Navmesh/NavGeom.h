@@ -1,24 +1,20 @@
-//  Copyright (c) 2018 Hugo Amiard hugo.amiard@laposte.net
+//  Copyright (c) 2019 Hugo Amiard hugo.amiard@laposte.net
 //  This software is licensed  under the terms of the GNU General Public License v3.0.
 //  See the attached LICENSE.txt file or https://www.gnu.org/licenses/gpl-3.0.en.html.
 //  This notice and the license may not be removed or altered from any source distribution.
 
 #pragma once
 
-#include <infra/NonCopy.h>
+#include <stl/string.h>
 #include <type/Unique.h>
 #include <core/Forward.h>
 #include <geom/Primitive.h>
 
-#ifndef MUD_CPP_20
-#include <string>
-#endif
-
 class rcContext;
 
-using namespace mud; namespace toy
+namespace toy
 {
-	using string = std::string;
+	using cstring = const char*;
 
 	static const int MAX_CONVEXVOL_PTS = 12;
 	struct ConvexVolume
@@ -29,7 +25,7 @@ using namespace mud; namespace toy
 		int area;
 	};
 
-	class TOY_CORE_EXPORT NavGeom : public NonCopy
+	class TOY_CORE_EXPORT NavGeom
 	{
 	public:
 		NavGeom(Geometry& geom, cstring name);
@@ -37,7 +33,7 @@ using namespace mud; namespace toy
 
 		Geometry& m_geometry;
 		string m_name;
-		unique_ptr<rcChunkyTriMesh> m_chunkyMesh;
+		unique<rcChunkyTriMesh> m_chunkyMesh;
 
 		bool build();
 
@@ -55,7 +51,7 @@ using namespace mud; namespace toy
 		void deleteConvexVolume(int i);
 
 	protected:
-		unique_ptr<rcContext> m_ctx;
+		unique<rcContext> m_ctx;
 
 	public:
 		// Off-Mesh connections.

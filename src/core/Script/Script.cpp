@@ -1,4 +1,4 @@
-//  Copyright (c) 2018 Hugo Amiard hugo.amiard@laposte.net
+//  Copyright (c) 2019 Hugo Amiard hugo.amiard@laposte.net
 //  This software is licensed  under the terms of the GNU General Public License v3.0.
 //  See the attached LICENSE.txt file or https://www.gnu.org/licenses/gpl-3.0.en.html.
 //  This notice and the license may not be removed or altered from any source distribution.
@@ -12,9 +12,10 @@
 
 #include <core/Spatial/Spatial.h>
 
-#include <vector>
+#include <stl/vector.h>
+#include <sstream>
 
-using namespace mud; namespace toy
+namespace toy
 {
 	EntityScript::EntityScript(HSpatial spatial)
 		: m_spatial(spatial)
@@ -39,7 +40,7 @@ using namespace mud; namespace toy
 				//m_logic_script->m_signature.m_params.push_back({ "entity", Ref(type<Spatial>()) });
 			}
 
-			//std::vector<Var> args = { Ref(spatial.m_handle), Ref(&spatial) };
+			//vector<Var> args = { Ref(spatial.m_handle), Ref(&spatial) };
 			//(*m_logic_script)(args);
 		}
 	}
@@ -49,8 +50,8 @@ using namespace mud; namespace toy
 		if(m_render_script)
 		{
 			Spatial& spatial = m_spatial;
-			std::vector<Var> args = { Ref(&spatial) };
-			(*m_render_script)(args);
+			//vector<Var> args = { Ref(&spatial) };
+			//(*m_render_script)(args);
 		}
 	}
 }

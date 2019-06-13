@@ -1,26 +1,31 @@
-//  Copyright (c) 2018 Hugo Amiard hugo.amiard@laposte.net
+//  Copyright (c) 2019 Hugo Amiard hugo.amiard@laposte.net
 //  This software is licensed  under the terms of the GNU General Public License v3.0.
 //  See the attached LICENSE.txt file or https://www.gnu.org/licenses/gpl-3.0.en.html.
 //  This notice and the license may not be removed or altered from any source distribution.
 
+#ifdef TWO_MODULES
+module toy.core
+#else
+#include <pool/SparsePool.hpp>
+#include <ecs/Complex.h>
 #include <core/Types.h>
 #include <core/Physic/Collider.h>
-
 #include <core/Spatial/Spatial.h>
 #include <core/World/Section.h>
-#include <core/World/World.h>
+#include <core/World/World.hpp>
 #include <core/Physic/Medium.h>
 #include <core/Physic/PhysicWorld.h>
 #include <core/Physic/CollisionShape.h>
 #include <core/Physic/Solid.h>
+#endif
 
-using namespace mud; namespace toy
+namespace toy
 {
 	OCollider Collider::create(HSpatial spatial, HMovable movable, const CollisionShape& collision_shape, Medium& medium, CollisionGroup group)
 	{
 		SparsePool<Collider>& pool = spatial->m_world->pool<Collider>();
 
-		OCollider collider = pool.construct(spatial, movable, collision_shape, medium, group);
+		OCollider collider = pool.create(spatial, movable, collision_shape, medium, group);
 		collider->m_world->add_collider(collider);
 		return collider;
 	}
@@ -44,9 +49,9 @@ using namespace mud; namespace toy
     Collider::~Collider()
     {}
 
-	void Collider::init(object_ptr<ColliderImpl> impl)
+	void Collider::init(object<ColliderImpl> impl)
 	{
-		m_impl = std::move(impl);
+		m_impl = move(impl);
 	}
 
 	void Collider::next_frame(size_t tick, size_t delta)
@@ -74,8 +79,8 @@ using namespace mud; namespace toy
 		SparsePool<Collider>& colliders = spatial->m_world->pool<Collider>();
 		SparsePool<Solid>& solids = spatial->m_world->pool<Solid>();
 
-		OCollider collider = colliders.construct(spatial, movable, collision_shape, medium, group);
-		OSolid solid = solids.construct(spatial, movable, std::move(collider), isstatic, mass);
+		OCollider collider = colliders.create(spatial, movable, collision_shape, medium, group);
+		OSolid solid = solids.create(spatial, movable, move(collider), isstatic, mass);
 
 		HCollider hcollider = solid->m_collider;
 		hcollider->m_world->add_solid(hcollider, solid);
@@ -95,7 +100,7 @@ using namespace mud; namespace toy
 
 	Solid::Solid(HSpatial spatial, HMovable movable, OCollider collider, bool isstatic, float mass)
 		: m_spatial(spatial)
-		, m_collider(std::move(collider))
+		, m_collider(move(collider))
 		, m_static(isstatic)
 		, m_mass(mass)
 	{
@@ -105,8 +110,8 @@ using namespace mud; namespace toy
 	Solid::~Solid()
 	{}
 
-	void Solid::init(object_ptr<SolidImpl> impl)
+	void Solid::init(object<SolidImpl> impl)
 	{
-		m_impl = std::move(impl);
+		m_impl = move(impl);
 	}
 }

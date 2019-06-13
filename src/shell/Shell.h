@@ -1,10 +1,11 @@
 
 #pragma once
 
-#include <jobs/Job.h>
-#include <tree/Node.h>
+#include <jobs/JobSystem.h>
+#include <tree/Graph.h>
 #include <refl/System.h>
 #include <refl/Class.h>
+#include <refl/VirtualMethod.h>
 #include <shell/Forward.h>
 #include <core/User.h>
 
@@ -14,23 +15,21 @@
 
 #include <visu/VisuScene.h>
 
-#include <uio/Edit/Script.h>
+#include <uio/ScriptEdit.h>
 
-namespace mud
+namespace two
 {
 	class Shell;
 }
 
-using namespace mud; namespace toy
+namespace toy
 {
 	class SqliteDatabase;
 	
-	using Selection = std::vector<Ref>;
-
 	class refl_ TOY_SHELL_EXPORT GameScene : public VisuScene
 	{
 	public:
-		GameScene(User& user, GfxSystem& gfx_system, SoundManager* sound_system, Game& game, Ref player = {});
+		GameScene(User& user, GfxSystem& gfx, SoundManager* sound_system, Game& game, Ref player = {});
 		~GameScene();
 
 		Selection& m_selection;
@@ -44,10 +43,10 @@ using namespace mud; namespace toy
 		Pause,
 	};
 
-	class refl_ TOY_SHELL_EXPORT Game : public NonCopy
+	class refl_ TOY_SHELL_EXPORT Game
 	{
 	public:
-		Game(User& user, GfxSystem& gfx_system);
+		Game(User& user, GfxSystem& gfx);
 		~Game();
 
 		GameScene& add_scene();
@@ -62,13 +61,13 @@ using namespace mud; namespace toy
 
 		EditContext m_editor;
 
-		std::vector<unique_ptr<GameScene>> m_scenes;
+		vector<unique<GameScene>> m_scenes;
 	};
 
 	using GameCallback = void(*)(GameModule& module, GameShell& shell, Game& game);
 	using SceneCallback = void(*)(GameModule& module, GameShell& shell, GameScene& scene);
 
-	class refl_ TOY_SHELL_EXPORT GameModule : public NonCopy
+	class refl_ TOY_SHELL_EXPORT GameModule
 	{
 	public:
 		GameModule(Module& module) : m_module(&module) {}
@@ -87,7 +86,7 @@ using namespace mud; namespace toy
 	class refl_ TOY_SHELL_EXPORT GameModuleBind : public GameModule
 	{
 	public:
-		constr_ GameModuleBind(Module& module, const VirtualMethod& call)
+		/*constr_*/ GameModuleBind(Module& module, const VirtualMethod& call)
 			: GameModule(module)
 			, m_call(call)
 		{}
@@ -105,13 +104,36 @@ using namespace mud; namespace toy
 	TOY_SHELL_EXPORT func_ void paint_physics(Gnode& parent, World& world);
 	TOY_SHELL_EXPORT func_ void physic_painter(GameScene& scene);
 
-	class refl_ TOY_SHELL_EXPORT GameShell : public NonCopy
+	class refl_ TOY_SHELL_EXPORT GameWindow : public GfxWindow
 	{
 	public:
-		GameShell(array<cstring> resource_paths, int argc, char *argv[]);
+		GameWindow(GfxSystem& gfx, uint32_t index, const string& name, const uvec2& size, bool fullscreen = false);
+
+#if !GLOBAL_VG
+		unique<Vg> m_vg = nullptr;
+#endif
+
+		attr_ uint32_t m_index = 0;
+		attr_ UiWindow m_ui_window;
+		attr_ Ui* m_ui = nullptr;
+
+		//attr_ Context& context() { return *m_context; }
+		//attr_ Vg& vg() { return *m_vg; }
+
+		virtual bool begin_frame() override;
+		virtual void render_frame() override;
+		//virtual void end_frame() override;
+	};
+
+	class refl_ TOY_SHELL_EXPORT GameShell
+	{
+	public:
+		constr_ GameShell(const string& resource_path, cstring exec_path = nullptr);
 		~GameShell();
 
-		meth_ void init();
+		meth_ void init(bool window);
+		meth_ GameWindow& window(const string& name, const uvec2& size, bool fullscreen = false);
+
 		meth_ void load(GameModule& module);
 		meth_ void load_path(const string& module_path);
 		meth_ void run(size_t iterations = 0U);
@@ -124,6 +146,8 @@ using namespace mud; namespace toy
 		meth_ void reload();
 		meth_ bool pump();
 		meth_ void cleanup();
+
+		meth_ GameWindow& main_window();
 
 		void run_script(Module& module, const string& file, bool run = false);
 
@@ -144,7 +168,7 @@ using namespace mud; namespace toy
 		meth_ void remove_scene(GameScene& scene);
 		meth_ void clear_scenes();
 
-		World& load_world(Id id);
+		World& load_world(uint32_t id);
 		void destroy_world();
 
 		void time_entries(Widget& parent);
@@ -152,14 +176,10 @@ using namespace mud; namespace toy
 		attr_ Core& core() { return *m_core; }
 		attr_ LuaInterpreter& lua() { return *m_lua; }
 		attr_ WrenInterpreter& wren() { return *m_wren; }
-		attr_ GfxSystem& gfx() { return *m_gfx_system; }
+		attr_ GfxSystem& gfx() { return *m_gfx; }
 #ifdef TOY_SOUND
 		attr_ SoundManager& sound() { return *m_sound_system; }
 #endif
-
-		attr_ Context& context() { return *m_context; }
-		attr_ Vg& vg() { return *m_vg; }
-		attr_ UiWindow& ui_window() { return *m_ui_window; }
 
 	public:
 		string m_exec_path;
@@ -167,41 +187,37 @@ using namespace mud; namespace toy
 
 		User m_user;
 
-		object_ptr<JobSystem> m_job_system;
-		object_ptr<Core> m_core;
-		object_ptr<LuaInterpreter> m_lua;
-		object_ptr<WrenInterpreter> m_wren;
-		object_ptr<GfxSystem> m_gfx_system;
+		object<JobSystem> m_job_system;
+		object<Core> m_core;
+		object<LuaInterpreter> m_lua;
+		object<WrenInterpreter> m_wren;
+		object<GfxSystem> m_gfx;
 #ifdef TOY_SOUND
-		object_ptr<SoundManager> m_sound_system;
+		object<SoundManager> m_sound_system;
 #endif
+
+		vector<unique<GameWindow>> m_windows;
 
 		attr_ Editor m_editor;
 		bool m_mini_editor = false;
 
-		unique_ptr<Context> m_context;
-		unique_ptr<Vg> m_vg;
-		unique_ptr<UiWindow> m_ui_window;
-
-		attr_ Ui* m_ui = nullptr;
-
-		unique_ptr<GameModule> m_game_module_alloc;
+		unique<GameModule> m_game_module_alloc;
 
 		GameModule* m_game_module = nullptr;
 		Game m_game;
 
-		std::function<void()> m_pump;
+		function<void()> m_pump;
 
 		enum class Step : unsigned int { Input = 0, Core, World, Game, Scene, UiRender, GfxRender, Count };
-		float m_times[size_t(Step::Count)] = {};
+		table<Step, float> m_times = {};
 	};
 
-#if MUD_PLATFORM_EMSCRIPTEN
+#ifdef TWO_PLATFORM_EMSCRIPTEN
 	static GameShell* g_app = nullptr;
 #endif
 }
 
-#if MUD_PLATFORM_EMSCRIPTEN
+#ifdef TWO_PLATFORM_EMSCRIPTEN
 extern "C"
 {
 	void copy(const char* text);

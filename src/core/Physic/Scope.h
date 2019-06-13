@@ -1,4 +1,4 @@
-//  Copyright (c) 2018 Hugo Amiard hugo.amiard@laposte.net
+//  Copyright (c) 2019 Hugo Amiard hugo.amiard@laposte.net
 //  This software is licensed  under the terms of the GNU General Public License v3.0.
 //  See the attached LICENSE.txt file or https://www.gnu.org/licenses/gpl-3.0.en.html.
 //  This notice and the license may not be removed or altered from any source distribution.
@@ -7,11 +7,11 @@
 
 #include <core/Forward.h>
 
-#include <core/Spatial/Spatial.h> // @array-include
+#include <core/Spatial/Spatial.h> // @span-include
 #include <core/Physic/Collider.h>
 #include <core/Physic/Signal.h>
 
-using namespace mud; namespace toy
+namespace toy
 {
 	class refl_ TOY_CORE_EXPORT PhysicScope : public ColliderObject
     {
@@ -24,8 +24,8 @@ using namespace mud; namespace toy
 
 		HSpatial m_spatial;
 		OCollider m_collider;
-		std::vector<HSpatial> m_scope;
-		std::vector<Observer*> m_observers;
+		vector<HSpatial> m_scope;
+		vector<Observer*> m_observers;
 	};
 
 	class refl_ TOY_CORE_EXPORT EmitterScope : public PhysicScope
@@ -40,7 +40,7 @@ using namespace mud; namespace toy
 		virtual void handle_moved();
 
 	protected:
-		std::vector<Signal> m_signals;
+		vector<Signal> m_signals;
 	};
 
 	class refl_ TOY_CORE_EXPORT ReceptorScope : public PhysicScope
@@ -57,14 +57,14 @@ using namespace mud; namespace toy
 	using HEmitterScope = SparseHandle<EmitterScope>;
 	using HReceptorScope = SparseHandle<ReceptorScope>;
 #else
-	using OEmitterScope = object_ptr<EmitterScope>;
-	using OReceptorScope = object_ptr<ReceptorScope>;
+	using OEmitterScope = object<EmitterScope>;
+	using OReceptorScope = object<ReceptorScope>;
 
 	using HEmitterScope = EmitterScope&;
 	using HReceptorScope = ReceptorScope&;
 #endif
 
-	class refl_ TOY_CORE_EXPORT Emitter : public Movabl
+	class refl_ TOY_CORE_EXPORT Emitter// : public Movabl
 	{
 	public:
 		constr_ Emitter() {}
@@ -80,10 +80,10 @@ using namespace mud; namespace toy
 		HEmitterScope add_sphere(Medium& medium, float radius, CollisionGroup group = CM_SOURCE);
 
 	protected:
-		std::vector<OEmitterScope> m_emitters;
+		vector<OEmitterScope> m_emitters;
 	};
 
-	class refl_ TOY_CORE_EXPORT Receptor : public Movabl
+	class refl_ TOY_CORE_EXPORT Receptor// : public Movabl
 	{
 	public:
 		constr_ Receptor() {}
@@ -101,6 +101,6 @@ using namespace mud; namespace toy
 		meth_ ReceptorScope* scope(Medium& medium);
 
 	protected:
-		std::vector<OReceptorScope> m_receptors;
+		vector<OReceptorScope> m_receptors;
 	};
 }

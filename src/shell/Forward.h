@@ -1,5 +1,3 @@
-
-
 #pragma once
 
 #include <infra/Config.h>
@@ -13,9 +11,6 @@
 #include <srlz/Forward.h>
 #include <math/Forward.h>
 #include <geom/Forward.h>
-#include <noise/Forward.h>
-#include <wfc/Forward.h>
-#include <fract/Forward.h>
 #include <lang/Forward.h>
 #include <ctx/Forward.h>
 #include <ui/Forward.h>
@@ -32,75 +27,11 @@
 #include <wfc-gfx/Forward.h>
 
 #ifndef TOY_SHELL_EXPORT
-#define TOY_SHELL_EXPORT MUD_IMPORT
+#define TOY_SHELL_EXPORT TWO_IMPORT
 #endif
 
-
-    
-    
-
-namespace std {
-
-    
-    
-}
-
-namespace mud {
-namespace ui {
-
-    
-    
-}
-}
-
-namespace glm {
-
-    
-    
-}
-
-namespace bx {
-
-    
-    
-}
-
-namespace json11 {
-
-    
-    
-}
-
-namespace mud {
-
-    
-    
-}
-
-namespace mud {
-namespace detail {
-
-    
-    
-}
-}
-
-namespace mud {
-namespace gfx {
-
-    
-    
-}
-}
-
-namespace bimg {
-
-    
-    
-}
-
-namespace toy {
-
+namespace toy
+{
     enum class GameMode : int;
     
     
@@ -109,11 +40,5 @@ namespace toy {
     class GameModule;
     class GameModuleBind;
     class GameShell;
+	class GameWindow;
 }
-
-namespace bgfx {
-
-    
-    
-}
-

@@ -1,35 +1,27 @@
 #pragma once
 
+#include <stdint.h>
+#include <stl/string.h>
+#include <stl/vector.h>
 #include <visu/Forward.h>
 
-#if !defined MUD_MODULES || defined MUD_TYPE_LIB
+#if !defined TWO_MODULES || defined TWO_TYPE_LIB
 #include <type/Type.h>
-#include <type/Vector.h>
 #endif
 
-#ifndef MUD_MODULES
+#ifndef TWO_MODULES
 #include <type/Types.h>
 #include <gfx/Types.h>
 #include <util/Types.h>
 #include <core/Types.h>
 #endif
 
-#ifndef MUD_CPP_20
-#include <string>
-#include <cstdint>
-#include <vector>
-#endif
 
-
-namespace mud
+namespace two
 {
     // Exported types
     
-    export_ template <> TOY_VISU_EXPORT Type& type<toy::PhysicDebugDraw>();
-    export_ template <> TOY_VISU_EXPORT Type& type<toy::SoundSource>();
-    export_ template <> TOY_VISU_EXPORT Type& type<toy::VisuScene>();
     
-	export_ template struct TOY_VISU_EXPORT Typed<std::vector<toy::PhysicDebugDraw*>>;
-	export_ template struct TOY_VISU_EXPORT Typed<std::vector<toy::SoundSource*>>;
-	export_ template struct TOY_VISU_EXPORT Typed<std::vector<toy::VisuScene*>>;
+    export_ template <> TOY_VISU_EXPORT Type& type<toy::PhysicDebugDraw>();
+    export_ template <> TOY_VISU_EXPORT Type& type<toy::VisuScene>();
 }

@@ -1,4 +1,4 @@
-//  Copyright (c) 2018 Hugo Amiard hugo.amiard@laposte.net
+//  Copyright (c) 2019 Hugo Amiard hugo.amiard@laposte.net
 //  This software is licensed  under the terms of the GNU General Public License v3.0.
 //  See the attached LICENSE.txt file or https://www.gnu.org/licenses/gpl-3.0.en.html.
 //  This notice and the license may not be removed or altered from any source distribution.
@@ -9,7 +9,7 @@
 #include <core/Physic/Obstacle.h>
 #include <core/Physic/Scope.h>
 
-using namespace mud; namespace toy
+namespace toy
 {
 	Medium::Medium(const string& name, bool occlusions)
 		: m_name(name)
@@ -26,7 +26,7 @@ using namespace mud; namespace toy
 		return m_masks[group];
 	}
 
-	float Medium::throughput(EmitterScope& emitter, ReceptorScope& receptor, std::vector<Obstacle*>& occluding)
+	float Medium::throughput(EmitterScope& emitter, ReceptorScope& receptor, vector<Obstacle*>& occluding)
 	{
 		UNUSED(emitter); UNUSED(receptor);
 

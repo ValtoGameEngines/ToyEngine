@@ -1,22 +1,16 @@
-//  Copyright (c) 2018 Hugo Amiard hugo.amiard@laposte.net
+//  Copyright (c) 2019 Hugo Amiard hugo.amiard@laposte.net
 //  This software is licensed  under the terms of the GNU General Public License v3.0.
 //  See the attached LICENSE.txt file or https://www.gnu.org/licenses/gpl-3.0.en.html.
 //  This notice and the license may not be removed or altered from any source distribution.
 
 #pragma once
 
+#include <stl/vector.h>
 #include <gfx-ui/Forward.h>
 #include <edit/Forward.h>
-#include <uio/Unode.h>
 
-#ifndef MUD_CPP_20
-#include <vector>
-#endif
-
-using namespace mud; namespace toy
+namespace toy
 {
-	using Selection = std::vector<Ref>;
-
 	//TOY_EDIT_EXPORT void context_menu(Widget& parent, Selector& selector, Ref object);
 
 	TOY_EDIT_EXPORT void edit_toolbox(Widget& parent, Toolbox& toolbox);
@@ -29,8 +23,8 @@ using namespace mud; namespace toy
 
 	TOY_EDIT_EXPORT void registry(Widget& parent, Indexer& indexer, Selection& selection);
 	TOY_EDIT_EXPORT void registry_section(Widget& parent, Indexer& indexer, Selection& selection);
-	TOY_EDIT_EXPORT void library(Widget& parent, const std::vector<Type*>& types, Selection& selection);
-	TOY_EDIT_EXPORT void library_section(Widget& parent, const std::vector<Type*>& types, Selection& selection);
+	TOY_EDIT_EXPORT void library(Widget& parent, span<Type*> types, Selection& selection);
+	TOY_EDIT_EXPORT void library_section(Widget& parent, span<Type*> types, Selection& selection);
 
 	TOY_EDIT_EXPORT void editor_menu(Widget& parent, ActionGroup& action_group);
 	TOY_EDIT_EXPORT void editor_menu_bar(Widget& parent, Editor& editor);

@@ -1,4 +1,4 @@
-//  Copyright (c) 2018 Hugo Amiard hugo.amiard@laposte.net
+//  Copyright (c) 2019 Hugo Amiard hugo.amiard@laposte.net
 //  This software is provided 'as-is' under the zlib License, see the LICENSE.txt file.
 //  This notice and the license may not be removed or altered from any source distribution.
 
@@ -7,7 +7,19 @@
 #include <platform/Forward.h>
 #include <toy/toy.h>
 
-using namespace mud;
+#include <ecs/ECS.hpp>
+#include <stl/vector.hpp>
+#include <stl/string.hpp>
+#include <pool/SparsePool.hpp>
+#include <pool/ObjectPool.hpp>
+#include <pool/Pool.hpp>
+#include <core/World/World.hpp>
+#include <visu/VisuScene.hpp>
+#include <tree/Graph.hpp>
+
+#include <map>
+
+using namespace two;
 using namespace toy;
 
 extern "C"
@@ -15,12 +27,20 @@ extern "C"
 	//_PLATFORM_EXPORT void ex_platform_game(GameShell& app, Game& game);
 }
 
-namespace mud
+namespace two
 {
-	template <> struct TypedBuffer<Bullet> { static size_t index() { return 20; } };
-	template <> struct TypedBuffer<Human>  { static size_t index() { return 21; } };
-	template <> struct TypedBuffer<Lamp>   { static size_t index() { return 22; } };
-	template <> struct TypedBuffer<Crate>  { static size_t index() { return 23; } };
+	template <> struct TypedBuffer<Bullet> { static uint32_t index() { return 20; } };
+	template <> struct TypedBuffer<Human>  { static uint32_t index() { return 21; } };
+	template <> struct TypedBuffer<Lamp>   { static uint32_t index() { return 22; } };
+	template <> struct TypedBuffer<Crate>  { static uint32_t index() { return 23; } };
+}
+
+namespace two
+{
+	template struct refl_ ComponentHandle<Bullet>;
+	template struct refl_ ComponentHandle<Human>;
+	template struct refl_ ComponentHandle<Lamp>;
+	template struct refl_ ComponentHandle<Crate>;
 }
 
 using HBullet = ComponentHandle<Bullet>;
@@ -31,12 +51,12 @@ using HCrate = ComponentHandle<Crate>;
 class refl_ _PLATFORM_EXPORT TileWorld : public Complex
 {
 public:
-	constr_ TileWorld(const std::string& name, JobSystem& job_system);
+	constr_ TileWorld(const string& name, JobSystem& job_system);
 	~TileWorld();
 
 	attr_ World m_world;
-	attr_ BulletWorld m_bullet_world;
-	attr_ Navmesh m_navmesh;
+	attr_ comp_ BulletWorld m_bullet_world;
+	attr_ comp_ Navmesh m_navmesh;
 
 	uvec3 m_block_subdiv = uvec3(20, 4, 20);
 	vec3 m_tile_scale = vec3(4.f);
@@ -47,8 +67,8 @@ public:
 
 	void next_frame();
 
-	void generate_block(GfxSystem& gfx_system, const ivec2& coord);
-	void open_blocks(GfxSystem& gfx_system, const vec3& position, const ivec2& radius);
+	void generate_block(GfxSystem& gfx, const ivec2& coord);
+	void open_blocks(GfxSystem& gfx, const vec3& position, const ivec2& radius);
 };
 
 class refl_ _PLATFORM_EXPORT Bullet
@@ -66,7 +86,7 @@ public:
 
 	bool m_impacted = false;
 	bool m_destroy = false;
-	vec3 m_impact = Zero3;
+	vec3 m_impact = vec3(0.f);
 
 	//OSolid m_solid;
 	OCollider m_collider;
@@ -90,15 +110,15 @@ struct refl_ Aim
 
 struct HumanController
 {
-	vec3 m_force = Zero3;
-	vec3 m_torque = Zero3;
+	vec3 m_force = vec3(0.f);
+	vec3 m_torque = vec3(0.f);
 };
 
 struct refl_ Stance
 {
 	constr_ Stance() : name(""), loop(false) {}
-	constr_ Stance(const std::string& name, bool loop) : name(name), loop(loop) {}
-	attr_ std::string name;
+	constr_ Stance(const string& name, bool loop) : name(name), loop(loop) {}
+	attr_ string name;
 	attr_ bool loop;
 };
 
@@ -120,7 +140,7 @@ public:
 
 	attr_ Faction m_faction;
 
-	vec2 m_angles = Zero2;
+	vec2 m_angles = vec2(0.f);
 	bool m_aiming = false;
 	Aim m_visor;
 
@@ -135,12 +155,12 @@ public:
 	bool m_stealth = false;
 
 	attr_ HHuman m_target = {};
-	attr_ vec3 m_dest = Zero3;
+	attr_ vec3 m_dest = vec3(0.f);
 	attr_ float m_cooldown = 0.f;
 
 	attr_ Stance m_state = { "IdleAim", true };
 
-	std::vector<EntityHandle<Bullet>> m_bullets;
+	vector<EntityHandle<Bullet>> m_bullets;
 
 	void next_frame(Spatial& spatial, Movable& movable, Receptor& receptor, size_t tick, size_t delta);
 

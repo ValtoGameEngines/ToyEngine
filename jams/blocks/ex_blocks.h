@@ -1,13 +1,26 @@
-//  Copyright (c) 2018 Hugo Amiard hugo.amiard@laposte.net
+//  Copyright (c) 2019 Hugo Amiard hugo.amiard@laposte.net
 //  This software is provided 'as-is' under the zlib License, see the LICENSE.txt file.
 //  This notice and the license may not be removed or altered from any source distribution.
 
 #pragma once
 
 #include <blocks/Forward.h>
+
+#include <ecs/ECS.hpp>
+#include <stl/vector.hpp>
+#include <stl/string.hpp>
+#include <pool/SparsePool.hpp>
+#include <pool/ObjectPool.hpp>
+#include <pool/Pool.hpp>
+#include <core/World/World.hpp>
+#include <visu/VisuScene.hpp>
+#include <tree/Graph.hpp>
+
 #include <toy/toy.h>
 
-using namespace mud;
+#include <map>
+
+using namespace two;
 using namespace toy;
 
 extern "C"
@@ -15,16 +28,25 @@ extern "C"
 	//_BLOCKS_EXPORT void ex_blocks_game(GameShell& app, Game& game);
 }
 
-namespace mud
+namespace two
 {
-	template <> struct TypedBuffer<Well>	{ static size_t index() { return 20; } };
-	template <> struct TypedBuffer<Camp>	{ static size_t index() { return 21; } };
-	template <> struct TypedBuffer<Shield>	{ static size_t index() { return 22; } };
-	template <> struct TypedBuffer<Slug>	{ static size_t index() { return 23; } };
-	template <> struct TypedBuffer<Tank>	{ static size_t index() { return 24; } };
+//	template <> struct TypedBuffer<Well>	{ static uint32_t index() { return 20; } };
+	template <> struct TypedBuffer<Camp>	{ static uint32_t index() { return 21; } };
+	template <> struct TypedBuffer<Shield>	{ static uint32_t index() { return 22; } };
+	template <> struct TypedBuffer<Slug>	{ static uint32_t index() { return 23; } };
+	template <> struct TypedBuffer<Tank>	{ static uint32_t index() { return 24; } };
 }
 
-using HWell = ComponentHandle<Well>;
+namespace two
+{
+//	template struct refl_ ComponentHandle<Well>;
+	template struct refl_ ComponentHandle<Camp>;
+	template struct refl_ ComponentHandle<Shield>;
+	template struct refl_ ComponentHandle<Slug>;
+	template struct refl_ ComponentHandle<Tank>;
+}
+
+//using HWell = ComponentHandle<Well>;
 using HCamp = ComponentHandle<Camp>;
 using HShield = ComponentHandle<Shield>;
 using HSlug = ComponentHandle<Slug>;
@@ -35,7 +57,7 @@ enum CustomCollisionGroup : short int
 	CM_ENERGY = 1 << 10,
 };
 
-class refl_ _BLOCKS_EXPORT Well
+/*class refl_ _BLOCKS_EXPORT Well
 {
 public:
 	constr_ Well() {}
@@ -47,7 +69,7 @@ public:
 	comp_ HEmitter m_emitter;
 
 	void next_frame(size_t tick, size_t delta);
-};
+};*/
 
 class refl_ _BLOCKS_EXPORT Faction
 {
@@ -66,7 +88,7 @@ public:
 	static const size_t s_max_factions = 10U;
 };
 
-export_ extern _BLOCKS_EXPORT std::vector<Faction> g_factions;
+export_ extern _BLOCKS_EXPORT vector<Faction> g_factions;
 
 class refl_ _BLOCKS_EXPORT Camp
 {
@@ -119,7 +141,7 @@ public:
 
 	bool m_impacted = false;
 	bool m_destroy = false;
-	vec3 m_impact = Zero3;
+	vec3 m_impact = vec3(0.f);
 
 	//OSolid m_solid;
 	OCollider m_collider;
@@ -144,8 +166,8 @@ public:
 
 	OSolid m_solid;
 
-	vec3 m_force = Zero3;
-	vec3 m_torque = Zero3;
+	vec3 m_force = vec3(0.f);
+	vec3 m_torque = vec3(0.f);
 
 	quat m_turret_angle = ZeroQuat;
 
@@ -158,29 +180,29 @@ public:
 	float m_shock = 0.f;
 
 	Tank* m_target = nullptr;
-	vec3 m_dest = Zero3;
+	vec3 m_dest = vec3(0.f);
 
 	bool m_ia = true;
 
-	std::vector<EntityHandle<Slug>> m_slugs;
+	vector<EntityHandle<Slug>> m_slugs;
 
 	void next_frame(Spatial& spatial, Movable& movable, Receptor& receptor, size_t tick, size_t delta);
 
 	void shoot(bool critical = false);
 
 	inline quat turret_rotation() { return m_turret_angle; } //quat(vec3(0.f, m_turret_angle, 0.f)); }
-	inline vec3 turret_direction() { return rotate(turret_rotation(), -Z3); }
+	inline vec3 turret_direction() { return rotate(turret_rotation(), -z3); }
 };
 
 class refl_ _BLOCKS_EXPORT BlockWorld : public Complex
 {
 public:
-	constr_ BlockWorld(const std::string& name, JobSystem& job_system);
+	constr_ BlockWorld(const string& name, JobSystem& job_system);
 	~BlockWorld();
 
 	attr_ World m_world;
-	attr_ BulletWorld m_bullet_world;
-	attr_ Navmesh m_navmesh;
+	attr_ comp_ BulletWorld m_bullet_world;
+	attr_ comp_ Navmesh m_navmesh;
 
 	attr_ uvec3 m_block_subdiv = uvec3(20, 4, 20);
 	attr_ vec3 m_tile_scale = vec3(4.f);
@@ -191,7 +213,7 @@ public:
 	std::map<ivec2, Tileblock*> m_blocks;
 	Tileblock* m_center_block = nullptr;
 
-	void generate_block(GfxSystem& gfx_system, const ivec2& coord);
+	void generate_block(GfxSystem& gfx, const ivec2& coord);
 };
 
 class refl_ _BLOCKS_EXPORT Player
